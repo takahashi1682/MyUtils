@@ -4,7 +4,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TUtils.UICommon
+namespace MyUtils.UICommon
 {
     public interface IButtonObservable
     {

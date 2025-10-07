@@ -3,7 +3,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TUtils.AudioMixerManager.UI
+namespace MyUtils.AudioMixerManager.UI
 {
     /// <summary>
     /// 音量調整用のスライダーを制御するクラス

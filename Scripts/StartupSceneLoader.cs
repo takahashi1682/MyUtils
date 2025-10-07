@@ -1,8 +1,8 @@
-using _Projects.Config;
+using Config;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace TUtils
+namespace MyUtils
 {
     /// <summary>
     /// ゲーム起動時に必要なプレハブを含んだシーンを生成する

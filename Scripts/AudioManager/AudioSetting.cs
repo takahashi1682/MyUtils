@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace TUtils.AudioManager
+namespace MyUtils.AudioManager
 {
     [Serializable]
     public class AudioSetting

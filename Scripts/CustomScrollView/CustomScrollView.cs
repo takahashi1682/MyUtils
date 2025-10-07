@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using R3;
 using UnityEngine;
 
-namespace TUtils.CustomScrollView
+namespace MyUtils.CustomScrollView
 {
     public interface ICustomScrollView
     {

@@ -1,11 +1,11 @@
 using System;
-using _Projects.Config;
+using Config;
 using Cysharp.Threading.Tasks;
-using TUtils.FadeScreen;
+using MyUtils.FadeScreen;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.SceneLoader
+namespace MyUtils.SceneLoader
 {
     public static class SceneLoaderUtils
     {

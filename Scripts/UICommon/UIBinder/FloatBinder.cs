@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace TUtils.UICommon.UIBinder
+namespace MyUtils.UICommon.UIBinder
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class FloatBinder : AbstractValueBinder<string>

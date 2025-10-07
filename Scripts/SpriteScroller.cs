@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     /// <summary>
     ///  Spriteをスクロールさせる機能

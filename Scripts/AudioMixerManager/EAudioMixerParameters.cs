@@ -1,4 +1,4 @@
-namespace TUtils.AudioMixerManager
+namespace MyUtils.AudioMixerManager
 {
     public enum EAudioMixerParameters
     {

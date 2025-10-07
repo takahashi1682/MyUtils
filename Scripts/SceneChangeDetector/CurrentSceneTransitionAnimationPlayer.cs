@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.SceneChangeDetector
+namespace MyUtils.SceneChangeDetector
 {
     /// <summary>
     /// シーンの遷移時にアニメーションを再生するクラス

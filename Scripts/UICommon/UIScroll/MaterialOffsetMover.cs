@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils.UICommon.UIScroll
+namespace MyUtils.UICommon.UIScroll
 {
     public class MaterialOffsetMover : MonoBehaviour
     {

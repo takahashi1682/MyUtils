@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.SceneChangeDetector
+namespace MyUtils.SceneChangeDetector
 {
     public abstract class AbstractSceneChangeDetector : MonoBehaviour
     {

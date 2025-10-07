@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     /// <summary>
     /// シングルトン基底クラス

@@ -1,11 +1,11 @@
 using System;
+using MyUtils.AudioManager.Manager;
 using R3;
-using TUtils.AudioManager.Manager;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-namespace TUtils.UICommon.UISelectable.UISliderChange
+namespace MyUtils.UICommon.UISelectable.UISliderChange
 {
     /// <summary>
     /// Sliderが変更された時に音を再生する機能

@@ -2,7 +2,7 @@ using R3;
 using TNRD;
 using UnityEngine;
 
-namespace TUtils.UICommon.UIBinder
+namespace MyUtils.UICommon.UIBinder
 {
     public interface IViewSwitchBinder
     {

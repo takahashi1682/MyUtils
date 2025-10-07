@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TUtils.FadeScreen
+namespace MyUtils.FadeScreen
 {
     /// <summary>
     /// 画面フェードを制御するシングルトンクラス

@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace TUtils.DOTweenUtils
+namespace MyUtils.DOTweenUtils
 {
     public abstract class AbstractDoTween : MonoBehaviour
     {

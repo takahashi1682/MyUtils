@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using DG.Tweening;
 
-namespace TUtils.DOTweenUtils
+namespace MyUtils.DOTweenUtils
 {
     public static class DoTweenExtensions
     {

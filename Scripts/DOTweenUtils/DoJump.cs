@@ -1,6 +1,6 @@
 using DG.Tweening;
 
-namespace TUtils.DOTweenUtils
+namespace MyUtils.DOTweenUtils
 {
     public class DoJump : AbstractDoTween
     {

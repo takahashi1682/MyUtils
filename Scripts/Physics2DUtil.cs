@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     public class Physics2DUtil
     {

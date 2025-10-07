@@ -3,7 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     public static class UniTaskUtils
     {

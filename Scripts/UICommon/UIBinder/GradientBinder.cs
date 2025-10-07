@@ -3,7 +3,7 @@ using TNRD;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TUtils.UICommon.UIBinder
+namespace MyUtils.UICommon.UIBinder
 {
     /// <summary>
     ///  値をグラデーションにバインドする機能

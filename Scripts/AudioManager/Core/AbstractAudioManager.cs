@@ -3,7 +3,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace TUtils.AudioManager.Core
+namespace MyUtils.AudioManager.Core
 {
     public abstract class AbstractAudioManager<T> : MonoBehaviour where T : AbstractAudioManager<T>
     {

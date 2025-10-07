@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace TUtils.UICommon.UISelectable
+namespace MyUtils.UICommon.UISelectable
 {
     /// <summary>
     /// UIが選択された時に移動する機能

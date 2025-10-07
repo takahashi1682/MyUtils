@@ -1,10 +1,10 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using TUtils.UICommon;
+using MyUtils.UICommon;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.SceneLoader
+namespace MyUtils.SceneLoader
 {
     /// <summary>
     /// シーンのアンロードボタン

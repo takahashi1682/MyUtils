@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     /// <summary>
     /// 複合キー：オブジェクト名 + コンポーネント型名

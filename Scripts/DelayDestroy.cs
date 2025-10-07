@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     /// <summary>
     /// 指定時間後に削除する機能

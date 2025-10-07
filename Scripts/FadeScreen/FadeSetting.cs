@@ -1,6 +1,6 @@
 using System;
 
-namespace TUtils.FadeScreen
+namespace MyUtils.FadeScreen
 {
     [Serializable]
     public class FadeSetting

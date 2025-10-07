@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.UICommon
+namespace MyUtils.UICommon
 {
     public interface IInputTriggerObservable
     {

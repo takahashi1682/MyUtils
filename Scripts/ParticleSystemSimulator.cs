@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     /// <summary>
     /// ParticleSystemのシミュレーションを行う機能

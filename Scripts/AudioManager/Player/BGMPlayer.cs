@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using TUtils.AudioManager.Core;
-using TUtils.AudioManager.Manager;
+using MyUtils.AudioManager.Core;
+using MyUtils.AudioManager.Manager;
 using UnityEngine;
 
-namespace TUtils.AudioManager.Player
+namespace MyUtils.AudioManager.Player
 {
     /// <summary>
     /// BGM再生機能

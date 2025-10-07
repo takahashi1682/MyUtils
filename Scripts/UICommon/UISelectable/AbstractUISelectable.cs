@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace TUtils.UICommon.UISelectable
+namespace MyUtils.UICommon.UISelectable
 {
     /// <summary>
     /// UIが選択された時に何かする機能

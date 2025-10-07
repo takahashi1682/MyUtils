@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TUtils.Parameter
+namespace MyUtils.Parameter
 {
     /// <summary>
     /// ゲーム内パラメーターの管理機能

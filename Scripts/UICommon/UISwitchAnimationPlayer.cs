@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils.UICommon
+namespace MyUtils.UICommon
 {
     /// <summary>
     /// アニメーションを再生するクラス

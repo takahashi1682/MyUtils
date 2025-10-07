@@ -1,12 +1,12 @@
 using System.Threading;
-using _Projects.Config;
+using Config;
 using Cysharp.Threading.Tasks;
-using TUtils.FadeScreen;
-using TUtils.UICommon;
+using MyUtils.FadeScreen;
+using MyUtils.UICommon;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.SceneLoader
+namespace MyUtils.SceneLoader
 {
     public class SceneLoaderInputTrigger : AbstractInputTrigger
     {

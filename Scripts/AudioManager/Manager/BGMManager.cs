@@ -1,6 +1,6 @@
-using TUtils.AudioManager.Core;
+using MyUtils.AudioManager.Core;
 
-namespace TUtils.AudioManager.Manager
+namespace MyUtils.AudioManager.Manager
 {
     /// <summary>
     /// BGM再生機能

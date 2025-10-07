@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TUtils.CustomScrollView
+namespace MyUtils.CustomScrollView
 {
     public abstract class CustomScrollViewItem : MonoBehaviour
     {

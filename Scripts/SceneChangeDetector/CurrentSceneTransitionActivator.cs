@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.SceneChangeDetector
+namespace MyUtils.SceneChangeDetector
 {
     /// <summary>
     /// シーン切替に応じてオブジェクトのアクティブ状態を切り替える機能

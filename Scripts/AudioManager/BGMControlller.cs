@@ -1,11 +1,11 @@
 using System;
-using _Projects.Config;
-using TUtils.AudioManager.Manager;
-using TUtils.SceneChangeDetector;
+using Config;
+using MyUtils.AudioManager.Manager;
+using MyUtils.SceneChangeDetector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.AudioManager
+namespace MyUtils.AudioManager
 {
     public class CurrentSceneBGMManager : AbstractSceneChangeDetector
     {

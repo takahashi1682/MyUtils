@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     public enum ERotateMode { Update, Interval }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     /// <summary>
     ///  シーン遷移時に破棄されないようにする

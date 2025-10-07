@@ -2,7 +2,7 @@ using System;
 using R3;
 using UnityEngine;
 
-namespace TUtils.AudioMixerManager
+namespace MyUtils.AudioMixerManager
 {
     /// <summary>
     /// ボリュームの保存/読み込みを行う

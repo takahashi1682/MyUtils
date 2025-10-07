@@ -1,8 +1,8 @@
 using Cysharp.Threading.Tasks;
-using TUtils.AudioManager.Manager;
+using MyUtils.AudioManager.Manager;
 using UnityEngine;
 
-namespace TUtils.AudioManager.Test
+namespace MyUtils.AudioManager.Test
 {
     public class AudioTest : MonoBehaviour
     {

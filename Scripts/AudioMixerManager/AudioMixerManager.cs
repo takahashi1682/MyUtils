@@ -4,7 +4,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace TUtils.AudioMixerManager
+namespace MyUtils.AudioMixerManager
 {
     /// <summary>
     /// ゲームで使用するAudioMixerの管理

@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace TUtils.UICommon.UIScroll
+namespace MyUtils.UICommon.UIScroll
 {
     /// <summary>
     /// UI�p�[�c�̃X�N���[�����s���N���X

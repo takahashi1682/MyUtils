@@ -1,6 +1,6 @@
-using TUtils.AudioManager.Core;
+using MyUtils.AudioManager.Core;
 
-namespace TUtils.AudioManager.Manager
+namespace MyUtils.AudioManager.Manager
 {
     /// <summary>
     /// Voice再生機能

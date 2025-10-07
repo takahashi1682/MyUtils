@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     /// <summary>
     /// 四角形の範囲を設定する機能

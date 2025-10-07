@@ -1,15 +1,17 @@
 using System.Globalization;
+using Cysharp.Threading.Tasks;
+using MyUtils.UICommon.UIBinder;
 using R3;
-using TUtils.UICommon.UIBinder;
 using UnityEngine;
 
-namespace TUtils.Parameter
+namespace MyUtils.Parameter
 {
     public interface IParameter
     {
         SerializableReactiveProperty<float> Max { get; }
         SerializableReactiveProperty<float> Current { get; }
         SerializableReactiveProperty<float> Min { get; }
+        ReadOnlyReactiveProperty<bool> IsHalfOrLess { get; }
         ReadOnlyReactiveProperty<bool> IsFull { get; }
         ReadOnlyReactiveProperty<bool> IsEmpty { get; }
 
@@ -31,34 +33,43 @@ namespace TUtils.Parameter
         IViewSwitchBinder,
         IValueBinder<int>,
         IValueBinder<float>,
+        IValueBinder<double>,
         IValueBinder<string>
     {
         [field: SerializeField] public SerializableReactiveProperty<float> Current { get; private set; } = new(1000f);
         [field: SerializeField] public SerializableReactiveProperty<float> Max { get; private set; } = new(1000f);
         [field: SerializeField] public SerializableReactiveProperty<float> Min { get; private set; } = new(0f);
 
-        private ReadOnlyReactiveProperty<int> _currentInt;
-        private ReadOnlyReactiveProperty<float> _currentFloat;
-        private ReadOnlyReactiveProperty<string> _currentString;
-        ReadOnlyReactiveProperty<int> IValueBinder<int>.CurrentValue => _currentInt;
-        ReadOnlyReactiveProperty<float> IValueBinder<float>.CurrentValue => _currentFloat;
-        ReadOnlyReactiveProperty<string> IValueBinder<string>.CurrentValue => _currentString;
+        public ReadOnlyReactiveProperty<int> CurrentInt;
+        public ReadOnlyReactiveProperty<float> CurrentFloat;
+        public ReadOnlyReactiveProperty<double> CurrentDouble;
+        public ReadOnlyReactiveProperty<string> CurrentString;
+        ReadOnlyReactiveProperty<int> IValueBinder<int>.CurrentValue => CurrentInt;
+        ReadOnlyReactiveProperty<float> IValueBinder<float>.CurrentValue => CurrentFloat;
+        ReadOnlyReactiveProperty<double> IValueBinder<double>.CurrentValue => CurrentDouble;
+        ReadOnlyReactiveProperty<string> IValueBinder<string>.CurrentValue => CurrentString;
         public ReadOnlyReactiveProperty<float> CurrentRate { get; private set; }
 
+        public ReadOnlyReactiveProperty<bool> IsHalfOrLess { get; private set; }
         public ReadOnlyReactiveProperty<bool> IsFull { get; private set; }
         public ReadOnlyReactiveProperty<bool> IsEmpty { get; private set; }
 
         protected virtual void Awake()
         {
-            _currentInt = Current.Select(Mathf.FloorToInt)
+            CurrentInt = Current.Select(Mathf.FloorToInt)
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this);
 
-            _currentFloat = Current
+            CurrentFloat = Current
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this);
 
-            _currentString = Current
+            CurrentDouble = Current
+                .Select(v => (double)v)
+                .ToReadOnlyReactiveProperty()
+                .AddTo(this);
+
+            CurrentString = Current
                 .Select(v => v.ToString(CultureInfo.CurrentCulture))
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this);
@@ -66,6 +77,11 @@ namespace TUtils.Parameter
             CurrentRate = Current
                 .CombineLatest(Max, Min,
                     (curr, max, min) => max == 0f ? 0f : Mathf.Clamp01((curr - min) / (max - min)))
+                .ToReadOnlyReactiveProperty()
+                .AddTo(this);
+
+            IsHalfOrLess = CurrentRate
+                .Select(rate => rate <= 0.5f)
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this);
 

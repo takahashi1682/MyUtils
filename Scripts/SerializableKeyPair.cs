@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace TUtils
+namespace MyUtils
 {
     [Serializable]
     public class SerializableKeyPair<TKey, TValue>

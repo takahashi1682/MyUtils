@@ -2,7 +2,7 @@ using System.Threading;
 using R3;
 using UnityEngine;
 
-namespace TUtils.AudioManager.Core
+namespace MyUtils.AudioManager.Core
 {
     /// <summary>
     /// 各オーディオマネージャーが管理するオーディオプレイヤー

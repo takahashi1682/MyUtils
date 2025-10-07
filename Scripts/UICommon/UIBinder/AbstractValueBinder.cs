@@ -3,7 +3,7 @@ using TMPro;
 using TNRD;
 using UnityEngine;
 
-namespace TUtils.UICommon.UIBinder
+namespace MyUtils.UICommon.UIBinder
 {
     // 共通インターフェース
     public interface IValueBinder<T>

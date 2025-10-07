@@ -1,4 +1,4 @@
-namespace TUtils.Countdown
+namespace MyUtils.Countdown
 {
     public interface IGameTimerObservable : IBasicTimerObservable
     {

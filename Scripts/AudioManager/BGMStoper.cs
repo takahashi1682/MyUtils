@@ -1,8 +1,8 @@
-using TUtils.AudioManager.Manager;
+using MyUtils.AudioManager.Manager;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace TUtils.AudioManager
+namespace MyUtils.AudioManager
 {
     public class BGMStoper : MonoBehaviour
     {

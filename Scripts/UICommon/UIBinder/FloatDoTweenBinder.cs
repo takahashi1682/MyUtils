@@ -4,7 +4,7 @@ using TMPro;
 using TNRD;
 using UnityEngine;
 
-namespace TUtils.UICommon.UIBinder
+namespace MyUtils.UICommon.UIBinder
 {
     /// <summary>
     ///  数値をテキストにバインドしアニメーションする機能

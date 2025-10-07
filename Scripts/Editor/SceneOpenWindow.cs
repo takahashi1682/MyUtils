@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace TUtils.Editor
+namespace MyUtils.Editor
 {
     public class SceneOpenWindow : EditorWindow
     {
@@ -70,12 +70,15 @@ namespace TUtils.Editor
         }
 
         private static GUIStyle CreateButtonStyle()
-            => new(EditorStyles.miniButton)
+        {
+            if (EditorStyles.miniButton == null) return null;
+            return new GUIStyle(EditorStyles.miniButton)
             {
                 fixedHeight = 20f,
                 alignment = TextAnchor.MiddleLeft,
                 imagePosition = ImagePosition.ImageLeft
             };
+        }
     }
 }
 #endif

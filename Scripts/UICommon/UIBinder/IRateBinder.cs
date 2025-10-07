@@ -1,6 +1,6 @@
 using R3;
 
-namespace TUtils.UICommon.UIBinder
+namespace MyUtils.UICommon.UIBinder
 {
     public interface IRateBinder
     {

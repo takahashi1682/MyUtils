@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-namespace TUtils.SceneChangeDetector
+namespace MyUtils.SceneChangeDetector
 {
     /// <summary>
     /// シーン切替に応じてボタンなどのオブジェクトを選択する機能

@@ -1,9 +1,9 @@
+using MyUtils.Parameter;
 using R3;
 using R3.Triggers;
-using TUtils.Parameter;
 using UnityEngine;
 
-namespace TUtils.Countdown
+namespace MyUtils.Countdown
 {
     /// <summary>
     /// 購読可能なカウントダウン機能

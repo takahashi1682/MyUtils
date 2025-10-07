@@ -2,7 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace TUtils.SimpleAnimation
+namespace MyUtils.SimpleAnimation
 {
     public static class SimpleAnimationUtils
     {

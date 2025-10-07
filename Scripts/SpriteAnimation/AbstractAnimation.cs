@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace TUtils.SpriteAnimation
+namespace MyUtils.SpriteAnimation
 {
     public abstract class AbstractAnimation : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils.Cursor
+namespace MyUtils.Cursor
 {
     /// <summary>
     /// カーソル設定

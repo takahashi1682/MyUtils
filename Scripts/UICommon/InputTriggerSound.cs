@@ -1,10 +1,10 @@
+using MyUtils.AudioManager;
+using MyUtils.AudioManager.Manager;
 using R3;
 using TNRD;
-using TUtils.AudioManager;
-using TUtils.AudioManager.Manager;
 using UnityEngine;
 
-namespace TUtils.UICommon
+namespace MyUtils.UICommon
 {
     public class InputTriggerSound : MonoBehaviour
     {

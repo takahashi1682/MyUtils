@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils.UICommon
+namespace MyUtils.UICommon
 {
     public class ProjectVersionViewer : MonoBehaviour
     {

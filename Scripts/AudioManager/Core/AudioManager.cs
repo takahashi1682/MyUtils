@@ -7,7 +7,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace TUtils.AudioManager.Core
+namespace MyUtils.AudioManager.Core
 {
     [Serializable]
     public class AudioManager

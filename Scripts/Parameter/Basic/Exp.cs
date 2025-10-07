@@ -1,4 +1,4 @@
-namespace TUtils.Parameter.Basic
+namespace MyUtils.Parameter.Basic
 {
     public interface IExp : IParameter
     {

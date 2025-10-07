@@ -1,7 +1,7 @@
-using TUtils.AudioManager.Manager;
+using MyUtils.AudioManager.Manager;
 using UnityEngine;
 
-namespace TUtils.UICommon.UISelectable
+namespace MyUtils.UICommon.UISelectable
 {
     /// <summary>
     /// UIが選択された時に音を再生する機能

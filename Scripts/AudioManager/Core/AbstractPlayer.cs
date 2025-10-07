@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TUtils.AudioManager.Core
+namespace MyUtils.AudioManager.Core
 {
     public abstract class AbstractPlayer : MonoBehaviour
     {

@@ -1,6 +1,6 @@
-using TUtils.AudioManager.Core;
+using MyUtils.AudioManager.Core;
 
-namespace TUtils.AudioManager.Manager
+namespace MyUtils.AudioManager.Manager
 {
     /// <summary>
     /// SE再生機能
