@@ -11,7 +11,7 @@ namespace MyUtils.AudioManager.Core
 
         protected AudioPlayer _currentPlayer;
 
-        public abstract AudioPlayer Play();
+        protected abstract AudioPlayer Play();
 
         protected virtual void Start()
         {

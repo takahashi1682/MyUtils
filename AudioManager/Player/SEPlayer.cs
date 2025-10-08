@@ -9,6 +9,6 @@ namespace MyUtils.AudioManager.Player
     // ReSharper disable once InconsistentNaming
     public class SEPlayer : AbstractPlayer
     {
-        public override AudioPlayer Play() => SEManager.Play(Setting);
+        protected override AudioPlayer Play() => SEManager.Play(Setting);
     }
 }

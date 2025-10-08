@@ -7,7 +7,7 @@ namespace MyUtils.AudioMixerManager
     /// <summary>
     /// ボリュームの保存/読み込みを行う
     /// </summary>
-    public class AudioVolumePreference : MonoBehaviour
+    public class AudioVolumePrefsBinder : MonoBehaviour
     {
         [SerializeField] private AudioMixerManager _audioMixerManager;
         [SerializeField] private string _registryKey = "AudioVolume_{0}";
@@ -29,7 +29,7 @@ namespace MyUtils.AudioMixerManager
         /// <param name="parameter"></param>
         private void LoadVolume(EAudioMixerParameters parameter)
         {
-            var loadVolume = PlayerPrefs.GetFloat(string.Format(_registryKey, parameter.ToString()), 1);
+            float loadVolume = PlayerPrefs.GetFloat(string.Format(_registryKey, parameter.ToString()), 1);
             _audioMixerManager.VolumeRates[parameter].Value = loadVolume;
         }
 

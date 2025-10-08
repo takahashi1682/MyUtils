@@ -23,7 +23,7 @@ namespace MyUtils.TalkUtils
             // // ①csvから会話データを読み込む
             _loadData.AddRange(CsvUtils<LineData>.Parse(_talkData));
             // ②読み込んだ会話データを表示する
-            await TalkManager.Instance.TalkAsync(_loadData);
+            await TalkManager.Singleton.TalkAsync(_loadData);
         }
     }
 }

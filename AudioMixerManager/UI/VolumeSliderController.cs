@@ -21,7 +21,7 @@ namespace MyUtils.AudioMixerManager.UI
         private void Start()
         {
             VolumeLevel.AddTo(this);
-            _mixer = AudioMixerManager.Instance;
+            _mixer = AudioMixerManager.Singleton;
 
             // 初期化
             InitializeVolumeLevel();
@@ -32,7 +32,7 @@ namespace MyUtils.AudioMixerManager.UI
 
         private void InitializeVolumeLevel()
         {
-            var volumeRate = _mixer.VolumeRates[_parameter].Value;
+            float volumeRate = _mixer.VolumeRates[_parameter].Value;
             VolumeLevel.Value = _maxVolumeLevel * volumeRate;
         }
 

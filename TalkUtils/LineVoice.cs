@@ -15,7 +15,7 @@ namespace MyUtils.TalkUtils
         private void Awake()
         {
             // 会話開始時にボイス再生
-            TalkManager.Instance.LineStart.Subscribe(lines =>
+            TalkManager.Singleton.LineStart.Subscribe(lines =>
             {
                 if (lines.Voice)
                 {
@@ -24,7 +24,7 @@ namespace MyUtils.TalkUtils
             }).AddTo(this);
 
             // 会話終了時にボイス停止
-            TalkManager.Instance.LineEnd.Subscribe(_ =>
+            TalkManager.Singleton.LineEnd.Subscribe(_ =>
             {
                 _audioPlayer?.Stop();
             }).AddTo(this);

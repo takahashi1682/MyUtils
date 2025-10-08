@@ -14,7 +14,7 @@ namespace MyUtils.Editor
         }
 
         private string[] _allScenePaths; // 全シーンのパス
-        private string _filterText = "Assets/_Projects/Scenes/"; // 入力されたフィルター文字列
+        private string _filterText = "Assets/Projects/"; // 入力されたフィルター文字列
         private GUIStyle _buttonStyle;
         private GUIContent _sceneIconContent;
 
@@ -42,9 +42,9 @@ namespace MyUtils.Editor
 
             var sceneIconContent = EditorGUIUtility.IconContent("SceneAsset Icon");
 
-            foreach (var scenePath in displayedScenes)
+            foreach (string scenePath in displayedScenes)
             {
-                var label = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+                string label = System.IO.Path.GetFileNameWithoutExtension(scenePath);
                 var content = new GUIContent(label, sceneIconContent.image);
 
                 if (GUILayout.Button(content, _buttonStyle))
@@ -59,9 +59,9 @@ namespace MyUtils.Editor
 
         private void RefreshSceneList()
         {
-            var guids = AssetDatabase.FindAssets("t:Scene");
+            string[] guids = AssetDatabase.FindAssets("t:Scene");
             _allScenePaths = new string[guids.Length];
-            for (var i = 0; i < guids.Length; i++)
+            for (int i = 0; i < guids.Length; i++)
             {
                 _allScenePaths[i] = AssetDatabase.GUIDToAssetPath(guids[i]);
             }

@@ -13,18 +13,18 @@ namespace MyUtils.AudioManager.Core
         public AudioMixerGroup MixerGroup;
 
         protected static AudioManager Core;
-        protected static T Instance;
+        protected static T Singleton;
 
         protected virtual void Awake()
         {
-            Instance = (T)this;
+            Singleton = (T)this;
             Core = new AudioManager(this, VolumeRate, MixerGroup, MaxAudioStreams);
         }
 
         protected virtual void OnDestroy()
         {
             Core = null;
-            Instance = null;
+            Singleton = null;
         }
 
         // ==== Wrappers ====

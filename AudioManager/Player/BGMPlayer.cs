@@ -19,7 +19,7 @@ namespace MyUtils.AudioManager.Player
         public bool IsStopOnDestroy = true;
 
         private AudioPlayer _currentPlayer;
-        private CancellationTokenSource _CancellationToken = new();
+        private readonly CancellationTokenSource _cancellationToken = new();
 
         private void Start()
         {
@@ -33,7 +33,7 @@ namespace MyUtils.AudioManager.Player
                 _currentPlayer = BGMManager.Play(IntroClip, Volume);
                 await UniTask.Delay(TimeSpan.FromSeconds(IntroClip.length),
                     DelayType.Realtime,
-                    cancellationToken: _CancellationToken.Token);
+                    cancellationToken: _cancellationToken.Token);
             }
 
             _currentPlayer = BGMManager.Play(LoopClip, Volume, true);
@@ -44,7 +44,7 @@ namespace MyUtils.AudioManager.Player
             if (IsStopOnDestroy && _currentPlayer)
             {
                 _currentPlayer.Stop();
-                _CancellationToken.Cancel();
+                _cancellationToken.Cancel();
             }
         }
     }

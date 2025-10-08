@@ -24,7 +24,7 @@ namespace MyUtils.TalkUtils
         private void Awake()
         {
             // 会話開始時にセリフを表示
-            TalkManager.Instance.LineStart.Subscribe(lines =>
+            TalkManager.Singleton.LineStart.Subscribe(lines =>
             {
                 _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource = new CancellationTokenSource();
@@ -32,7 +32,7 @@ namespace MyUtils.TalkUtils
             }).AddTo(this);
 
             // 会話終了時にセリフを非表示
-            TalkManager.Instance.LineEnd.Subscribe(_ =>
+            TalkManager.Singleton.LineEnd.Subscribe(_ =>
             {
                 _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource = null;
@@ -100,7 +100,7 @@ namespace MyUtils.TalkUtils
                     _linesText.text += lineData.Lines[i];
                 }
 
-                await UniTask.Delay(TimeSpan.FromSeconds(TalkManager.Instance.OneCharInterval),
+                await UniTask.Delay(TimeSpan.FromSeconds(TalkManager.Singleton.OneCharInterval),
                     cancellationToken: _cancellationTokenSource.Token);
             }
         }

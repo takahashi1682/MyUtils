@@ -7,7 +7,7 @@ namespace MyUtils.AudioManager
     public class BGMStoper : MonoBehaviour
     {
         public AudioResource AudioResource;
-        public bool IsAllStoped = false;
+        public bool IsAllStoped;
         public bool IsStopOnStart;
         public bool IsStopOnDestroy = true;
 

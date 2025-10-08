@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils
+namespace MyUtils.ApplicationUtils
 {
     public enum EResolution
     {

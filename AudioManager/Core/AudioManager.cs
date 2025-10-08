@@ -29,7 +29,7 @@ namespace MyUtils.AudioManager.Core
             VolumeRate = volumeRate;
             MixerGroup = mixerGroup;
 
-            for (var i = 0; i < maxAudioStreams; i++)
+            for (int i = 0; i < maxAudioStreams; i++)
                 CreateAudioPlayer($"{MixerGroup.name}_{i}");
         }
 
