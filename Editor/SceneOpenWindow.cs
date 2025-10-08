@@ -22,11 +22,6 @@ namespace MyUtils.Editor
 
         private void OnGUI()
         {
-            _buttonStyle ??= CreateButtonStyle();
-
-            // ボタンスタイルがnullの時がある
-            if (_buttonStyle == null) return;
-
             // フィルター入力フィールド
             EditorGUILayout.LabelField("Filter by path:", EditorStyles.boldLabel);
             _filterText = EditorGUILayout.TextField(_filterText);
@@ -59,6 +54,8 @@ namespace MyUtils.Editor
 
         private void RefreshSceneList()
         {
+            _buttonStyle = CreateButtonStyle();
+
             string[] guids = AssetDatabase.FindAssets("t:Scene");
             _allScenePaths = new string[guids.Length];
             for (int i = 0; i < guids.Length; i++)
