@@ -8,6 +8,9 @@ namespace MyUtils.Parameter
     public interface IParameter
     {
         SerializableReactiveProperty<float> Current { get; }
+        ReadOnlyReactiveProperty<int> CurrentInt { get; }
+        ReadOnlyReactiveProperty<double> CurrentDouble { get; }
+        ReadOnlyReactiveProperty<string> CurrentString { get; }
         SerializableReactiveProperty<float> Min { get; }
         SerializableReactiveProperty<float> Max { get; }
         ReadOnlyReactiveProperty<bool> IsHalfOrLess { get; }
@@ -41,26 +44,28 @@ namespace MyUtils.Parameter
         [field: SerializeField] public SerializableReactiveProperty<float> Max { get; private set; } = new(1000f);
 
         private ReadOnlyReactiveProperty<int> _currentInt;
-        ReadOnlyReactiveProperty<int> IValueBinder<int>.CurrentValue => _currentInt ??= Current.Select(Mathf.FloorToInt)
+        public ReadOnlyReactiveProperty<int> CurrentInt => _currentInt ??= Current.Select(Mathf.FloorToInt)
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
+        ReadOnlyReactiveProperty<int> IValueBinder<int>.CurrentValue => CurrentInt;
 
-        private ReadOnlyReactiveProperty<float> _currentFloat;
-        ReadOnlyReactiveProperty<float> IValueBinder<float>.CurrentValue => _currentFloat ??= Current
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
+
+        ReadOnlyReactiveProperty<float> IValueBinder<float>.CurrentValue => Current;
 
         private ReadOnlyReactiveProperty<double> _currentDouble;
-        ReadOnlyReactiveProperty<double> IValueBinder<double>.CurrentValue => _currentDouble ??= Current
+
+        public ReadOnlyReactiveProperty<double> CurrentDouble => _currentDouble ??= Current
             .Select(v => (double)v)
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
+        ReadOnlyReactiveProperty<double> IValueBinder<double>.CurrentValue => CurrentDouble;
 
         private ReadOnlyReactiveProperty<string> _currentString;
-        ReadOnlyReactiveProperty<string> IValueBinder<string>.CurrentValue => _currentString ??= Current
+        public ReadOnlyReactiveProperty<string> CurrentString => _currentString ??= Current
             .Select(v => v.ToString(CultureInfo.CurrentCulture))
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
+        ReadOnlyReactiveProperty<string> IValueBinder<string>.CurrentValue => CurrentString;
 
         private ReadOnlyReactiveProperty<float> _currentRate;
         public ReadOnlyReactiveProperty<float> CurrentRate => _currentRate ??= Current

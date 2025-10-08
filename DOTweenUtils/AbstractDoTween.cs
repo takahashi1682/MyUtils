@@ -3,7 +3,13 @@ using UnityEngine;
 
 namespace MyUtils.DOTweenUtils
 {
-    public abstract class AbstractDoTween<T> : AbstractTargetBehaviour<T> where T : Component
+    public interface IDoTween
+    {
+        public Tween TweenInstance { get; }
+        public void Reload();
+    }
+
+    public abstract class AbstractDoTween<T> : AbstractTargetBehaviour<T>, IDoTween where T : Component
     {
         public float Duration = 1;
         public float Delay;

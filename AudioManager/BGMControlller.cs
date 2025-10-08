@@ -1,4 +1,5 @@
 using System;
+using Config;
 using MyUtils.AudioManager.Manager;
 using MyUtils.SceneChangeDetector;
 using UnityEngine;

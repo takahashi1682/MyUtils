@@ -9,7 +9,7 @@ namespace MyUtils
 
         protected virtual void Awake()
         {
-            if (!TryGetComponent(out _target))
+            if (_target == null && !TryGetComponent(out _target))
             {
                 Debug.LogError(
                     $"{gameObject.name} に {typeof(T).Name} コンポーネントがアタッチされていません。");

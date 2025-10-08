@@ -1,4 +1,5 @@
 using System.Threading;
+using Config;
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
 using UnityEngine;
