@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -22,6 +23,13 @@ namespace MyUtils.Editor
 
         private void OnGUI()
         {
+            _buttonStyle ??= new GUIStyle(EditorStyles.miniButton)
+            {
+                fixedHeight = 20f,
+                alignment = TextAnchor.MiddleLeft,
+                imagePosition = ImagePosition.ImageLeft
+            };
+
             // フィルター入力フィールド
             EditorGUILayout.LabelField("Filter by path:", EditorStyles.boldLabel);
             _filterText = EditorGUILayout.TextField(_filterText);
@@ -33,7 +41,7 @@ namespace MyUtils.Editor
 
             string[] displayedScenes = string.IsNullOrEmpty(_filterText)
                 ? _allScenePaths
-                : System.Array.FindAll(_allScenePaths, path => path.ToLower().Contains(_filterText.ToLower()));
+                : Array.FindAll(_allScenePaths, path => path.ToLower().Contains(_filterText.ToLower()));
 
             var sceneIconContent = EditorGUIUtility.IconContent("SceneAsset Icon");
 
@@ -54,8 +62,6 @@ namespace MyUtils.Editor
 
         private void RefreshSceneList()
         {
-            _buttonStyle = CreateButtonStyle();
-
             string[] guids = AssetDatabase.FindAssets("t:Scene");
             _allScenePaths = new string[guids.Length];
             for (int i = 0; i < guids.Length; i++)
@@ -64,17 +70,6 @@ namespace MyUtils.Editor
             }
 
             Repaint();
-        }
-
-        private static GUIStyle CreateButtonStyle()
-        {
-            if (EditorStyles.miniButton == null) return null;
-            return new GUIStyle(EditorStyles.miniButton)
-            {
-                fixedHeight = 20f,
-                alignment = TextAnchor.MiddleLeft,
-                imagePosition = ImagePosition.ImageLeft
-            };
         }
     }
 }

@@ -16,7 +16,7 @@ namespace MyUtils.AudioMixerManager
         [SerializeField] private SerializableReactiveProperty<float> _bgmVolumeRate = new(1);
         [SerializeField] private SerializableReactiveProperty<float> _seVolumeRate = new(1);
         [SerializeField] private SerializableReactiveProperty<float> _voiceVolumeRate = new(1);
-        public readonly Dictionary<EAudioMixerParameters, ReactiveProperty<float>> VolumeRates = new();
+        public readonly Dictionary<EAudioMixerParam, ReactiveProperty<float>> VolumeRates = new();
 
         protected override void Awake()
         {
@@ -27,26 +27,26 @@ namespace MyUtils.AudioMixerManager
             _seVolumeRate.AddTo(this);
             _voiceVolumeRate.AddTo(this);
 
-            VolumeRates[EAudioMixerParameters.Master] = _masterVolumeRate;
-            VolumeRates[EAudioMixerParameters.BGM] = _bgmVolumeRate;
-            VolumeRates[EAudioMixerParameters.SE] = _seVolumeRate;
-            VolumeRates[EAudioMixerParameters.Voice] = _voiceVolumeRate;
+            VolumeRates[EAudioMixerParam.Master] = _masterVolumeRate;
+            VolumeRates[EAudioMixerParam.BGM] = _bgmVolumeRate;
+            VolumeRates[EAudioMixerParam.SE] = _seVolumeRate;
+            VolumeRates[EAudioMixerParam.Voice] = _voiceVolumeRate;
         }
 
         private void Start()
         {
-            var parameters = Enum.GetValues(typeof(EAudioMixerParameters));
-            foreach (EAudioMixerParameters parameter in parameters)
+            var parameters = Enum.GetValues(typeof(EAudioMixerParam));
+            foreach (EAudioMixerParam parameter in parameters)
             {
                 SubscribeToVolumeRate(parameter);
             }
         }
 
-        private void SubscribeToVolumeRate(EAudioMixerParameters parameters) =>
-            VolumeRates[parameters]
+        private void SubscribeToVolumeRate(EAudioMixerParam param) =>
+            VolumeRates[param]
                 .Subscribe(v =>
                 {
-                    AudioMixer.SetFloat(parameters.ToString(), ToDecibelRate(v));
+                    AudioMixer.SetFloat(param.ToString(), ToDecibelRate(v));
                 })
                 .AddTo(this);
 

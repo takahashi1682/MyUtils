@@ -10,7 +10,7 @@ namespace MyUtils.AudioMixerManager.UI
     /// </summary>
     public class VolumeSliderController : MonoBehaviour
     {
-        [SerializeField] private EAudioMixerParameters _parameter;
+        [SerializeField] private EAudioMixerParam _param;
         [SerializeField] private int _maxVolumeLevel = 10;
         [field: SerializeField] public SerializableReactiveProperty<float> VolumeLevel = new(10);
         [SerializeField] private Slider _volumeSlider;
@@ -32,7 +32,7 @@ namespace MyUtils.AudioMixerManager.UI
 
         private void InitializeVolumeLevel()
         {
-            float volumeRate = _mixer.VolumeRates[_parameter].Value;
+            float volumeRate = _mixer.VolumeRates[_param].Value;
             VolumeLevel.Value = _maxVolumeLevel * volumeRate;
         }
 
@@ -87,7 +87,7 @@ namespace MyUtils.AudioMixerManager.UI
         private void SubscribeToVolumeLevelChanges()
         {
             VolumeLevel.Subscribe(x =>
-                _mixer.VolumeRates[_parameter].Value = x / _volumeSlider.maxValue
+                _mixer.VolumeRates[_param].Value = x / _volumeSlider.maxValue
             ).AddTo(this);
         }
     }

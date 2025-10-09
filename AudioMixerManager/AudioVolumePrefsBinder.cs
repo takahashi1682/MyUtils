@@ -1,4 +1,4 @@
-using System;
+using MyUtils.DataStore;
 using R3;
 using UnityEngine;
 
@@ -10,39 +10,20 @@ namespace MyUtils.AudioMixerManager
     public class AudioVolumePrefsBinder : MonoBehaviour
     {
         [SerializeField] private AudioMixerManager _audioMixerManager;
-        [SerializeField] private string _registryKey = "AudioVolume_{0}";
 
         private void Start()
         {
-            // AwakeではAudioMixerにアクセスできないためStartで実行
-            var parameters = Enum.GetValues(typeof(EAudioMixerParameters));
-            foreach (EAudioMixerParameters parameter in parameters)
-            {
-                LoadVolume(parameter);
-                AutoSaveVolume(parameter);
-            }
-        }
+            var setting = PlayerSettingsStore.Singleton.CurrentData;
+            _audioMixerManager.VolumeRates[EAudioMixerParam.Master].Value = setting.MasterVolume;
+            _audioMixerManager.VolumeRates[EAudioMixerParam.BGM].Value = setting.BGMVolume;
+            _audioMixerManager.VolumeRates[EAudioMixerParam.SE].Value = setting.SEVolume;
+            _audioMixerManager.VolumeRates[EAudioMixerParam.Voice].Value = setting.VoiceVolume;
 
-        /// <summary>
-        /// 保存された設定値を読み込む
-        /// </summary>
-        /// <param name="parameter"></param>
-        private void LoadVolume(EAudioMixerParameters parameter)
-        {
-            float loadVolume = PlayerPrefs.GetFloat(string.Format(_registryKey, parameter.ToString()), 1);
-            _audioMixerManager.VolumeRates[parameter].Value = loadVolume;
+            _audioMixerManager.VolumeRates[EAudioMixerParam.Master].Subscribe(x => setting.MasterVolume = x)
+                .AddTo(this);
+            _audioMixerManager.VolumeRates[EAudioMixerParam.BGM].Subscribe(x => setting.BGMVolume = x).AddTo(this);
+            _audioMixerManager.VolumeRates[EAudioMixerParam.SE].Subscribe(x => setting.SEVolume = x).AddTo(this);
+            _audioMixerManager.VolumeRates[EAudioMixerParam.Voice].Subscribe(x => setting.VoiceVolume = x).AddTo(this);
         }
-
-        /// <summary>
-        /// ボリューム設定値を自動保存する
-        /// </summary>
-        /// <param name="parameter"></param>
-        private void AutoSaveVolume(EAudioMixerParameters parameter)
-            => _audioMixerManager.VolumeRates[parameter]
-                .Subscribe(x =>
-                {
-                    PlayerPrefs.SetFloat(string.Format(_registryKey, parameter.ToString()), x);
-                    PlayerPrefs.Save();
-                }).AddTo(this);
     }
 }

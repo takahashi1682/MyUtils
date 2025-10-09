@@ -2,7 +2,7 @@ namespace MyUtils
 {
     public enum ESceneName
     {
-        // 一度設定した数値は変更しないでください。Inspecterの設定値がずれます。
+        // 一度設定した数値は変更しないでください。Inspectorの設定値がずれます。
         None = -1,
         Splash = 0,
         Title = 1,

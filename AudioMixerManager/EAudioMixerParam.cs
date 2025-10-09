@@ -1,6 +1,6 @@
 namespace MyUtils.AudioMixerManager
 {
-    public enum EAudioMixerParameters
+    public enum EAudioMixerParam
     {
         Master,
         BGM,
