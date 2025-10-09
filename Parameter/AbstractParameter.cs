@@ -53,20 +53,20 @@ namespace MyUtils.Parameter
 
         // CurrentInt
         private ReadOnlyReactiveProperty<int> _currentInt;
-        private ReadOnlyReactiveProperty<int> CurrentIntInternal => _currentInt ??= Current.Select(Mathf.FloorToInt)
+        public ReadOnlyReactiveProperty<int> CurrentInt => _currentInt ??= Current.Select(Mathf.FloorToInt)
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
 
         // CurrentDouble
         private ReadOnlyReactiveProperty<double> _currentDouble;
-        private ReadOnlyReactiveProperty<double> CurrentDoubleInternal => _currentDouble ??= Current
+        public ReadOnlyReactiveProperty<double> CurrentDouble => _currentDouble ??= Current
             .Select(v => (double)v)
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
 
         // CurrentString
         private ReadOnlyReactiveProperty<string> _currentString;
-        private ReadOnlyReactiveProperty<string> CurrentStringInternal => _currentString ??= Current
+        public ReadOnlyReactiveProperty<string> CurrentString => _currentString ??= Current
             .Select(v => v.ToString(CultureInfo.CurrentCulture))
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
@@ -101,9 +101,9 @@ namespace MyUtils.Parameter
 
         // IValueBinder<T>は、privateな遅延初期化Getterを参照する。
         ReadOnlyReactiveProperty<float> IValueBinder<float>.CurrentValue => Current; // floatはCurrentをそのまま使用
-        ReadOnlyReactiveProperty<int> IValueBinder<int>.CurrentValue => CurrentIntInternal;
-        ReadOnlyReactiveProperty<double> IValueBinder<double>.CurrentValue => CurrentDoubleInternal;
-        ReadOnlyReactiveProperty<string> IValueBinder<string>.CurrentValue => CurrentStringInternal;
+        ReadOnlyReactiveProperty<int> IValueBinder<int>.CurrentValue => CurrentInt;
+        ReadOnlyReactiveProperty<double> IValueBinder<double>.CurrentValue => CurrentDouble;
+        ReadOnlyReactiveProperty<string> IValueBinder<string>.CurrentValue => CurrentString;
 
         /// <summary>最小値を設定し、現在値を補正</summary>
         public void SetMin(float min)
