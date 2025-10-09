@@ -31,7 +31,7 @@ namespace MyUtils.Editor
             if (GUILayout.Button("Refresh")) RefreshSceneList();
             EditorGUILayout.Space();
 
-            var displayedScenes = string.IsNullOrEmpty(_filterText)
+            string[] displayedScenes = string.IsNullOrEmpty(_filterText)
                 ? _allScenePaths
                 : System.Array.FindAll(_allScenePaths, path => path.ToLower().Contains(_filterText.ToLower()));
 

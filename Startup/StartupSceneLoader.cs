@@ -1,4 +1,3 @@
-using Config;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
