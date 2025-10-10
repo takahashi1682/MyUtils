@@ -155,6 +155,10 @@ PrefabInstance:
       propertyPath: MixerGroup
       value: 
       objectReference: {fileID: -7013684376649555111, guid: d14a71c9e37c4914792d17e86db57dea, type: 2}
+    - target: {fileID: 7008013409493859938, guid: 5ef6f3e30264c3a4b9964551d5f958bc, type: 3}
+      propertyPath: _manager
+      value: 
+      objectReference: {fileID: 220985891}
     - target: {fileID: 7215928250356366550, guid: 5ef6f3e30264c3a4b9964551d5f958bc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -200,6 +204,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ef6f3e30264c3a4b9964551d5f958bc, type: 3}
+--- !u!114 &220985891 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5755039939093692670, guid: 5ef6f3e30264c3a4b9964551d5f958bc, type: 3}
+  m_PrefabInstance: {fileID: 220985890}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24335333702d11b4cb607c622a8fb891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5464741611684788406
 PrefabInstance:
   m_ObjectHideFlags: 0

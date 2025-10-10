@@ -5,9 +5,6 @@ namespace MyUtils
     [Serializable]
     public class PlayerSetting
     {
-        public float MasterVolume = 1;
-        public float BGMVolume = 1;
-        public float SEVolume = 1;
-        public float VoiceVolume = 1;
+        public float[] Volumes = { 1f, 1f, 1f, 1f };
     }
 }

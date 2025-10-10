@@ -10,7 +10,7 @@ namespace MyUtils.DataStore
     public class AbstractDataStore<T> : AbstractSingletonBehaviour<AbstractDataStore<T>>
         where T : class, new()
     {
-        [field: SerializeField] public T CurrentData { get; private set; }
+        [field: SerializeField] public T Current { get; private set; }
 
         [Header("保存設定")]
         public bool SaveToOnDestroy = true;
@@ -27,7 +27,7 @@ namespace MyUtils.DataStore
             base.Awake();
 
             // JSONファイルのフルパスを取得し、設定をロード
-            CurrentData = EncryptedJsonFileHandler<T>.LoadData(FileName, IsEncrypt, IvFileName, AesKey);
+            Current = EncryptedJsonFileHandler<T>.LoadData(FileName, IsEncrypt, IvFileName, AesKey);
         }
 
         protected override void OnDestroy()
@@ -39,6 +39,6 @@ namespace MyUtils.DataStore
         }
 
         public void SaveSettings()
-            => EncryptedJsonFileHandler<T>.SaveData(FileName, CurrentData, IsEncrypt, IvFileName, AesKey);
+            => EncryptedJsonFileHandler<T>.SaveData(FileName, Current, IsEncrypt, IvFileName, AesKey);
     }
 }
