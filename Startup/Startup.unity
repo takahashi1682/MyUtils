@@ -215,6 +215,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24335333702d11b4cb607c622a8fb891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &453126477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 453126478}
+  - component: {fileID: 453126479}
+  - component: {fileID: 453126480}
+  m_Layer: 0
+  m_Name: ResolutionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &453126478
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453126477}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 51.41499, y: 13.97064, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &453126479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453126477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 404ca7d23ebe22341b0a8f06d0d06a3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyUtils.DontDestroyOnLoad
+--- !u!114 &453126480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453126477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd032d588fb80b94b901f67d1ecab84e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResolutionManager
+  CurrentResolution:
+    value: 0
 --- !u!1001 &5464741611684788406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -286,3 +345,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 5464741611684788406}
   - {fileID: 220985890}
+  - {fileID: 453126478}
