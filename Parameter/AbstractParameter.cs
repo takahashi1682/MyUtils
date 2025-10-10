@@ -8,6 +8,9 @@ namespace MyUtils.Parameter
     public interface IParameter
     {
         SerializableReactiveProperty<float> Current { get; }
+        ReadOnlyReactiveProperty<int> CurrentInt { get; }
+        ReadOnlyReactiveProperty<double> CurrentDouble { get; }
+        ReadOnlyReactiveProperty<string> CurrentString { get; }
         SerializableReactiveProperty<float> Min { get; }
         SerializableReactiveProperty<float> Max { get; }
         ReadOnlyReactiveProperty<float> CurrentRate { get; }

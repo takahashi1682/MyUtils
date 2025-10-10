@@ -1,7 +1,7 @@
 using MyUtils.JsonUtils;
 using UnityEngine;
 
-namespace MyUtils.DataStore
+namespace MyUtils.DataStore.Core
 {
     /// <summary>
     ///  JSONファイルにデータを保存・読み込みするための抽象クラス
