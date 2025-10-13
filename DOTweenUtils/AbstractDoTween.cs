@@ -22,7 +22,11 @@ namespace MyUtils.DOTweenUtils
         public Tween TweenInstance { get; protected set; }
         protected abstract Tween CreateTween();
 
-        protected virtual void Start() => Reload();
+        protected override void Start()
+        {
+            base.Start();
+            Reload();
+        }
 
         protected virtual void OnDestroy()
             => TweenInstance?.Kill();

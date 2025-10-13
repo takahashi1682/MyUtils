@@ -22,8 +22,9 @@ namespace MyUtils
 
         private bool _isClicked;
 
-        protected virtual void Start()
+        protected override void Start()
         {
+            base.Start();
             _onClickSubject.AddTo(this);
 
             if (TryGetComponent(out Target))

@@ -11,9 +11,9 @@ namespace MyUtils.UIPrefsBinder
         [SerializeField] private string _prefsKey = "key_toggle";
         [SerializeField] private bool _defaultValue;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
 
             int savedValue = PlayerPrefs.GetInt(_prefsKey, _defaultValue ? 1 : 0);
             Target.isOn = savedValue != 0;

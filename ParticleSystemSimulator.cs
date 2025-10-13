@@ -10,8 +10,9 @@ namespace MyUtils
     {
         public float SimulationTime = 10f;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             Target.Simulate(SimulationTime);
             Target.Play();
         }

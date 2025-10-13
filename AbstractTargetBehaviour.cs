@@ -7,7 +7,7 @@ namespace MyUtils
         [Header("対象コンポーネント(未設定時は同一GameObjectのコンポーネントを自動取得)")]
         public T Target;
 
-        protected virtual void Awake()
+        protected virtual void Start()
         {
             if (Target == null && !TryGetComponent(out Target))
             {

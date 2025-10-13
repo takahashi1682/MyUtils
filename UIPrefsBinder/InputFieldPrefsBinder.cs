@@ -11,9 +11,9 @@ namespace MyUtils.UIPrefsBinder
         [SerializeField] private string _prefsKey = "key_inputField";
         [SerializeField] private string _defaultValue;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
 
             string savedValue = PlayerPrefs.GetString(_prefsKey, _defaultValue);
             Target.text = savedValue;

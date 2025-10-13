@@ -10,20 +10,20 @@ namespace MyUtils.UISelectable
         [SerializeField] private float _selectedScale = 1.1f;
         private Vector3 _defaultScale;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
-            _defaultScale = Target.localScale;
+            base.Start();
+            _defaultScale = Target.transform.localScale;
         }
 
         protected override void SelectedAction()
-            => Target.localScale = _defaultScale * _selectedScale;
+            => Target.transform.localScale = _defaultScale * _selectedScale;
 
         protected override void SubmitAction()
         {
         }
 
         protected override void DeselectAction()
-            => Target.localScale = _defaultScale;
+            => Target.transform.localScale = _defaultScale;
     }
 }

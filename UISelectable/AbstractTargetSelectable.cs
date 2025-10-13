@@ -8,7 +8,7 @@ namespace MyUtils.UISelectable
     /// UIが選択された時に何かする機能
     /// </summary>
     [RequireComponent(typeof(Selectable))]
-    public abstract class AbstractTargetSelectable : AbstractTargetBehaviour<RectTransform>,
+    public abstract class AbstractTargetSelectable : AbstractTargetBehaviour<Selectable>,
         ISubmitHandler,
         IPointerClickHandler,
         IPointerEnterHandler,
@@ -17,16 +17,7 @@ namespace MyUtils.UISelectable
         IDeselectHandler
     {
         [SerializeField] protected bool _isFullyExited;
-
-        protected Selectable Selectable;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            Selectable = GetComponent<Selectable>();
-        }
-
+        
         /// <summary>
         /// このUIが非表示になった時に呼ばれる
         /// </summary>
@@ -46,7 +37,7 @@ namespace MyUtils.UISelectable
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (!Selectable.IsInteractable()) return;
+            if (!Target.IsInteractable()) return;
 
             SubmitAction();
         }
@@ -57,7 +48,7 @@ namespace MyUtils.UISelectable
         /// <param name="eventData"></param>
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (!Selectable.IsInteractable()) return;
+            if (!Target.IsInteractable()) return;
 
             SelectedAction();
         }
@@ -80,14 +71,14 @@ namespace MyUtils.UISelectable
         /// <param name="eventData"></param>
         public void OnSelect(BaseEventData eventData)
         {
-            if (!Selectable.IsInteractable()) return;
+            if (!Target.IsInteractable()) return;
 
             SelectedAction();
         }
 
         public void OnSubmit(BaseEventData eventData)
         {
-            if (!Selectable.IsInteractable()) return;
+            if (!Target.IsInteractable()) return;
 
             SubmitAction();
         }

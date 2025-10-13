@@ -11,9 +11,9 @@ namespace MyUtils.UIPrefsBinder
         [SerializeField] private string _prefsKey = "key_slider";
         [SerializeField] private float _defaultValue;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
 
             float savedValue = PlayerPrefs.GetFloat(_prefsKey, _defaultValue);
             Target.value = Mathf.Clamp(savedValue, Target.minValue, Target.maxValue);

@@ -11,9 +11,9 @@ namespace MyUtils.UIPrefsBinder
         [SerializeField] private string _prefsKey = "key_dropdown";
         [SerializeField] private int _defaultValue;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
 
             int savedValue = PlayerPrefs.GetInt(_prefsKey, _defaultValue);
             Target.value = Mathf.Clamp(savedValue, 0, Target.options.Count - 1);

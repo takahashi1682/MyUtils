@@ -11,9 +11,9 @@ namespace MyUtils.DOTweenUtils
 
         private Vector3 _originalPos;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
             _originalPos = Target.localPosition;
         }
 

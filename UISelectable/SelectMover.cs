@@ -15,11 +15,11 @@ namespace MyUtils.UISelectable
         private Tween _endMoveAnimation;
         private Tween _startMoveAnimation;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
 
-            _defaultPosition = Target.localPosition;
+            _defaultPosition = Target.transform.localPosition;
 
             SetupMoveAnimation();
         }
@@ -40,11 +40,11 @@ namespace MyUtils.UISelectable
 
         private void SetupMoveAnimation()
         {
-            _startMoveAnimation = Target.DOLocalMove(_selectedPosition, _duration).SetRelative();
+            _startMoveAnimation = Target.transform.DOLocalMove(_selectedPosition, _duration).SetRelative();
             _startMoveAnimation.SetAutoKill(false);
             _startMoveAnimation.SetLink(gameObject);
 
-            _endMoveAnimation = Target.DOLocalMove(_defaultPosition, _duration);
+            _endMoveAnimation = Target.transform.DOLocalMove(_defaultPosition, _duration);
             _endMoveAnimation.SetAutoKill(false);
             _endMoveAnimation.SetLink(gameObject);
         }
