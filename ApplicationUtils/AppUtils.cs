@@ -1,7 +1,9 @@
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-// 消すな
+
+// ReSharper disable once RedundantUsingDirective
+using UnityEngine;
 
 namespace MyUtils.ApplicationUtils
 {
