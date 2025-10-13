@@ -12,7 +12,8 @@ namespace MyUtils
         GameOption = 5,
         Credit = 6,
         Game = 7,
-        Result = 8,
+        CharacterStatus = 8,
+        Result = 9,
         Startup = 100,
         Loading = 101,
     }

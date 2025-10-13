@@ -13,6 +13,6 @@ namespace MyUtils.DOTweenUtils
         public Vector3 EndValue = new(300, 0, 0);
 
         protected override Tween CreateTween()
-            => _target.DOLocalMove(EndValue, Duration).SetRelative(IsRelative);
+            => Target.DOLocalMove(EndValue, Duration).SetRelative(IsRelative);
     }
 }

@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489bddedc23f4d5694914a59aa135e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _audioMixerManager: {fileID: 5755039939093692670}
+  _manager: {fileID: 5755039939093692670}
 --- !u!114 &-3423235446466508187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,17 +145,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _titleBGMResource:
-    Resource: {fileID: 8300000, guid: 22a45602f5697f14bba5ff0a31c9468e, type: 3}
+    Resource: {fileID: 0}
     Volume: 0.5
     IsLoop: 1
     Position: {x: 0, y: 0, z: 0}
   _outGameBGMResource:
-    Resource: {fileID: 8300000, guid: d373c843fc4ada144b9e5cd0ade1bcc4, type: 3}
+    Resource: {fileID: 0}
     Volume: 0.5
     IsLoop: 1
     Position: {x: 0, y: 0, z: 0}
   _inGameBGMResource:
-    Resource: {fileID: 8300000, guid: 5fcb80dbb35c5b0488c9ecadb6094c16, type: 3}
+    Resource: {fileID: 8300000, guid: 0b51ef2a7a1de1746a79c602a7ab995b, type: 3}
     Volume: 0.5
     IsLoop: 1
     Position: {x: 0, y: 0, z: 0}

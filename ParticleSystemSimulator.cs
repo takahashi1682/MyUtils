@@ -12,8 +12,8 @@ namespace MyUtils
 
         private void Start()
         {
-            _target.Simulate(SimulationTime);
-            _target.Play();
+            Target.Simulate(SimulationTime);
+            Target.Play();
         }
     }
 }

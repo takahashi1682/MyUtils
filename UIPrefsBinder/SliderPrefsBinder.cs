@@ -16,9 +16,9 @@ namespace MyUtils.UIPrefsBinder
             base.Awake();
 
             float savedValue = PlayerPrefs.GetFloat(_prefsKey, _defaultValue);
-            _target.value = Mathf.Clamp(savedValue, _target.minValue, _target.maxValue);
+            Target.value = Mathf.Clamp(savedValue, Target.minValue, Target.maxValue);
 
-            _target.onValueChanged.AddListener(OnFloatValueChanged);
+            Target.onValueChanged.AddListener(OnFloatValueChanged);
         }
 
         private void OnFloatValueChanged(float newValue)

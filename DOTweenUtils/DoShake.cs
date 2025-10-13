@@ -14,11 +14,11 @@ namespace MyUtils.DOTweenUtils
         protected override void Awake()
         {
             base.Awake();
-            _originalPos = _target.localPosition;
+            _originalPos = Target.localPosition;
         }
 
         protected override Tween CreateTween()
-            => _target.DOShakePosition(Duration, Strength, Vibrato, Randomness)
-                .OnComplete(() => _target.localPosition = _originalPos);
+            => Target.DOShakePosition(Duration, Strength, Vibrato, Randomness)
+                .OnComplete(() => Target.localPosition = _originalPos);
     }
 }

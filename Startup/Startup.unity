@@ -134,7 +134,7 @@ PrefabInstance:
     - target: {fileID: -3423235446466508187, guid: 5ef6f3e30264c3a4b9964551d5f958bc, type: 3}
       propertyPath: _inGameBGMResource.Resource
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 0b51ef2a7a1de1746a79c602a7ab995b, type: 3}
     - target: {fileID: 2450194670699924975, guid: 5ef6f3e30264c3a4b9964551d5f958bc, type: 3}
       propertyPath: MixerGroup
       value: 
@@ -332,6 +332,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1500176464516587111, guid: 2fa704c2df110c141b62e445fe899894, type: 3}
       propertyPath: IvFileName
+      value: player_setting.iv
+      objectReference: {fileID: 0}
+    - target: {fileID: 1500176464516587111, guid: 2fa704c2df110c141b62e445fe899894, type: 3}
+      propertyPath: <Setting>k__BackingField.FileName
+      value: player_setting.json
+      objectReference: {fileID: 0}
+    - target: {fileID: 1500176464516587111, guid: 2fa704c2df110c141b62e445fe899894, type: 3}
+      propertyPath: <Setting>k__BackingField.IvFileName
       value: player_setting.iv
       objectReference: {fileID: 0}
     m_RemovedComponents: []

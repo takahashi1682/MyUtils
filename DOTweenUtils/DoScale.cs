@@ -8,6 +8,6 @@ namespace MyUtils.DOTweenUtils
         [Header("DoScale")] public Vector3 ToScale = new(1, 1.2f, 1);
 
         protected override Tween CreateTween()
-            => _target.DOScale(ToScale, Duration);
+            => Target.DOScale(ToScale, Duration);
     }
 }

@@ -16,9 +16,9 @@ namespace MyUtils.UIPrefsBinder
             base.Awake();
 
             int savedValue = PlayerPrefs.GetInt(_prefsKey, _defaultValue ? 1 : 0);
-            _target.isOn = savedValue != 0;
+            Target.isOn = savedValue != 0;
 
-            _target.onValueChanged.AddListener(OnToggleValueChanged);
+            Target.onValueChanged.AddListener(OnToggleValueChanged);
         }
 
         private void OnToggleValueChanged(bool newValue)

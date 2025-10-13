@@ -19,7 +19,7 @@ namespace MyUtils.UISelectable
         {
             base.Awake();
 
-            _defaultPosition = _target.localPosition;
+            _defaultPosition = Target.localPosition;
 
             SetupMoveAnimation();
         }
@@ -40,11 +40,11 @@ namespace MyUtils.UISelectable
 
         private void SetupMoveAnimation()
         {
-            _startMoveAnimation = _target.DOLocalMove(_selectedPosition, _duration).SetRelative();
+            _startMoveAnimation = Target.DOLocalMove(_selectedPosition, _duration).SetRelative();
             _startMoveAnimation.SetAutoKill(false);
             _startMoveAnimation.SetLink(gameObject);
 
-            _endMoveAnimation = _target.DOLocalMove(_defaultPosition, _duration);
+            _endMoveAnimation = Target.DOLocalMove(_defaultPosition, _duration);
             _endMoveAnimation.SetAutoKill(false);
             _endMoveAnimation.SetLink(gameObject);
         }

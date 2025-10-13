@@ -9,6 +9,6 @@ namespace MyUtils.DOTweenUtils
         public int NumJumps = 1; // ジャンプの回数
 
         protected override Tween CreateTween()
-            => _target.DOLocalJump(_target.localPosition, JumpPower, NumJumps, Duration);
+            => Target.DOLocalJump(Target.localPosition, JumpPower, NumJumps, Duration);
     }
 }

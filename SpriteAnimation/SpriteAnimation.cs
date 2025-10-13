@@ -7,7 +7,7 @@ namespace MyUtils.SpriteAnimation
     {
         protected override void SetSprite(Sprite sprite)
         {
-            _target.sprite = sprite;
+            Target.sprite = sprite;
         }
     }
 }

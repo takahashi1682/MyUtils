@@ -1,10 +1,11 @@
 using System;
+using MyUtils.AudioManager;
 using MyUtils.AudioManager.Manager;
 using MyUtils.SceneChangeDetector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MyUtils.AudioManager
+namespace MyUtils
 {
     public class CurrentSceneBGMManager : AbstractSceneChangeDetector
     {
@@ -30,7 +31,7 @@ namespace MyUtils.AudioManager
                     break;
 
                 case ESceneName.Game:
-                    BGMManager.HasPlay(_inGameBGMResource);
+                    BGMManager.FadeInAsync(_inGameBGMResource);
                     break;
 
                 case ESceneName.Splash:

@@ -36,19 +36,50 @@ namespace MyUtils
     {
         [SerializeField] private GameObject[] _registeredObjects;
 
-        private static SceneObjectsRegistry _instance;
         private readonly Dictionary<ComponentKey, Component> _componentCache = new();
+        private static SceneObjectsRegistry _instance;
 
-        private void Awake() => _instance = this;
-        private void OnDestroy() => _instance = null;
+        public static SceneObjectsRegistry Singleton
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    // シーン上からインスタンスを探す
+                    _instance = FindFirstObjectByType<SceneObjectsRegistry>();
+
+                    if (_instance == null)
+                    {
+                        throw new Exception($"シーン上に {nameof(SceneObjectsRegistry)} が見つかりません。");
+                    }
+                }
+
+                return _instance;
+            }
+        }
+
+        private void Awake()
+        {
+            if (_instance == null) _instance = this;
+
+            if (this != _instance)
+            {
+                throw new Exception($"シーン上に {nameof(SceneObjectsRegistry)} が複数存在します。");
+            }
+        }
+
+        protected void OnDestroy()
+        {
+            if (this == _instance) _instance = null;
+        }
 
         /// <summary>
         /// 登録された GameObject を名前で取得します
         /// </summary>
         public static GameObject FindObjectByName(string objectName)
         {
-            if (_instance == null || string.IsNullOrEmpty(objectName)) return null;
-            return _instance._registeredObjects.FirstOrDefault(obj => obj.name == objectName);
+            if (Singleton == null || string.IsNullOrEmpty(objectName)) return null;
+            return Singleton._registeredObjects.FirstOrDefault(obj => obj.name == objectName);
         }
 
         /// <summary>
@@ -56,21 +87,21 @@ namespace MyUtils
         /// </summary>
         public static T GetComponentFromScene<T>(string objectName = null) where T : Component
         {
-            if (_instance == null) return null;
+            if (Singleton == null) return null;
 
             string typeName = typeof(T).Name;
             var componentKey = new ComponentKey(objectName ?? string.Empty, typeName);
 
-            if (_instance._componentCache.TryGetValue(componentKey, out var cachedComponent))
+            if (Singleton._componentCache.TryGetValue(componentKey, out var cachedComponent))
                 return cachedComponent as T;
 
-            foreach (var obj in _instance._registeredObjects)
+            foreach (var obj in Singleton._registeredObjects)
             {
                 if (!string.IsNullOrEmpty(objectName) && obj.name != objectName) continue;
 
                 if (obj.TryGetComponent<T>(out var component))
                 {
-                    _instance._componentCache[componentKey] = component;
+                    Singleton._componentCache[componentKey] = component;
                     return component;
                 }
             }
@@ -90,20 +121,20 @@ namespace MyUtils
         /// <summary>
         /// キャッシュをクリア（リロード時や一時的に再スキャンしたい場合に使用）
         /// </summary>
-        public static void ClearCache() => _instance._componentCache.Clear();
+        public static void ClearCache() => Singleton._componentCache.Clear();
 
         /// <summary>
         /// 任意の GameObject を追加登録（動的生成時など）
         /// </summary>
         public static void RegisterObject(GameObject obj)
         {
-            if (_instance == null || obj == null) return;
+            if (Singleton == null || obj == null) return;
 
-            var list = _instance._registeredObjects.ToList();
+            var list = Singleton._registeredObjects.ToList();
             if (!list.Contains(obj))
             {
                 list.Add(obj);
-                _instance._registeredObjects = list.ToArray();
+                Singleton._registeredObjects = list.ToArray();
             }
         }
     }

@@ -23,7 +23,7 @@ namespace MyUtils.Editor
 
         private void OnGUI()
         {
-            _buttonStyle ??= new GUIStyle(EditorStyles.miniButton)
+            _buttonStyle = new GUIStyle(EditorStyles.miniButton)
             {
                 fixedHeight = 20f,
                 alignment = TextAnchor.MiddleLeft,

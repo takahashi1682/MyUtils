@@ -111,7 +111,7 @@ namespace MyUtils.AudioManager.Core
 
         public async UniTask FadeOutAsync(AudioPlayer player, float duration = 1)
         {
-            await UniTaskUtils.LerpAsync(1, 0, duration, x => player.VolumeRate.Value = x, token: player.Cts.Token);
+            await UniTaskUtils.LerpAsync(player.VolumeRate.CurrentValue, 0, duration, x => player.VolumeRate.Value = x, token: player.Cts.Token);
         }
 
         public async UniTask FadeInAsync(AudioSetting setting, float duration = 1)
@@ -122,14 +122,14 @@ namespace MyUtils.AudioManager.Core
         }
 
         public async UniTask FadeInAsync(AudioPlayer player, float duration = 1)
-            => await UniTaskUtils.LerpAsync(0, 1, duration, x => player.VolumeRate.Value = x, token: player.Cts.Token);
+            => await UniTaskUtils.LerpAsync(0, player.VolumeRate.CurrentValue, duration, x => player.VolumeRate.Value = x, token: player.Cts.Token);
 
         public async UniTask CrossFadeAsync(AudioPlayer prev, AudioSetting setting, float duration)
         {
-            await UniTaskUtils.LerpAsync(0, 1, duration, x => prev.VolumeRate.Value = x, token: prev.Cts.Token);
+            await UniTaskUtils.LerpAsync(prev.VolumeRate.CurrentValue, 0, duration, x => prev.VolumeRate.Value = x, token: prev.Cts.Token);
             prev.Stop();
             var player = Play(setting);
-            await UniTaskUtils.LerpAsync(0, 1, duration, x => player.VolumeRate.Value = x, token: player.Cts.Token);
+            await UniTaskUtils.LerpAsync(0,  setting.Volume, duration, x => player.VolumeRate.Value = x, token: player.Cts.Token);
         }
     }
 }

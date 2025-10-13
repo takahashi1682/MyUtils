@@ -13,17 +13,17 @@ namespace MyUtils.UISelectable
         protected override void Awake()
         {
             base.Awake();
-            _defaultScale = _target.localScale;
+            _defaultScale = Target.localScale;
         }
 
         protected override void SelectedAction()
-            => _target.localScale = _defaultScale * _selectedScale;
+            => Target.localScale = _defaultScale * _selectedScale;
 
         protected override void SubmitAction()
         {
         }
 
         protected override void DeselectAction()
-            => _target.localScale = _defaultScale;
+            => Target.localScale = _defaultScale;
     }
 }

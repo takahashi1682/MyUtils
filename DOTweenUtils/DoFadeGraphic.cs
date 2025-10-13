@@ -12,6 +12,6 @@ namespace MyUtils.DOTweenUtils
 
         protected override Tween CreateTween()
             => DOVirtual.Float(StartValue, EndValue, Duration,
-                alpha => _target.alpha = alpha);
+                alpha => Target.alpha = alpha);
     }
 }

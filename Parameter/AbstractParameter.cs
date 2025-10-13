@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using MyUtils.UIBinder;
 using R3;
@@ -33,6 +34,7 @@ namespace MyUtils.Parameter
     /// 汎用的なパラメータクラス（HP, Stamina, Gauge など）。
     /// 使用されないReactivePropertyは遅延初期化されます。
     /// </summary>
+    [Serializable]
     public abstract class AbstractParameter : MonoBehaviour,
         IParameter,
         IRateBinder,

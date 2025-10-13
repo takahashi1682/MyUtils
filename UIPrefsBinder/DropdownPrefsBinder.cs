@@ -16,9 +16,9 @@ namespace MyUtils.UIPrefsBinder
             base.Awake();
 
             int savedValue = PlayerPrefs.GetInt(_prefsKey, _defaultValue);
-            _target.value = Mathf.Clamp(savedValue, 0, _target.options.Count - 1);
+            Target.value = Mathf.Clamp(savedValue, 0, Target.options.Count - 1);
 
-            _target.onValueChanged.AddListener(OnDropdownValueChanged);
+            Target.onValueChanged.AddListener(OnDropdownValueChanged);
         }
 
         private void OnDropdownValueChanged(int newValue)

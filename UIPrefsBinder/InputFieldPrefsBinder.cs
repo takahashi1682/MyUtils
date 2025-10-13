@@ -16,9 +16,9 @@ namespace MyUtils.UIPrefsBinder
             base.Awake();
 
             string savedValue = PlayerPrefs.GetString(_prefsKey, _defaultValue);
-            _target.text = savedValue;
+            Target.text = savedValue;
 
-            _target.onValueChanged.AddListener(OnInputFieldValueChanged);
+            Target.onValueChanged.AddListener(OnInputFieldValueChanged);
         }
 
         private void OnInputFieldValueChanged(string newValue)

@@ -13,8 +13,8 @@ namespace MyUtils.DOTweenUtils
         protected override Tween CreateTween()
         {
             var sequence = DOTween.Sequence();
-            sequence.Append(_target.material.DOFade(StartValue, 0));
-            sequence.Append(_target.material.DOFade(EndValue, Duration));
+            sequence.Append(Target.material.DOFade(StartValue, 0));
+            sequence.Append(Target.material.DOFade(EndValue, Duration));
             return sequence;
         }
     }

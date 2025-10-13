@@ -26,9 +26,9 @@ namespace MyUtils
         {
             _onClickSubject.AddTo(this);
 
-            if (TryGetComponent(out _target))
+            if (TryGetComponent(out Target))
             {
-                _target.OnClickAsObservable()
+                Target.OnClickAsObservable()
                     .SubscribeAwait(async (_, cts) =>
                     {
                         _onClickSubject.OnNext(Unit.Default);

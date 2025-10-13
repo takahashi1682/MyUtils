@@ -1,12 +1,9 @@
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-
-using UnityEngine;
-
 // 消すな
 
-namespace MyUtils
+namespace MyUtils.ApplicationUtils
 {
     /// <summary>
     ///     アプリケーション関係のUtils
