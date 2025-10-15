@@ -1,5 +1,4 @@
 using MyUtils.DataStore;
-using R3;
 using UnityEngine;
 
 namespace MyUtils.ApplicationUtils
@@ -24,23 +23,15 @@ namespace MyUtils.ApplicationUtils
             (540, 360),
         };
 
-        public SerializableReactiveProperty<EResolution> CurrentResolution;
+        public static void ApplyResolution(int resolutionIndex)
+            => ApplyResolution((EResolution)resolutionIndex);
 
-        protected override void Awake()
+        public static void ApplyResolution(EResolution resolution)
         {
-            base.Awake();
+            // 解像度の保存
+            PlayerSettingsStore.Singleton.Current.Resolution = resolution;
 
-            var resolution = PlayerSettingsStore.Singleton.Current.Resolution;
-            CurrentResolution = new SerializableReactiveProperty<EResolution>(resolution);
-            CurrentResolution.Subscribe(x =>
-            {
-                ApplyResolution(x);
-                resolution = x;
-            }).AddTo(this);
-        }
-
-        private static void ApplyResolution(EResolution resolution)
-        {
+            // 画面解像度の変更
             (int width, int height) = ResolutionList[(int)resolution];
             Screen.SetResolution(width, height, FullScreenMode.Windowed);
         }

@@ -12,7 +12,7 @@ namespace MyUtils
     }
 
     [RequireComponent(typeof(Button))]
-    public abstract class AbstractButton : AbstractTargetBehaviour<Button>, IButtonObservable
+    public abstract class AbstractAwaitButton : AbstractTargetBehaviour<Button>, IButtonObservable
     {
         [Header("Button Settings")]
         public AwaitOperation AwaitOperation = AwaitOperation.Drop;

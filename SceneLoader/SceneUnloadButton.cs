@@ -8,7 +8,7 @@ namespace MyUtils.SceneLoader
     /// <summary>
     /// シーンのアンロードボタン
     /// </summary>
-    public class SceneUnloadButton : AbstractButton
+    public class SceneUnloadButton : AbstractAwaitButton
     {
         protected override async UniTask OnClick(CancellationToken cts)
             => await SceneManager.UnloadSceneAsync(gameObject.scene.name);

@@ -272,8 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd032d588fb80b94b901f67d1ecab84e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResolutionManager
-  CurrentResolution:
-    value: 0
+  _playerSettingsStore: {fileID: 5464741611684788407}
 --- !u!1001 &5464741611684788406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -335,6 +334,10 @@ PrefabInstance:
       value: player_setting.iv
       objectReference: {fileID: 0}
     - target: {fileID: 1500176464516587111, guid: 2fa704c2df110c141b62e445fe899894, type: 3}
+      propertyPath: SaveToOnDestroy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1500176464516587111, guid: 2fa704c2df110c141b62e445fe899894, type: 3}
       propertyPath: <Setting>k__BackingField.FileName
       value: player_setting.json
       objectReference: {fileID: 0}
@@ -347,6 +350,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fa704c2df110c141b62e445fe899894, type: 3}
+--- !u!114 &5464741611684788407 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1500176464516587111, guid: 2fa704c2df110c141b62e445fe899894, type: 3}
+  m_PrefabInstance: {fileID: 5464741611684788406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bb44281840f5cd42a2fac0fe2b56857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyUtils.GameSetting.PlayerSettingsStore
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
