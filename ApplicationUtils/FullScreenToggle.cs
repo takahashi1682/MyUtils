@@ -21,7 +21,7 @@ namespace MyUtils.ApplicationUtils
                 .Subscribe(isOn => Screen.fullScreen = isOn)
                 .AddTo(this);
         }
-
+        
         private void Update() => _isFullScreen.Value = Screen.fullScreen;
     }
 }
