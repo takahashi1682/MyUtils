@@ -14,6 +14,7 @@ namespace MyUtils
         Game = 7,
         CharacterStatus = 8,
         Result = 9,
+        Map = 10,
         Startup = 100,
         Loading = 101,
     }

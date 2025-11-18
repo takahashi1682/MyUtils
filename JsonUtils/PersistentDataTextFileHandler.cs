@@ -6,9 +6,10 @@ using UnityEngine;
 namespace MyUtils.JsonUtils
 {
     /// <summary>
-    ///  テキストファイルの保存と読み込みを行うユーティリティクラス。
+    ///  Application.persistentDataPath 配下のテキストファイル専用の保存・読み込みユーティリティクラス。
+    ///  指定したファイル名は自動的に persistentDataPath と結合されます。
     /// </summary>
-    public static class TextFileHandler
+    public static class PersistentDataTextFileHandler
     {
         private static readonly Encoding FileEncoding = Encoding.UTF8;
 

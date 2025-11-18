@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace MyUtils.SpriteAnimation
+namespace MyUtils
 {
     public abstract class AbstractAnimation<T> : AbstractTargetBehaviour<T> where T : Component
     {
@@ -12,41 +12,41 @@ namespace MyUtils.SpriteAnimation
             PingPong
         }
 
-        [SerializeField] private EMode _mode = EMode.One;
-        [SerializeField] private float _fps = 16.0f;
-        [SerializeField] private bool _isAutoDestroy = true;
-        [SerializeField] private Sprite[] _sprites;
+        public EMode Mode = EMode.One;
+        public float FPS = 16.0f;
+        public bool IsAutoDestroy = true;
+        public Sprite[] Sprites;
 
         protected virtual void OnEnable()
         {
-            StartCoroutine(MainProcess(1f / _fps));
+            StartCoroutine(MainProcess(1f / FPS));
         }
 
         protected virtual IEnumerator MainProcess(float interval)
         {
-            var isLoop = _mode != EMode.One;
-            var spriteLength = _sprites.Length;
+            bool isLoop = Mode != EMode.One;
+            int spriteLength = Sprites.Length;
             var secondWait = new WaitForSeconds(interval);
-            for (var count = 0; isLoop || count < spriteLength; count++)
+            for (int count = 0; isLoop || count < spriteLength; count++)
             {
-                var index = _mode switch
+                int index = Mode switch
                 {
                     EMode.Repeat => (int)Mathf.Repeat(count, spriteLength),
                     EMode.PingPong => (int)Mathf.PingPong(count, spriteLength - 1),
                     _ => count
                 };
 
-                SetSprite(_sprites[index]);
+                SetSprite(index);
 
                 yield return secondWait;
             }
 
-            if (_isAutoDestroy)
+            if (IsAutoDestroy)
             {
                 Destroy(gameObject);
             }
         }
 
-        protected abstract void SetSprite(Sprite sprite);
+        protected abstract void SetSprite(int index);
     }
 }

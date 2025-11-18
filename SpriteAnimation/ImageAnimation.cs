@@ -1,13 +1,12 @@
-using UnityEngine;
 using UnityEngine.UI;
 
-namespace MyUtils.SpriteAnimation
+namespace MyUtils
 {
     public class ImageAnimation : AbstractAnimation<Image>
     {
-        protected override void SetSprite(Sprite sprite)
+        protected override void SetSprite(int index)
         {
-            Target.sprite = sprite;
+            Target.sprite = Sprites[index];
         }
     }
 }

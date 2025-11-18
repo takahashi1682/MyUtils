@@ -10,8 +10,8 @@ namespace MyUtils
     public class CurrentSceneBGMManager : AbstractSceneChangeDetector
     {
         [SerializeField] private AudioSetting _titleBGMResource;
-        [SerializeField] private AudioSetting _outGameBGMResource;
-        [SerializeField] private AudioSetting _inGameBGMResource;
+        [SerializeField] private AudioSetting _mapBGMResource;
+        [SerializeField] private AudioSetting _gameBGMResource;
 
         protected override void OnSceneEnter(Scene scene, LoadSceneMode mode)
         {
@@ -23,15 +23,19 @@ namespace MyUtils
                     BGMManager.HasPlay(_titleBGMResource);
                     break;
 
-                case ESceneName.MainMenu:
-                case ESceneName.Result:
-                    BGMManager.Stop(_inGameBGMResource.Resource);
-                    BGMManager.Stop(_titleBGMResource.Resource);
-                    BGMManager.HasPlay(_outGameBGMResource);
-                    break;
+                // case ESceneName.MainMenu:
+                // case ESceneName.Result:
+                //     BGMManager.Stop(_gameBGMResource.Resource);
+                //     BGMManager.Stop(_titleBGMResource.Resource);
+                //     BGMManager.HasPlay(_mapBGMResource);
+                //     break;
 
+                case ESceneName.Map:
+                    BGMManager.FadeInAsync(_mapBGMResource);
+                    break;
+                
                 case ESceneName.Game:
-                    BGMManager.FadeInAsync(_inGameBGMResource);
+                    BGMManager.FadeInAsync(_gameBGMResource);
                     break;
 
                 case ESceneName.Splash:
@@ -52,7 +56,7 @@ namespace MyUtils
                     break;
 
                 case ESceneName.Game:
-                    BGMManager.FadeOutAsync(_inGameBGMResource);
+                    BGMManager.FadeOutAsync(_gameBGMResource);
                     break;
             }
         }

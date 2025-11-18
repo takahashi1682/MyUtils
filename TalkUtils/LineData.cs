@@ -20,8 +20,8 @@ namespace MyUtils.TalkUtils
 
         // public int Id => _id;
         public string Key => _key;
-        public string Name => _name;
         public int Group => _group;
+        public string Name => _name;
         public string Lines => _lines;
         public EEmotions Emotion => _emotion;
         public AudioClip Voice => _voice;
@@ -32,7 +32,6 @@ namespace MyUtils.TalkUtils
             _key = parameter[0];
             _name = parameter[1];
             _lines = parameter[2];
-            _group = int.Parse(parameter[3]);
 
             // 感情の設定
             // _emotion = (EEmotions)Enum.Parse(typeof(EEmotions), parameter[4]);

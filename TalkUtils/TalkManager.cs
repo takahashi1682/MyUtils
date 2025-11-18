@@ -15,24 +15,29 @@ namespace MyUtils.TalkUtils
     public class TalkManager : AbstractSingletonBehaviour<TalkManager>
     {
         [Header("スキップ可能設定")]
-        [SerializeField] private bool _clickSkip = true;
+        [SerializeField] protected bool _clickSkip = true;
 
         [Header("自動スクロール設定")]
         public float OneCharInterval = 0.1f;
-        [SerializeField] private float _nextLineInterval = 0.8f;
-        [SerializeField] private bool _autoEnd = true;
+        [SerializeField] protected float _nextLineInterval = 0.8f;
+        [SerializeField] protected bool _autoEnd = true;
 
         [Header("表示設定")]
+        public Subject<Unit> TalkStart { get; } = new();
         public Subject<LineData> LineStart { get; } = new();
         public Subject<LineData> LineEnd { get; } = new();
-        private ButtonControl _leftMouseButton;
-        private CancellationToken _destroyCancellationToken;
+        public Subject<Unit> TalkEnd { get; } = new();
+        protected ButtonControl _leftMouseButton;
+        protected CancellationToken _destroyCancellationToken;
 
         protected override void Awake()
         {
             base.Awake();
+            TalkStart.AddTo(this);
             LineStart.AddTo(this);
             LineEnd.AddTo(this);
+            TalkEnd.AddTo(this);
+
             _destroyCancellationToken = destroyCancellationToken;
             _leftMouseButton = Mouse.current.leftButton;
         }
@@ -41,20 +46,24 @@ namespace MyUtils.TalkUtils
         /// 会話を処理する機能
         /// </summary>
         /// <param name="talk"></param>
-        public async UniTask TalkAsync(List<LineData> talk)
+        public virtual async UniTask TalkAsync(List<LineData> talk)
         {
+            TalkStart.OnNext(Unit.Default);
+
             foreach (var line in talk)
             {
                 await LineAsync(line);
                 await UniTask.Yield();
             }
+
+            TalkEnd.OnNext(Unit.Default);
         }
 
         /// <summary>
         ///  1セリフを処理する機能
         /// </summary>
         /// <param name="lineData"></param>
-        public async UniTask LineAsync(LineData lineData)
+        public virtual async UniTask LineAsync(LineData lineData)
         {
             LineStart.OnNext(lineData);
             if (_autoEnd)

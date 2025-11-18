@@ -11,18 +11,23 @@ namespace MyUtils.TalkUtils
     /// </summary>
     public class LineViewer : MonoBehaviour
     {
-        [SerializeField] private GameObject _talkWindow;
-        [SerializeField] private TMPro.TextMeshProUGUI _nameText;
-        [SerializeField] private TMPro.TextMeshProUGUI _linesText;
-        [SerializeField] private GameObject _nextIcon;
+        [SerializeField] protected GameObject _talkWindow;
+        [SerializeField] protected TMPro.TextMeshProUGUI _nameText;
+        [SerializeField] protected TMPro.TextMeshProUGUI _linesText;
+        [SerializeField] protected GameObject _nextIcon;
 
         [Header("表示設定")]
-        [SerializeField, Tooltip("1文字ずつ表示")] private bool _isIntervalEnabled;
+        [SerializeField, Tooltip("1文字ずつ表示")] protected bool _isIntervalEnabled;
 
-        private CancellationTokenSource _cancellationTokenSource;
+        protected CancellationTokenSource _cancellationTokenSource;
 
-        private void Awake()
+        protected virtual void Awake()
         {
+            TalkManager.Singleton.TalkStart.Subscribe(_ =>
+            {
+                _talkWindow.SetActive(true);
+            }).AddTo(this);
+
             // 会話開始時にセリフを表示
             TalkManager.Singleton.LineStart.Subscribe(lines =>
             {
@@ -36,6 +41,10 @@ namespace MyUtils.TalkUtils
             {
                 _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource = null;
+            }).AddTo(this);
+
+            TalkManager.Singleton.TalkEnd.Subscribe(_ =>
+            {
                 _talkWindow.SetActive(false);
             }).AddTo(this);
         }
@@ -44,7 +53,7 @@ namespace MyUtils.TalkUtils
         ///  セリフを表示
         /// </summary>
         /// <param name="lineData"></param>
-        private async UniTask DisplayLinesAsync(LineData lineData)
+        protected virtual async UniTask DisplayLinesAsync(LineData lineData)
         {
             if (_nameText != null)
             {
@@ -57,8 +66,6 @@ namespace MyUtils.TalkUtils
             {
                 _nextIcon.SetActive(false);
             }
-
-            _talkWindow.SetActive(true);
 
             if (_isIntervalEnabled)
             {
@@ -78,9 +85,9 @@ namespace MyUtils.TalkUtils
         }
 
         // 1文字ずつ表示
-        private async UniTask DisplayTextAsync(LineData lineData)
+        protected virtual async UniTask DisplayTextAsync(LineData lineData)
         {
-            for (var i = 0; i < lineData.Lines.Length; i++)
+            for (int i = 0; i < lineData.Lines.Length; i++)
             {
                 if (_cancellationTokenSource.Token.IsCancellationRequested) break;
 
@@ -105,7 +112,7 @@ namespace MyUtils.TalkUtils
             }
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             _cancellationTokenSource?.Cancel();
         }

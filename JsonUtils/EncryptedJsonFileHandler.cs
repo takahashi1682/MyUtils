@@ -25,7 +25,7 @@ namespace MyUtils.JsonUtils
         public static void SaveData(T outputData, string fileName, bool isEncrypt, string ivKeyFileName, string aesKey)
         {
             // JsonFileHandler にファイルパス生成を任せ、ローカル変数での再結合を避ける
-            string filePath = TextFileHandler.GetFilePath(fileName);
+            string filePath = PersistentDataTextFileHandler.GetFilePath(fileName);
 
             // 1. JSONにシリアライズ
             string json = JsonUtility.ToJson(outputData, false);
@@ -38,11 +38,11 @@ namespace MyUtils.JsonUtils
 
                 // 2. IVを専用ファイルに保存 (エラー処理はJsonFileHandler側で担当)
                 string ivPath = GetIVFilePath(ivKeyFileName);
-                TextFileHandler.SaveText(ivPath, AESEncryption.BytesToHex(iv));
+                PersistentDataTextFileHandler.SaveText(ivPath, AESEncryption.BytesToHex(iv));
             }
 
             // 3. データ本体を保存 (エラー処理はJsonFileHandler側で担当)
-            TextFileHandler.SaveText(filePath, dataToSave);
+            PersistentDataTextFileHandler.SaveText(filePath, dataToSave);
         }
 
         public static bool LoadData(out T loadData, T defaultValue, DataStoreSetting setting)
@@ -55,8 +55,8 @@ namespace MyUtils.JsonUtils
         public static bool LoadData(out T loadData, T defaultValue, string fileName, bool isEncrypt, string ivFileName,
             string aesKey)
         {
-            string filePath = TextFileHandler.GetFilePath(fileName);
-            string dataToLoad = TextFileHandler.LoadText(filePath);
+            string filePath = PersistentDataTextFileHandler.GetFilePath(fileName);
+            string dataToLoad = PersistentDataTextFileHandler.LoadText(filePath);
 
             if (dataToLoad == null)
             {
@@ -72,7 +72,7 @@ namespace MyUtils.JsonUtils
                 if (isEncrypt)
                 {
                     string ivPath = GetIVFilePath(ivFileName);
-                    string ivHex = TextFileHandler.LoadText(ivPath);
+                    string ivHex = PersistentDataTextFileHandler.LoadText(ivPath);
 
                     if (ivHex == null)
                     {

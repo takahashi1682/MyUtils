@@ -1,13 +1,13 @@
 using UnityEngine;
 
-namespace MyUtils.SpriteAnimation
+namespace MyUtils
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class SpriteAnimation : AbstractAnimation<SpriteRenderer>
     {
-        protected override void SetSprite(Sprite sprite)
+        protected override void SetSprite(int index)
         {
-            Target.sprite = sprite;
+            Target.sprite = Sprites[index];
         }
     }
 }
