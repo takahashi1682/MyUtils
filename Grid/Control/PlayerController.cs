@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using MyUtils.Grid.Map;
 using UnityEngine;
 using R3;
 #if UNITY_EDITOR
@@ -12,28 +12,35 @@ namespace MyUtils.Grid
     {
         public static bool IsActive { get; set; } = true;
 
-        [SerializeField] private GameObject _moveMarker;
+        [SerializeField] private UnitIdentity _unitIdentity;
+        [SerializeField] private ParticleSystem _moveMarker;
         [SerializeField] private UnitMover _unitMover;
         [SerializeField] private UnitAnimation _unitAnimation;
         [SerializeField] private RouteUtils _routeUtils;
         [SerializeField] private CursorController _cursorController;
-        [SerializeField] private UnitManager _unitManager;
 
         [SerializeField] private bool _isCostDisplay;
-        private Grid<UnitMarker> _units;
 
         private Area _currentMoveArea;
         private Vector2Int _lastDirectionalPos;
         private bool _isBestRoute;
 
-        private async void Start()
+        private void Start()
         {
-            _units = await _unitManager.OnLoadAsObservable.Task.AttachExternalCancellation(destroyCancellationToken);
+            UnitManager.Units.Add(_unitIdentity);
 
             _unitMover.IsMoving.Subscribe(x =>
             {
                 _unitAnimation.IsRun = x;
-                _moveMarker.SetActive(x);
+                if (x)
+                {
+                    _moveMarker.Simulate(_moveMarker.main.duration, true, true);
+                    _moveMarker.Play(true);
+                }
+                else
+                {
+                    _moveMarker.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                }
             }).AddTo(this);
 
             _unitMover.OnDirectionChangedAsObservable.Subscribe(x =>
@@ -49,22 +56,23 @@ namespace MyUtils.Grid
                     _unitAnimation.SetDirection(_lastDirectionalPos);
 
                     // 移動先にユニットが存在する場合は中断
-                    var target = pos + _lastDirectionalPos;
-                    if (_units[target] is var unit && unit != null)
+                    var targetPos = pos + _lastDirectionalPos;
+                    var targetUnit = UnitManager.GetPosUnit(targetPos);
+                    if (targetUnit != null)
                     {
                         // ユニットのイベントを発火
-                        if (unit.TryGetComponent(out UnitInteraction interaction))
+                        if (targetUnit.TryGetComponent(out UnitInteraction interaction))
                         {
                             IsActive = false;
 
                             var lastDirectionalPos = Vector2Int.down;
-                            if (unit.TryGetComponent(out UnitAnimation anim))
+                            if (targetUnit.TryGetComponent(out UnitAnimation anim))
                             {
                                 lastDirectionalPos = anim.LastDirectionalPos;
                                 anim.SetDirection(-_lastDirectionalPos);
                             }
-                            
-                            await interaction.OnInteract();
+
+                            await interaction.OnInteract(_unitIdentity);
 
                             if (anim != null)
                             {

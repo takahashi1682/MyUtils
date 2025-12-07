@@ -1,8 +1,8 @@
-using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Map
 {
     [Serializable]
     public class MapLoader : MonoBehaviour

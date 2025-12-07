@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MyUtils
@@ -9,10 +10,14 @@ namespace MyUtils
     public class ParticleSystemSimulator : AbstractTargetBehaviour<ParticleSystem>
     {
         public float SimulationTime = 10f;
-
-        protected override void Start()
+        
+        private void OnEnable()
         {
-            base.Start();
+            OnSimulate();
+        }
+
+        private void OnSimulate()
+        {
             Target.Simulate(SimulationTime);
             Target.Play();
         }

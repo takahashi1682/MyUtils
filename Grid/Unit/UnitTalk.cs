@@ -36,7 +36,7 @@ namespace MyUtils.Grid
             return OnTalk("talk_" + groupId);
         }
 
-        public async UniTask OnInteract()
+        public async UniTask OnInteract(UnitIdentity unit)
         {
             _onTalkBegin.OnNext(Unit.Default);
             await OnRandomTalk();

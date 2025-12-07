@@ -8,7 +8,7 @@ namespace MyUtils.Grid
         [SerializeField] protected UnitAnimation _unitAnimation;
         [SerializeField] protected Vector2Int _lookDirection = Vector2Int.up;
 
-        public UniTask OnInteract()
+        public UniTask OnInteract(UnitIdentity unit)
         {
             _unitAnimation.SetDirection(_lookDirection);
             return UniTask.CompletedTask;

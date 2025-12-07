@@ -10,18 +10,9 @@ namespace MyUtils.Grid
     [Serializable]
     public class Grid<T>
     {
-        [Serializable]
-        public class Row
-        {
-            public T[] values;
-
-            public Row(int columnCount)
-            {
-                values = new T[columnCount];
-            }
-        }
-
-        public Row[] rows;
+        public int RowCount;
+        public int ColumnCount;
+        public T[] Data;
 
         /// <summary>
         /// グリッドを初期化します。
@@ -30,11 +21,9 @@ namespace MyUtils.Grid
         /// <param name="columnCount">列数（Width/X）</param>
         public Grid(int rowCount, int columnCount)
         {
-            rows = new Row[rowCount];
-            for (int y = 0; y < rowCount; y++)
-            {
-                rows[y] = new Row(columnCount);
-            }
+            RowCount = rowCount;
+            ColumnCount = columnCount;
+            Data = new T[rowCount * columnCount];
         }
 
         /// <summary>
@@ -44,8 +33,8 @@ namespace MyUtils.Grid
         /// <param name="x">列インデックス (Width)</param>
         public T this[int y, int x]
         {
-            get => rows[y].values[x];
-            set => rows[y].values[x] = value;
+            get => Data[y * ColumnCount + x];
+            set => Data[y * ColumnCount + x] = value;
         }
 
         /// <summary>
@@ -59,21 +48,15 @@ namespace MyUtils.Grid
         }
 
         /// <summary>
-        /// グリッドの行数を取得します。
-        /// </summary>
-        public int RowCount => rows.Length;
-        
-        /// <summary>
         /// グリッドの列数（幅）を取得します。行がない場合は 0 を返します。
         /// </summary>
-        public int ColumnCount => rows.Length > 0 ? rows[0].values.Length : 0;
-        
+        // public int ColumnCount => rows.Length > 0 ? rows[0].values.Length : 0;
         public bool IsInside(Vector2Int pos)
         {
             return 0 <= pos.x && pos.x < ColumnCount &&
                    0 <= pos.y && pos.y < RowCount;
         }
-        
+
         // 互換性プロパティ
         public int Width => ColumnCount;
         public int Height => RowCount;

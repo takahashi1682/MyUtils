@@ -18,7 +18,7 @@ namespace MyUtils.TalkUtils
         [SerializeField] protected bool _clickSkip = true;
 
         [Header("自動スクロール設定")]
-        public float OneCharInterval = 0.1f;
+        public float OneCharInterval = 0.05f;
         [SerializeField] protected float _nextLineInterval = 0.8f;
         [SerializeField] protected bool _autoEnd = true;
 

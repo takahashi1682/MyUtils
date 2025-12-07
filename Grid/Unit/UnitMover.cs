@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 
@@ -8,7 +8,6 @@ namespace MyUtils.Grid
     public class UnitMover : MonoBehaviour
     {
         public float MoveSpeed = 5f;
-
         private const float ArrivalTolerance = 0.05f;
 
         private readonly Queue<Vector2Int> _moveRoute = new();
@@ -35,6 +34,16 @@ namespace MyUtils.Grid
 
             _startPoint = transform.position;
             NextPoint = _startPoint;
+        }
+
+        public void SetPosition(Vector2Int gridPos)
+        {
+            var target = new Vector3(gridPos.x, gridPos.y, 0);
+            transform.position = target;
+            _startPoint = target;
+            NextPoint = target;
+            _moveRoute.Clear();
+            _isMoving.Value = false;
         }
 
         /// <summary>

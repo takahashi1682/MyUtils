@@ -1,12 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Cysharp.Threading.Tasks;
-using R3;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Map
 {
     public sealed class Node
     {
@@ -55,14 +51,11 @@ namespace MyUtils.Grid
         };
 
         [SerializeField] private MapLoader _mapLoader;
-        [SerializeField] private UnitManager _unitManager;
         private Grid<int> _map;
-        private Grid<UnitMarker> _units;
 
         private async void Awake()
         {
             _map = await _mapLoader.OnLoadAsObservable.Task.AttachExternalCancellation(destroyCancellationToken);
-            _units = await _unitManager.OnLoadAsObservable.Task.AttachExternalCancellation(destroyCancellationToken);
         }
 
         /// <summary>
@@ -127,7 +120,7 @@ namespace MyUtils.Grid
                     }
 
                     // 他ユニットチェック
-                    var targetUnit = _units[nextPos];
+                    var targetUnit = UnitManager.GetPosUnit(nextPos);
                     if (targetUnit != null)
                     {
                         // 他ユニットがいるマスはUnitとしてマークしてスキップ（開始地点を除く）

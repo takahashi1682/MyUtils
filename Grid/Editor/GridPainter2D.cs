@@ -23,7 +23,8 @@ namespace MyUtils.Grid.Editor
         private Grid<int> _grid;
         private bool _painting;
         private bool _erasing;
-        private string _jsonFilePath = "Assets/map.json";
+        [SerializeField] private TextAsset _jsonAsset;
+        //  private string _jsonFilePath = "Assets/grid_data.json";
 
         [MenuItem("Tools/Grid Painter 2D")]
         public static void Open()
@@ -74,11 +75,29 @@ namespace MyUtils.Grid.Editor
             GUILayout.EndHorizontal();
             EditorGUILayout.Space(10);
             // --- JSONパス入力 ---
-            GUILayout.Label("JSON File Path");
-            _jsonFilePath = EditorGUILayout.TextField(_jsonFilePath);
-            
+
+            // --- JSONアセット指定（推奨：.json） ---
+            GUILayout.Label("JSON Asset (optional)");
+            var newAsset = (TextAsset)EditorGUILayout.ObjectField(_jsonAsset, typeof(TextAsset), false);
+
+            // if (newAsset != _jsonAsset)
+            // {
+            //     _jsonAsset = newAsset;
+            //
+            //     if (_jsonAsset != null)
+            //     {
+            //         // TextAsset のパスを自動で取得して _jsonFilePath にセット
+            //         string assetPath = AssetDatabase.GetAssetPath(_jsonAsset);
+            //
+            //         if (!string.IsNullOrEmpty(assetPath))
+            //         {
+            //             _jsonFilePath = assetPath;
+            //         }
+            //     }
+            // }
+
             EditorGUILayout.Space(10);
-            
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("保存"))
             {
@@ -103,7 +122,6 @@ namespace MyUtils.Grid.Editor
             if (_editHeight < 1) _editHeight = 1;
             if (_editCellSize <= 0f) _editCellSize = 1f;
 
-    
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("初期化"))
@@ -123,7 +141,6 @@ namespace MyUtils.Grid.Editor
 
             GUILayout.EndHorizontal();
 
-           
 
             EditorGUILayout.HelpBox("※ Width/Height を編集後は必ず [Update Grid Size] を押してください。\nSceneビューで左クリックで追加、右クリックで削除",
                 MessageType.Info);
@@ -200,17 +217,25 @@ namespace MyUtils.Grid.Editor
                 return;
             }
 
-            if (string.IsNullOrEmpty(_jsonFilePath))
+            if (_jsonAsset == null)
             {
-                Debug.LogWarning("JSONファイルパスが未設定です");
+                Debug.LogWarning("JSONアセットが未設定です");
                 return;
             }
 
+            // if (string.IsNullOrEmpty(_jsonAsset))
+            // {
+            //     Debug.LogWarning("JSONファイルパスが未設定です");
+            //     return;
+            // }
+
+            var jsonFilePath = AssetDatabase.GetAssetPath(_jsonAsset);
+            
             try
             {
-                File.WriteAllText(_jsonFilePath, json);
+                File.WriteAllText(jsonFilePath, json);
                 AssetDatabase.Refresh();
-                Debug.Log($"✅ JSON Exported: {_jsonFilePath}");
+                Debug.Log($"✅ JSON Exported: {jsonFilePath}");
             }
             catch (System.Exception ex)
             {
@@ -220,13 +245,14 @@ namespace MyUtils.Grid.Editor
 
         private void ImportFromJson()
         {
-            if (string.IsNullOrEmpty(_jsonFilePath) || !File.Exists(_jsonFilePath))
+            var jsonFilePath = AssetDatabase.GetAssetPath(_jsonAsset);
+            if (string.IsNullOrEmpty(jsonFilePath) || !File.Exists(jsonFilePath))
             {
                 Debug.LogWarning("JSONファイルパスが無効です");
                 return;
             }
 
-            string json = File.ReadAllText(_jsonFilePath);
+            string json = File.ReadAllText(jsonFilePath);
             try
             {
                 // JsonUtility.FromJson<Grid<int>> が使えない場合はラッパーを使う必要あり
@@ -245,7 +271,7 @@ namespace MyUtils.Grid.Editor
                 _editHeight = _height;
                 Repaint();
                 SceneView.RepaintAll();
-                Debug.Log($"✅ JSON Imported: {_jsonFilePath}");
+                Debug.Log($"✅ JSON Imported: {jsonFilePath}");
             }
             catch (System.Exception ex)
             {
