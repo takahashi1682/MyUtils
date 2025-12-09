@@ -5,7 +5,7 @@ using MyUtils.SceneChangeDetector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MyUtils
+namespace MyUtils._GameSetting
 {
     public class CurrentSceneBGMManager : AbstractSceneChangeDetector
     {
@@ -15,50 +15,50 @@ namespace MyUtils
 
         protected override void OnSceneEnter(Scene scene, LoadSceneMode mode)
         {
-            if (!Enum.TryParse(scene.name, out ESceneName sceneName)) return;
-            switch (sceneName)
-            {
-                case ESceneName.Title:
-                    BGMManager.StopAll();
-                    BGMManager.HasPlay(_titleBGMResource);
-                    break;
+            // if (!Enum.TryParse(scene.name, out SceneAsset sceneName)) return;
+            // switch (sceneName)
+            // {
+            //     case ESceneName.Title:
+            //         BGMManager.StopAll();
+            //         BGMManager.HasPlay(_titleBGMResource);
+            //         break;
 
-                // case ESceneName.MainMenu:
-                // case ESceneName.Result:
-                //     BGMManager.Stop(_gameBGMResource.Resource);
-                //     BGMManager.Stop(_titleBGMResource.Resource);
-                //     BGMManager.HasPlay(_mapBGMResource);
-                //     break;
+            // case ESceneName.MainMenu:
+            // case ESceneName.Result:
+            //     BGMManager.Stop(_gameBGMResource.Resource);
+            //     BGMManager.Stop(_titleBGMResource.Resource);
+            //     BGMManager.HasPlay(_mapBGMResource);
+            //     break;
 
-                case ESceneName.Map:
-                    BGMManager.FadeInAsync(_mapBGMResource);
-                    break;
-                
-                case ESceneName.Game:
-                    BGMManager.FadeInAsync(_gameBGMResource);
-                    break;
-
-                case ESceneName.Splash:
-                case ESceneName.Loading:
-                    BGMManager.StopAll();
-                    break;
-            }
+            // case ESceneName.Map:
+            //     BGMManager.FadeInAsync(_mapBGMResource);
+            //     break;
+            //
+            // case ESceneName.Game:
+            //     BGMManager.FadeInAsync(_gameBGMResource);
+            //     break;
+            //
+            // case ESceneName.Splash:
+            // case ESceneName.Loading:
+            //     BGMManager.StopAll();
+            //     break;
+            // }
         }
 
         protected override void OnSceneExit(Scene scene)
         {
-            if (!Enum.TryParse(scene.name, out ESceneName sceneName)) return;
-
-            switch (sceneName)
-            {
-                case ESceneName.Title:
-                    BGMManager.FadeOutAsync(_titleBGMResource);
-                    break;
-
-                case ESceneName.Game:
-                    BGMManager.FadeOutAsync(_gameBGMResource);
-                    break;
-            }
+            // if (!Enum.TryParse(scene.name, out ESceneName sceneName)) return;
+            //
+            // switch (sceneName)
+            // {
+            //     case ESceneName.Title:
+            //         BGMManager.FadeOutAsync(_titleBGMResource);
+            //         break;
+            //
+            //     case ESceneName.Game:
+            //         BGMManager.FadeOutAsync(_gameBGMResource);
+            //         break;
+            //  }
         }
     }
 }

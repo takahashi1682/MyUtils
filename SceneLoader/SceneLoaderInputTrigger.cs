@@ -1,6 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,7 +10,7 @@ namespace MyUtils.SceneLoader
     public class SceneLoaderInputTrigger : AbstractInputTrigger
     {
         [Header("Scene Loader Settings")]
-        [SerializeField] private ESceneName _nextScene;
+        [SerializeField] private SceneAsset _nextScene;
         [SerializeField] private LoadSceneMode _loadSceneMode = LoadSceneMode.Single;
         [SerializeField] private FadeSetting _fadeSetting;
 

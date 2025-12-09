@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +12,7 @@ namespace MyUtils.SceneLoader
         private static bool _isRunning;
 
         public static async UniTask LoadSceneAsync(
-            ESceneName nextScene,
+            SceneAsset nextScene,
             FadeSetting fadeSetting = null,
             LoadSceneMode mode = LoadSceneMode.Single,
             float minLoadingTime = 0f,
@@ -35,7 +36,7 @@ namespace MyUtils.SceneLoader
         }
 
         private static async UniTask LoadSceneInternalAsync(
-            ESceneName nextScene,
+            SceneAsset nextScene,
             FadeSetting fadeSetting,
             LoadSceneMode mode,
             float minLoadingTime,

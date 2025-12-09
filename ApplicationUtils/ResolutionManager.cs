@@ -12,7 +12,7 @@ namespace MyUtils.ApplicationUtils
         W540H360,
     }
 
-    public class ResolutionManager : AbstractSingletonBehaviour<ResolutionManager>
+    public static class ResolutionManager
     {
         public static readonly (int width, int height)[] ResolutionList =
         {

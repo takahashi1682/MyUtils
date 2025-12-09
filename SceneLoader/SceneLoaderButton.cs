@@ -1,6 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,12 +12,12 @@ namespace MyUtils.SceneLoader
     /// </summary>
     public class SceneLoaderButton : AbstractAwaitButton
     {
-        [SerializeField] private ESceneName _nextScene;
+        [SerializeField] private SceneAsset _nextScene;
         [SerializeField] private LoadSceneMode _loadSceneMode = LoadSceneMode.Single;
 
         [Header("ロード画面設定")]
         [SerializeField] private bool _isUseLoadingScene;
-        [SerializeField] private ESceneName _loadingScene = ESceneName.Loading;
+        [SerializeField] private SceneAsset _loadingScene;
         [SerializeField] private int _minLoadingTime = 3;
 
         [Header("フェード設定")]

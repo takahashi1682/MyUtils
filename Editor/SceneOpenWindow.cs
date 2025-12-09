@@ -15,7 +15,7 @@ namespace MyUtils.Editor
         }
 
         private string[] _allScenePaths; // 全シーンのパス
-        private string _filterText = "Assets/Projects/"; // 入力されたフィルター文字列
+        private string _filterText = "Assets/"; // 入力されたフィルター文字列
         private GUIStyle _buttonStyle;
         private GUIContent _sceneIconContent;
 
