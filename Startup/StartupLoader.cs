@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MyUtils.GameManager
+namespace MyUtils.Startup
 {
     /// <summary>
     /// ゲーム起動時にStartupシーンを読み込むクラス

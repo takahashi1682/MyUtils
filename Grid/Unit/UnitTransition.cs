@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Unit
 {
     public class UnitTransition : MonoBehaviour, IUnitEvent
     {

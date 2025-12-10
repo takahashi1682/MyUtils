@@ -49,7 +49,6 @@ namespace MyUtils.AudioManager.Core
             VolumeRate.Value = setting.Volume;
             AudioSource.resource = setting.Resource;
             AudioSource.loop = setting.IsLoop;
-            transform.position = setting.Position;
             _isPaused = true;
         }
 

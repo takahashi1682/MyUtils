@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Core
 {
     [System.Serializable]
     public class Area : Grid<Cell>

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Unit
 {
     public class EventIdentity : UnitIdentity
     {

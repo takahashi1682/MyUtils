@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using R3;
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Unit
 {
     public class UnitMover : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 using UnityEngine.UI;
 
-namespace MyUtils
+namespace MyUtils.SpriteAnimation
 {
     public class ImageAnimation : AbstractAnimation<Image>
     {

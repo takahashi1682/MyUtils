@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Unit
 {
     public static class UnitManager
     {

@@ -1,7 +1,7 @@
 using System;
 using MyUtils.ApplicationUtils;
 
-namespace MyUtils
+namespace MyUtils._GameSetting
 {
     [Serializable]
     public class PlayerSetting

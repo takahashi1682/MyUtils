@@ -31,21 +31,18 @@ namespace MyUtils.AudioManager.Core
 
         public static AudioPlayer Play(AudioSetting setting) => Core.Play(setting);
 
-        public static AudioPlayer Play(AudioResource resource, float volume = 1f, bool isLoop = false,
-            Vector3 pos = default)
-            => Play(new AudioSetting(resource, volume, isLoop, pos));
+        public static AudioPlayer Play(AudioResource resource, float volume = 1f, bool isLoop = false)
+            => Play(new AudioSetting(resource, volume, isLoop));
 
         public static AudioPlayer HasPlay(AudioSetting setting) => Core.HasPlay(setting);
 
-        public static AudioPlayer HasPlay(AudioResource resource, float volume = 1f, bool isLoop = false,
-            Vector3 pos = default)
-            => Core.HasPlay(new AudioSetting(resource, volume, isLoop, pos));
+        public static AudioPlayer HasPlay(AudioResource resource, float volume = 1f, bool isLoop = false)
+            => Core.HasPlay(new AudioSetting(resource, volume, isLoop));
 
         public static AudioPlayer Ready(AudioSetting setting) => Core.Ready(setting);
 
-        public static AudioPlayer Ready(AudioResource resource, float volume = 1f, bool isLoop = false,
-            Vector3 pos = default)
-            => Ready(new AudioSetting(resource, volume, isLoop, pos));
+        public static AudioPlayer Ready(AudioResource resource, float volume = 1f, bool isLoop = false)
+            => Ready(new AudioSetting(resource, volume, isLoop));
 
         public static void Stop(AudioResource resource) => Core.Stop(resource);
         public static void StopAll() => Core.StopAll();

@@ -1,3 +1,4 @@
+using MyUtils._GameSetting;
 using MyUtils.DataStore.Core;
 
 namespace MyUtils.DataStore

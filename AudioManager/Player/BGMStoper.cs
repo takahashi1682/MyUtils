@@ -2,7 +2,7 @@ using MyUtils.AudioManager.Manager;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace MyUtils.AudioManager
+namespace MyUtils.AudioManager.Player
 {
     public class BGMStoper : MonoBehaviour
     {

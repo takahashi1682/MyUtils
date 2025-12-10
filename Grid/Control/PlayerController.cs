@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using MyUtils.Grid.Core;
 using MyUtils.Grid.Map;
-using UnityEngine;
+using MyUtils.Grid.Unit;
 using R3;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
+using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Control
 {
     public class PlayerController : MonoBehaviour
     {

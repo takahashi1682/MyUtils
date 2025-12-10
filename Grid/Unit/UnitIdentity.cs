@@ -1,7 +1,6 @@
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Unit
 {
     public class UnitIdentity : MonoBehaviour
     {

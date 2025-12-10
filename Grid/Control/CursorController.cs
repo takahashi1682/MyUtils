@@ -1,11 +1,11 @@
-using System;
 using Cysharp.Threading.Tasks;
+using MyUtils.Grid.Core;
 using MyUtils.Grid.Map;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Control
 {
     public class CursorController : MonoBehaviour
     {

@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using TNRD;
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Unit
 {
     public interface IUnitEvent
     {

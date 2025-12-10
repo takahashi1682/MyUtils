@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace MyUtils
+namespace MyUtils.SpriteAnimation
 {
     public abstract class AbstractAnimation<T> : AbstractTargetBehaviour<T> where T : Component
     {

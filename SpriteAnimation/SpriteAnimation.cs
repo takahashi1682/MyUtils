@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils
+namespace MyUtils.SpriteAnimation
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class SpriteAnimation : AbstractAnimation<SpriteRenderer>

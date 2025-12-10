@@ -42,7 +42,7 @@ namespace MyUtils.SceneLoader
             float minLoadingTime,
             IProgress<float> progress)
         {
-            var sceneName = nextScene.ToString();
+            string sceneName = nextScene.name;
             var operation = SceneManager.LoadSceneAsync(sceneName, mode)
                             ?? throw new Exception($"シーンの読み込みに失敗しました: {sceneName}");
 

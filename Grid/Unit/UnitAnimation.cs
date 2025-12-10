@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Unit
 {
-    public class UnitAnimation : SpriteAnimation
+    public class UnitAnimation : SpriteAnimation.SpriteAnimation
     {
         [Tooltip("移動中でなくてもアニメーションを再生するかどうか")]
         public bool IsRun;

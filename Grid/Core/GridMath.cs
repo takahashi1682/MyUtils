@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Core
 {
     public static class GridMath
     {

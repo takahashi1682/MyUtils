@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using MyUtils.Grid.Core;
+using MyUtils.Grid.Unit;
 using UnityEngine;
 
 namespace MyUtils.Grid.Map

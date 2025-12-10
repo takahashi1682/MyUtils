@@ -2,26 +2,25 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace MyUtils.AudioManager
+namespace MyUtils.AudioManager.Core
 {
     [Serializable]
     public class AudioSetting
     {
-        public AudioResource Resource;
+        [SerializeField] // 初期値を反映するために必要
         public float Volume = 1f;
+        public AudioResource Resource;
         public bool IsLoop;
-        public Vector3 Position;
 
         public AudioSetting()
         {
         }
 
-        public AudioSetting(AudioResource resource, float volume = 1f, bool isLoop = false, Vector3 position = default)
+        public AudioSetting(AudioResource resource, float volume = 1f, bool isLoop = false)
         {
             Resource = resource;
             Volume = volume;
             IsLoop = isLoop;
-            Position = position;
         }
     }
 }

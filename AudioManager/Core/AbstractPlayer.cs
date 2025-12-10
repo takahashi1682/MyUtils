@@ -6,7 +6,7 @@ namespace MyUtils.AudioManager.Core
     {
         public AudioSetting Setting;
         public bool IsPlayOnStart = true;
-        public bool IsPlayOnEnable = false;
+        public bool IsPlayOnEnable;
         public bool IsStopOnDestroy = true;
 
         protected AudioPlayer _currentPlayer;
