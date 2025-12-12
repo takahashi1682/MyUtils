@@ -1,5 +1,6 @@
 using System;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using MyUtils.AudioManager.Core;
 using R3;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -11,12 +12,14 @@ namespace MyUtils.AudioMixerManager
     /// </summary>
     public class AudioMixerManager : AbstractSingletonBehaviour<AudioMixerManager>
     {
+        public readonly UniTaskCompletionSource<AudioVolumeRates> OnLoadAsObservable = new();
+
         [field: SerializeField] public AudioMixer AudioMixer { get; private set; }
         [SerializeField] private SerializableReactiveProperty<float> _masterVolumeRate = new(1);
         [SerializeField] private SerializableReactiveProperty<float> _bgmVolumeRate = new(1);
         [SerializeField] private SerializableReactiveProperty<float> _seVolumeRate = new(1);
         [SerializeField] private SerializableReactiveProperty<float> _voiceVolumeRate = new(1);
-        public readonly Dictionary<EAudioMixerParam, ReactiveProperty<float>> VolumeRates = new();
+        public readonly AudioVolumeRates VolumeRates = new();
 
         protected override void Awake()
         {
@@ -31,6 +34,8 @@ namespace MyUtils.AudioMixerManager
             VolumeRates[EAudioMixerParam.BGM] = _bgmVolumeRate;
             VolumeRates[EAudioMixerParam.SE] = _seVolumeRate;
             VolumeRates[EAudioMixerParam.Voice] = _voiceVolumeRate;
+
+            OnLoadAsObservable.TrySetResult(VolumeRates);
         }
 
         private void Start()
@@ -57,7 +62,7 @@ namespace MyUtils.AudioMixerManager
         /// <returns></returns>
         public static float ToDecibelRate(float rate)
         {
-            var adjustedRate = (float)(1 - Math.Pow(1 - rate, 2));
+            float adjustedRate = (float)(1 - Math.Pow(1 - rate, 2));
             return Mathf.Lerp(-80, 0, adjustedRate);
         }
     }
