@@ -8,6 +8,7 @@ namespace MyUtils.UISelectable
     /// </summary>
     public class SelectMover : AbstractTargetSelectable
     {
+        [SerializeField] private RectTransform _moveTarget;
         [SerializeField] private Vector3 _selectedPosition = new(-30, 0);
         [SerializeField] private float _duration = 0.1f;
 
@@ -19,7 +20,7 @@ namespace MyUtils.UISelectable
         {
             base.Start();
 
-            _defaultPosition = Target.transform.localPosition;
+            _defaultPosition = _moveTarget.transform.localPosition;
 
             SetupMoveAnimation();
         }
@@ -40,13 +41,15 @@ namespace MyUtils.UISelectable
 
         private void SetupMoveAnimation()
         {
-            _startMoveAnimation = Target.transform.DOLocalMove(_selectedPosition, _duration).SetRelative();
-            _startMoveAnimation.SetAutoKill(false);
-            _startMoveAnimation.SetLink(gameObject);
-
-            _endMoveAnimation = Target.transform.DOLocalMove(_defaultPosition, _duration);
-            _endMoveAnimation.SetAutoKill(false);
-            _endMoveAnimation.SetLink(gameObject);
+            // _startMoveAnimation = _moveTarget.transform.DOLocalMove(_selectedPosition, _duration);
+            // _startMoveAnimation.SetAutoKill(false);
+            // _startMoveAnimation.SetLink(gameObject);
+            // _startMoveAnimation.Pause();
+            //
+            // _endMoveAnimation = _moveTarget.transform.DOLocalMove(_defaultPosition, _duration);
+            // _endMoveAnimation.SetAutoKill(false);
+            // _endMoveAnimation.SetLink(gameObject);
+            // _endMoveAnimation.Pause();
         }
     }
 }

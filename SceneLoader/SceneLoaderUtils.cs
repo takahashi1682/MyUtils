@@ -1,7 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +11,7 @@ namespace MyUtils.SceneLoader
         private static bool _isRunning;
 
         public static async UniTask LoadSceneAsync(
-            SceneAsset nextScene,
+            string nextScene,
             FadeSetting fadeSetting = null,
             LoadSceneMode mode = LoadSceneMode.Single,
             float minLoadingTime = 0f,
@@ -36,18 +35,22 @@ namespace MyUtils.SceneLoader
         }
 
         private static async UniTask LoadSceneInternalAsync(
-            SceneAsset nextScene,
+            string nextScene,
             FadeSetting fadeSetting,
             LoadSceneMode mode,
             float minLoadingTime,
             IProgress<float> progress)
         {
-            string sceneName = nextScene.name;
-            var operation = SceneManager.LoadSceneAsync(sceneName, mode)
-                            ?? throw new Exception($"シーンの読み込みに失敗しました: {sceneName}");
+            var operation = SceneManager.LoadSceneAsync(nextScene, mode);
+
+            if (operation == null)
+            {
+                throw new Exception($"SceneLoader: シーン '{nextScene}' の読み込みに失敗しました。シーン名が正しいか、ビルド設定に含まれているか確認してください。");
+            }
 
             operation.allowSceneActivation = false;
-            var startTime = Time.realtimeSinceStartup;
+
+            float startTime = Time.realtimeSinceStartup;
 
             // 0.9 までの読み込みを待機
             while (operation.progress < 0.9f)
@@ -59,8 +62,8 @@ namespace MyUtils.SceneLoader
             progress?.Report(0.9f);
 
             // 最小ロード時間を保証
-            var elapsed = Time.realtimeSinceStartup - startTime;
-            var remaining = Mathf.Max(0, minLoadingTime - elapsed);
+            float elapsed = Time.realtimeSinceStartup - startTime;
+            float remaining = Mathf.Max(0, minLoadingTime - elapsed);
             await UniTask.Delay(TimeSpan.FromSeconds(remaining), DelayType.Realtime);
 
             // フェードアウト
@@ -75,7 +78,7 @@ namespace MyUtils.SceneLoader
             // Additive読み込み時は明示的にアクティブ化
             if (mode == LoadSceneMode.Additive)
             {
-                var loadedScene = SceneManager.GetSceneByName(sceneName);
+                var loadedScene = SceneManager.GetSceneByName(nextScene);
                 if (loadedScene.IsValid() && loadedScene.isLoaded)
                     SceneManager.SetActiveScene(loadedScene);
             }

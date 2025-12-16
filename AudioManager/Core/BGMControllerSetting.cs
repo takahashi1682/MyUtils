@@ -1,5 +1,5 @@
 using System;
-using UnityEditor;
+using MyUtils.SceneLoader;
 using UnityEngine;
 
 namespace MyUtils.AudioManager.Core
@@ -16,7 +16,7 @@ namespace MyUtils.AudioManager.Core
     [Serializable]
     public class PlayBGMSetting
     {
-        public SceneAsset SceneAsset;
+        public SceneReference SceneName;
         public AudioPlayMode AudioPlayMode;
         public AudioSetting AudioSetting;
     }

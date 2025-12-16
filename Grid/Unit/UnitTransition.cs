@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
-using UnityEditor;
+using MyUtils.SceneLoader;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,7 +8,7 @@ namespace MyUtils.Grid.Unit
 {
     public class UnitTransition : MonoBehaviour, IUnitEvent
     {
-        [SerializeField] private SceneAsset _nextScene;
+        [SerializeField] private SceneReference _nextScene;
         [SerializeField] private Vector2Int _nextStartPoint;
         [SerializeField] private FadeSetting _fadeSetting;
 
@@ -18,7 +18,7 @@ namespace MyUtils.Grid.Unit
 
             await FadeScreenManager.BeginFadeOut(_fadeSetting);
 
-            await SceneManager.LoadSceneAsync(_nextScene.name);
+            await SceneManager.LoadSceneAsync(_nextScene.ToString());
 
             move.SetPosition(Vector2Int.RoundToInt(_nextStartPoint));
 

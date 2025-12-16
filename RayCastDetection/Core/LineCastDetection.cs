@@ -20,7 +20,9 @@ namespace MyUtils.RayCastDetection.Core
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
 
         [Header("Debug")]
+#if UNITY_EDITOR
         [SerializeField] private bool _isShowGizmos = true;
+#endif
         [SerializeField] private Vector3 _labelOffset = Vector3.right;
 
         private readonly ReactiveProperty<RaycastHit> _hitObject = new();

@@ -1,3 +1,4 @@
+using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,19 +12,38 @@ namespace MyUtils.UISelectable
     public abstract class AbstractTargetSelectable : AbstractTargetBehaviour<Selectable>,
         ISubmitHandler,
         IPointerClickHandler,
-        IPointerEnterHandler,
-        IPointerExitHandler,
-        ISelectHandler,
-        IDeselectHandler
+        IPointerEnterHandler, IPointerExitHandler,
+        ISelectHandler, IDeselectHandler
     {
-        [SerializeField] protected bool _isFullyExited;
-        
+        [SerializeField] protected bool _isFullyExited = true;
+        private readonly ReactiveProperty<bool> _isSelected = new(false);
+
+        protected override void Start()
+        {
+            base.Start();
+            _isSelected.AddTo(this);
+
+            _isSelected
+                .Skip(1) // 初期値の変更を無視
+                .Subscribe(isSelected =>
+                {
+                    if (isSelected)
+                    {
+                        SelectedAction();
+                    }
+                    else
+                    {
+                        DeselectAction();
+                    }
+                }).AddTo(this);
+        }
+
         /// <summary>
         /// このUIが非表示になった時に呼ばれる
         /// </summary>
         protected void OnDisable()
         {
-            DeselectAction();
+            _isSelected.Value = false;
         }
 
         /// <summary>
@@ -32,7 +52,7 @@ namespace MyUtils.UISelectable
         /// <param name="eventData"></param>
         public void OnDeselect(BaseEventData eventData)
         {
-            DeselectAction();
+            _isSelected.Value = false;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -50,7 +70,7 @@ namespace MyUtils.UISelectable
         {
             if (!Target.IsInteractable()) return;
 
-            SelectedAction();
+            _isSelected.Value = true;
         }
 
         /// <summary>
@@ -59,10 +79,13 @@ namespace MyUtils.UISelectable
         /// <param name="eventData"></param>
         public void OnPointerExit(PointerEventData eventData)
         {
-            // 親から子オブジェクトにカーソルが移動した時は何もしない
-            if (_isFullyExited && !eventData.fullyExited) return;
-
-            DeselectAction();
+            Debug.Log(eventData.pointerCurrentRaycast.gameObject);
+            // カーソルが完全に出た場合のみ選択解除
+            if (_isFullyExited && eventData.fullyExited)
+            {
+                Debug.Log(2);
+                _isSelected.Value = false;
+            }
         }
 
         /// <summary>
@@ -73,7 +96,7 @@ namespace MyUtils.UISelectable
         {
             if (!Target.IsInteractable()) return;
 
-            SelectedAction();
+            _isSelected.Value = true;
         }
 
         public void OnSubmit(BaseEventData eventData)

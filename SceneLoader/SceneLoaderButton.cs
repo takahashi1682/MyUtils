@@ -1,7 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,13 +11,13 @@ namespace MyUtils.SceneLoader
     /// </summary>
     public class SceneLoaderButton : AbstractAwaitButton
     {
-        [SerializeField] private SceneAsset _nextScene;
+        [SerializeField] private SceneReference _nextScene;
         [SerializeField] private LoadSceneMode _loadSceneMode = LoadSceneMode.Single;
 
         [Header("ロード画面設定")]
         [SerializeField] private bool _isUseLoadingScene;
-        [SerializeField] private SceneAsset _loadingScene;
-        [SerializeField] private int _minLoadingTime = 3;
+        [SerializeField] private SceneReference _loadingScene;
+        [SerializeField] private int _minLoadingTime = 2;
 
         [Header("フェード設定")]
         [SerializeField] private bool _isFade = true;
@@ -26,19 +25,20 @@ namespace MyUtils.SceneLoader
 
         protected override async UniTask OnClick(CancellationToken cts)
         {
+            string nextScene = _nextScene.SceneName;
             var fadeSetting = _isFade ? _fadeSetting : null;
             if (_isUseLoadingScene)
             {
                 // ロード画面の読み込み
-                await SceneLoaderUtils.LoadSceneAsync(_loadingScene, fadeSetting);
+                await SceneLoaderUtils.LoadSceneAsync(_loadingScene.SceneName, fadeSetting);
 
                 // 目的のシーンの読み込み
-                await SceneLoaderUtils.LoadSceneAsync(_nextScene, fadeSetting,
+                await SceneLoaderUtils.LoadSceneAsync(nextScene, fadeSetting,
                     minLoadingTime: _minLoadingTime);
             }
             else
             {
-                await SceneLoaderUtils.LoadSceneAsync(_nextScene, fadeSetting, _loadSceneMode);
+                await SceneLoaderUtils.LoadSceneAsync(nextScene, fadeSetting, _loadSceneMode);
             }
         }
     }

@@ -32,9 +32,9 @@ namespace MyUtils.AudioManager
 
             foreach (var setting in settings)
             {
-                if (setting.SceneAsset == null) continue;
+                if (setting.SceneName == null) continue;
 
-                if (setting.SceneAsset.name == sceneName)
+                if (setting.SceneName.ToString() == sceneName)
                 {
                     ExecuteBGMAction(setting);
                 }
