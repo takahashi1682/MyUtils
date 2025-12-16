@@ -15,7 +15,6 @@ namespace MyUtils.UISelectable
         IPointerEnterHandler, IPointerExitHandler,
         ISelectHandler, IDeselectHandler
     {
-        [SerializeField] protected bool _isFullyExited = true;
         private readonly ReactiveProperty<bool> _isSelected = new(false);
 
         protected override void Start()
@@ -79,13 +78,7 @@ namespace MyUtils.UISelectable
         /// <param name="eventData"></param>
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log(eventData.pointerCurrentRaycast.gameObject);
-            // カーソルが完全に出た場合のみ選択解除
-            if (_isFullyExited && eventData.fullyExited)
-            {
-                Debug.Log(2);
-                _isSelected.Value = false;
-            }
+            _isSelected.Value = false;
         }
 
         /// <summary>

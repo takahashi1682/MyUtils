@@ -41,15 +41,15 @@ namespace MyUtils.UISelectable
 
         private void SetupMoveAnimation()
         {
-            // _startMoveAnimation = _moveTarget.transform.DOLocalMove(_selectedPosition, _duration);
-            // _startMoveAnimation.SetAutoKill(false);
-            // _startMoveAnimation.SetLink(gameObject);
-            // _startMoveAnimation.Pause();
-            //
-            // _endMoveAnimation = _moveTarget.transform.DOLocalMove(_defaultPosition, _duration);
-            // _endMoveAnimation.SetAutoKill(false);
-            // _endMoveAnimation.SetLink(gameObject);
-            // _endMoveAnimation.Pause();
+            _startMoveAnimation = _moveTarget.transform.DOLocalMove(_selectedPosition, _duration);
+            _startMoveAnimation.SetAutoKill(false);
+            _startMoveAnimation.SetLink(gameObject);
+            _startMoveAnimation.Pause();
+
+            _endMoveAnimation = _moveTarget.transform.DOLocalMove(_defaultPosition, _duration);
+            _endMoveAnimation.SetAutoKill(false);
+            _endMoveAnimation.SetLink(gameObject);
+            _endMoveAnimation.Pause();
         }
     }
 }
