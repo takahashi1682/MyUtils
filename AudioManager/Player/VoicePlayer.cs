@@ -8,15 +8,7 @@ namespace MyUtils.AudioManager.Player
     /// </summary>
     public class VoicePlayer : AbstractPlayer
     {
-        private AudioPlayer _audioPlayer;
-        protected override void Play() => _audioPlayer = VoiceManager.Play(Setting);
-
-        protected override void Stop()
-        {
-            if (_audioPlayer)
-            {
-                _audioPlayer.Stop();
-            }
-        }
+        public AudioSetting Setting;
+        public override void Play() => _audioPlayer = VoiceManager.Play(Setting, transform);
     }
 }

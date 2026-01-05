@@ -1,16 +1,35 @@
+using MyUtils.AudioManager.Core;
 using UnityEngine;
 
-namespace MyUtils.AudioManager.Core
+namespace MyUtils.AudioManager.Player
 {
     public abstract class AbstractPlayer : MonoBehaviour
     {
-        public AudioSetting Setting;
         public bool IsPlayOnAwake = true;
         public bool IsPlayOnEnable;
         public bool IsStopOnDestroy = true;
 
-        protected abstract void Play();
-        protected abstract void Stop();
+        protected AudioPlayer _audioPlayer;
+
+        public abstract void Play();
+
+        public virtual void Pause()
+        {
+            if (_audioPlayer == null) return;
+            _audioPlayer.Pause();
+        }
+
+        public virtual void UnPause()
+        {
+            if (_audioPlayer == null) return;
+            _audioPlayer.UnPause();
+        }
+
+        public virtual void Stop()
+        {
+            if (_audioPlayer == null) return;
+            _audioPlayer.Stop();
+        }
 
         protected virtual void Start()
         {

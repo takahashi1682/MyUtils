@@ -6,18 +6,9 @@ namespace MyUtils.AudioManager.Player
     /// <summary>
     /// SE再生機能
     /// </summary>
-    // ReSharper disable once InconsistentNaming
     public class SEPlayer : AbstractPlayer
     {
-        private AudioPlayer _audioPlayer;
-        protected override void Play() => _audioPlayer = SEManager.Play(Setting);
-
-        protected override void Stop()
-        {
-            if (_audioPlayer)
-            {
-                _audioPlayer.Stop();
-            }
-        }
+        public AudioSetting Setting;
+        public override void Play() => _audioPlayer = SEManager.Play(Setting, transform);
     }
 }

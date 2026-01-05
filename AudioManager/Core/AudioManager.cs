@@ -35,38 +35,38 @@ namespace MyUtils.AudioManager.Core
 
         ~AudioManager() => _cts?.Cancel();
 
-        public AudioPlayer Ready(AudioSetting setting)
+        public AudioPlayer Ready(AudioSetting setting, Transform trackingTarget)
         {
             if (!TryGetAvailablePlayer(out var player)) return null;
-            player.Ready(setting);
+            player.Ready(setting, trackingTarget);
             return player;
         }
 
-        public AudioPlayer Play(AudioSetting setting)
+        public AudioPlayer Play(AudioSetting setting, Transform trackingTarget)
         {
-            var player = Ready(setting);
+            var player = Ready(setting, trackingTarget);
             player?.Play();
             return player;
         }
 
-        public async void PlayFadeAsync(AudioSetting setting, float duration = 1)
+        public async void PlayFadeAsync(AudioSetting setting, float duration = 1, Transform trackingTarget = null)
         {
-            var player = Play(setting);
+            var player = Play(setting, trackingTarget);
             if (player == null) return;
             await FadeInAsync(player, duration);
         }
 
         public bool HasPlay(AudioSetting setting)
-            => GetPlayingAudioPlayer(setting.Resource);
-        
-        public AudioPlayer GetPlayingAudioPlayer(AudioResource resource)
+            => GetPlayingAudioPlayer(setting.Clip);
+
+        public AudioPlayer GetPlayingAudioPlayer(AudioClip clip)
             => _audioPlayers.FirstOrDefault(p =>
                 p.IsInUse &&
-                p.AudioSource?.clip?.name == resource.name);
+                p.AudioSource?.clip?.name == clip.name);
 
-        public void Stop(AudioResource resource)
+        public void Stop(AudioClip clip)
             => _audioPlayers.FirstOrDefault(p =>
-                p.AudioSource?.clip?.name == resource.name)?.Stop();
+                p.AudioSource?.clip?.name == clip.name)?.Stop();
 
         public void StopAll()
             => _audioPlayers.ForEach(p => p.Stop());
@@ -98,9 +98,9 @@ namespace MyUtils.AudioManager.Core
             return _cts.Token;
         }
 
-        public async UniTask FadeOutAsync(AudioResource resource, float duration = 1)
+        public async UniTask FadeOutAsync(AudioClip clip, float duration = 1)
         {
-            var player = GetPlayingAudioPlayer(resource);
+            var player = GetPlayingAudioPlayer(clip);
             if (player == null) return;
             await FadeOutAsync(player, duration);
             player.Stop();
@@ -112,9 +112,9 @@ namespace MyUtils.AudioManager.Core
                 token: player.Cts.Token);
         }
 
-        public async UniTask FadeInAsync(AudioSetting setting, float duration = 1)
+        public async UniTask FadeInAsync(AudioSetting setting, float duration = 1, Transform trackingTarget = null)
         {
-            var player = Play(setting);
+            var player = Play(setting, trackingTarget);
             if (player == null) return;
             await FadeInAsync(player, duration);
         }
@@ -123,12 +123,13 @@ namespace MyUtils.AudioManager.Core
             => await UniTaskUtils.LerpAsync(0, player.VolumeRate.CurrentValue, duration,
                 x => player.VolumeRate.Value = x, token: player.Cts.Token);
 
-        public async UniTask CrossFadeAsync(AudioPlayer prev, AudioSetting setting, float duration)
+        public async UniTask CrossFadeAsync(AudioPlayer prev, AudioSetting setting, float duration,
+            Transform trackingTarget)
         {
             await UniTaskUtils.LerpAsync(prev.VolumeRate.CurrentValue, 0, duration, x => prev.VolumeRate.Value = x,
                 token: prev.Cts.Token);
             prev.Stop();
-            var player = Play(setting);
+            var player = Play(setting, trackingTarget);
             await UniTaskUtils.LerpAsync(0, setting.Volume, duration, x => player.VolumeRate.Value = x,
                 token: player.Cts.Token);
         }

@@ -13,7 +13,7 @@ namespace MyUtils.UISelectable.UISliderChange
     [RequireComponent(typeof(Slider))]
     public class UISliderChangeSoundPlayer : MonoBehaviour
     {
-        public AudioResource Resource;
+        public AudioClip Clip;
         public float Interval = 0.3f;
 
         private void Start()
@@ -24,7 +24,7 @@ namespace MyUtils.UISelectable.UISliderChange
                     .ThrottleFirstLast(
                         TimeSpan.FromSeconds(Interval),
                         UnityTimeProvider.TimeUpdateRealtime)
-                    .Subscribe(_ => SEManager.Play(Resource))
+                    .Subscribe(_ => SEManager.Play(Clip))
                     .AddTo(this);
             }
         }

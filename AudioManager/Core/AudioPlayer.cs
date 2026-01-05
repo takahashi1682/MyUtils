@@ -11,9 +11,11 @@ namespace MyUtils.AudioManager.Core
     {
         public AudioSource AudioSource { get; private set; }
         public ReactiveProperty<float> VolumeRate { get; } = new(1);
+        public CancellationTokenSource Cts { get; private set; } = new();
+
+        private Transform _trackingTarget;
         private AudioManager _manager;
         private bool _isPaused;
-        public CancellationTokenSource Cts { get; private set; } = new();
 
         //　使用中かどうか
         public bool IsInUse => AudioSource.isPlaying || _isPaused;
@@ -36,7 +38,8 @@ namespace MyUtils.AudioManager.Core
         /// 再生準備
         /// </summary>
         /// <param name="setting"></param>
-        public void Ready(AudioSetting setting)
+        /// <param name="trackingTarget"></param>
+        public void Ready(AudioSetting setting, Transform trackingTarget)
         {
             if (Cts != null)
             {
@@ -45,20 +48,41 @@ namespace MyUtils.AudioManager.Core
             }
 
             Cts = new CancellationTokenSource();
-            
-            VolumeRate.Value = setting.Volume;
-            AudioSource.resource = setting.Resource;
-            AudioSource.loop = setting.IsLoop;
+
+            SetAudioSetting(setting);
+            _trackingTarget = trackingTarget;
             _isPaused = true;
+        }
+
+        private void SetAudioSetting(AudioSetting setting)
+        {
+            AudioSource.resource = setting.Clip;
+            AudioSource.mute = setting.Mute;
+            AudioSource.bypassEffects = setting.BypassEffects;
+            AudioSource.bypassListenerEffects = setting.BypassListenerEffects;
+            AudioSource.bypassReverbZones = setting.BypassReverbZones;
+            AudioSource.loop = setting.IsLoop;
+            VolumeRate.Value = setting.Volume;
+            AudioSource.priority = setting.Priority;
+            AudioSource.pitch = setting.Pitch;
+            AudioSource.panStereo = setting.PanStereo;
+            AudioSource.spatialBlend = setting.SpatialBlendType == SpatialBlendType._2D ? 0f : 1f;
+            AudioSource.reverbZoneMix = setting.ReverbZoneMix;
+            AudioSource.dopplerLevel = setting.DopplerLevel;
+            AudioSource.spread = setting.Spread;
+            AudioSource.rolloffMode = setting.RolloffMode;
+            AudioSource.minDistance = setting.MinDistance;
+            AudioSource.maxDistance = setting.MaxDistance;
         }
 
         /// <summary>
         /// 再生
         /// </summary>
         /// <param name="setting"></param>
-        public void Play(AudioSetting setting)
+        /// <param name="trackingTarget"></param>
+        public void Play(AudioSetting setting, Transform trackingTarget)
         {
-            Ready(setting);
+            Ready(setting, trackingTarget);
             Play();
         }
 
@@ -96,12 +120,20 @@ namespace MyUtils.AudioManager.Core
         {
             Cts?.Cancel();
             AudioSource.Stop();
+            _trackingTarget = null;
             AudioSource.clip = null;
-            VolumeRate.Value = 1f;
             _isPaused = false;
         }
 
         private void UpdateVolume()
             => AudioSource.volume = VolumeRate.Value * _manager.VolumeRate.CurrentValue;
+
+        private void FixedUpdate()
+        {
+            if (_trackingTarget == null) return;
+            if (!AudioSource.isPlaying) return;
+
+            transform.position = _trackingTarget.position;
+        }
     }
 }

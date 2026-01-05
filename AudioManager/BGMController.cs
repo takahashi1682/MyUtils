@@ -57,7 +57,7 @@ namespace MyUtils.AudioManager
                     break;
 
                 case AudioPlayMode.Stop:
-                    BGMManager.Stop(setting.AudioSetting.Resource);
+                    BGMManager.Stop(setting.AudioSetting.Clip);
                     break;
 
                 case AudioPlayMode.FadeIn:
@@ -65,7 +65,7 @@ namespace MyUtils.AudioManager
                     break;
 
                 case AudioPlayMode.FadeOut:
-                    BGMManager.FadeOutAsync(setting.AudioSetting.Resource);
+                    BGMManager.FadeOutAsync(setting.AudioSetting.Clip);
                     break;
             }
         }

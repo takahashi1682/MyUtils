@@ -22,7 +22,7 @@ namespace MyUtils.AudioManager.Sample
             await UniTask.Delay(TimeSpan.FromSeconds(5));
 
             // BGMの停止方法①
-            BGMManager.Stop(_bgm1.Resource); // Resource名で停止
+            BGMManager.Stop(_bgm1.Clip); // Resource名で停止
 
             // BGMの停止方法②
             bgmPlayer.Stop();　// 再生中のプレイヤーから停止
