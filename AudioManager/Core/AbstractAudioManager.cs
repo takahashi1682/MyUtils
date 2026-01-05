@@ -13,18 +13,24 @@ namespace MyUtils.AudioManager.Core
         public AudioMixerGroup MixerGroup;
 
         protected static AudioManager Core;
-        protected static T Singleton;
 
         protected virtual void Awake()
         {
-            Singleton = (T)this;
+            // 同じ型(T)のCoreが既に存在するかチェック
+            if (Core != null)
+            {
+                Debug.LogWarning($"[AudioManager] {typeof(T).Name} のインスタンスが既に存在するため、新しい方を破棄します。");
+                Destroy(gameObject);
+                return;
+            }
+
+            // この型(T)専用のCoreを生成
             Core = new AudioManager(this, VolumeRate, MixerGroup, MaxAudioStreams);
         }
 
         protected virtual void OnDestroy()
         {
             Core = null;
-            Singleton = null;
         }
 
         // ==== Wrappers ====
@@ -34,9 +40,9 @@ namespace MyUtils.AudioManager.Core
         public static AudioPlayer Play(AudioResource resource, float volume = 1f, bool isLoop = false)
             => Play(new AudioSetting(resource, volume, isLoop));
 
-        public static AudioPlayer HasPlay(AudioSetting setting) => Core.HasPlay(setting);
+        public static bool HasPlay(AudioSetting setting) => Core.HasPlay(setting);
 
-        public static AudioPlayer HasPlay(AudioResource resource, float volume = 1f, bool isLoop = false)
+        public static bool HasPlay(AudioResource resource, float volume = 1f, bool isLoop = false)
             => Core.HasPlay(new AudioSetting(resource, volume, isLoop));
 
         public static AudioPlayer Ready(AudioSetting setting) => Core.Ready(setting);
