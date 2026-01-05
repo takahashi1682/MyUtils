@@ -15,9 +15,10 @@ namespace MyUtils.Editor
         }
 
         private string[] _allScenePaths; // 全シーンのパス
-        private string _filterText = "Assets/"; // 入力されたフィルター文字列
+        private string _filterText = "Assets/Projects/"; // 入力されたフィルター文字列
         private GUIStyle _buttonStyle;
         private GUIContent _sceneIconContent;
+        private Vector2 _scrollPosition;
 
         private void OnEnable() => RefreshSceneList();
 
@@ -39,6 +40,8 @@ namespace MyUtils.Editor
             if (GUILayout.Button("Refresh")) RefreshSceneList();
             EditorGUILayout.Space();
 
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+
             string[] displayedScenes = string.IsNullOrEmpty(_filterText)
                 ? _allScenePaths
                 : Array.FindAll(_allScenePaths, path => path.ToLower().Contains(_filterText.ToLower()));
@@ -58,6 +61,8 @@ namespace MyUtils.Editor
                     }
                 }
             }
+
+            EditorGUILayout.EndScrollView();
         }
 
         private void RefreshSceneList()
