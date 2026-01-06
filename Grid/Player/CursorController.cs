@@ -1,11 +1,9 @@
-using Cysharp.Threading.Tasks;
-using MyUtils.Grid.Core;
 using MyUtils.Grid.Map;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace MyUtils.Grid.Control
+namespace MyUtils.Grid
 {
     public class CursorController : MonoBehaviour
     {
@@ -20,13 +18,16 @@ namespace MyUtils.Grid.Control
         private Camera _mainCamera;
         private Grid<int> _map;
 
-        private async void Start()
+        private void Start()
         {
             _mainCamera = Camera.main;
             _pos.AddTo(this);
             _clickSubject.AddTo(this);
 
-            _map = await _mapLoader.OnLoadAsObservable.Task.AttachExternalCancellation(destroyCancellationToken);
+            _mapLoader.OnLoadAsObservable
+                .Where(grid => grid != null)
+                .Subscribe(grid => _map = grid)
+                .AddTo(this);
         }
 
         private void Update()

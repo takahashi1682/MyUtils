@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.Grid.Unit
+namespace MyUtils.Grid
 {
     public class UnitAnimation : SpriteAnimation.SpriteAnimation
     {

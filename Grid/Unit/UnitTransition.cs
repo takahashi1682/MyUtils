@@ -1,14 +1,14 @@
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
-using MyUtils.SceneLoader;
+using MyUtils.Grid.Map;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MyUtils.Grid.Unit
+namespace MyUtils.Grid
 {
     public class UnitTransition : MonoBehaviour, IUnitEvent
     {
-        [SerializeField] private SceneReference _nextScene;
+        [SerializeField] private MapData _nextMapData;
         [SerializeField] private Vector2Int _nextStartPoint;
         [SerializeField] private FadeSetting _fadeSetting;
 
@@ -18,16 +18,13 @@ namespace MyUtils.Grid.Unit
 
             await FadeScreenManager.BeginFadeOut(_fadeSetting);
 
-            await SceneManager.LoadSceneAsync(_nextScene.ToString());
+            await SceneManager.LoadSceneAsync(_nextMapData.name);
 
             move.SetPosition(Vector2Int.RoundToInt(_nextStartPoint));
 
-            await FadeScreenManager.BeginFadeIn(_fadeSetting);
+            MapLoader.Singleton.Load(_nextMapData.GridData);
 
-            // if (unit.TryGetComponent<UnitAnimation>(out var anim))
-            // {
-            //     anim.SetDirection(_startDirection);
-            // }
+            await FadeScreenManager.BeginFadeIn(_fadeSetting);
         }
     }
 }

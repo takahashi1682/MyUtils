@@ -4,14 +4,14 @@ using MyUtils.TalkUtils;
 using R3;
 using UnityEngine;
 
-namespace MyUtils.Grid.Unit
+namespace MyUtils.Grid
 {
     public class UnitTalk : MonoBehaviour, IUnitEvent
     {
-        private readonly Subject<R3.Unit> _onTalkBegin = new();
-        private readonly Subject<R3.Unit> _onTalkEnd = new();
-        public Observable<R3.Unit> OnTalkBegin => _onTalkBegin;
-        public Observable<R3.Unit> OnTalkEnd => _onTalkEnd;
+        private readonly Subject<Unit> _onTalkBegin = new();
+        private readonly Subject<Unit> _onTalkEnd = new();
+        public Observable<Unit> OnTalkBegin => _onTalkBegin;
+        public Observable<Unit> OnTalkEnd => _onTalkEnd;
 
         [SerializeField] private TextAsset _talkData;
         public int GroupCount = 1;
@@ -38,9 +38,9 @@ namespace MyUtils.Grid.Unit
 
         public async UniTask OnInteract(UnitIdentity unit)
         {
-            _onTalkBegin.OnNext(R3.Unit.Default);
+            _onTalkBegin.OnNext(Unit.Default);
             await OnRandomTalk();
-            _onTalkEnd.OnNext(R3.Unit.Default);
+            _onTalkEnd.OnNext(Unit.Default);
         }
     }
 }

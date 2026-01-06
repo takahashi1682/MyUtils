@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace MyUtils.Grid.Unit
+namespace MyUtils.Grid
 {
     public class UnitLookDirection : MonoBehaviour, IUnitEvent
     {

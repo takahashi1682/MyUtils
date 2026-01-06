@@ -1,31 +1,33 @@
 using System;
-using Cysharp.Threading.Tasks;
-using MyUtils.Grid.Core;
+using R3;
 using UnityEngine;
 
 namespace MyUtils.Grid.Map
 {
-    [Serializable]
-    public class MapLoader : MonoBehaviour
+    public class MapLoader : AbstractSingletonBehaviour<MapLoader>
     {
-        public TextAsset JsonFile;
+        [SerializeField] private TextAsset _defaultJson;
         [SerializeField] private bool _isAutoLoad = true;
 
-        public UniTaskCompletionSource<Grid<int>> OnLoadAsObservable = new();
+        public readonly BehaviorSubject<Grid<int>> OnLoadAsObservable = new(null);
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            OnLoadAsObservable.AddTo(this);
+
             if (_isAutoLoad)
-                Load();
+                Load(_defaultJson);
         }
 
-        public void Load()
+        public void Load(TextAsset gridJson)
         {
             try
             {
-                var grid = JsonUtility.FromJson<Grid<int>>(JsonFile.text);
+                var grid = JsonUtility.FromJson<Grid<int>>(gridJson.text);
                 Debug.Log($"✅ Gridデータを読み込みました ({grid.RowCount}x{grid.ColumnCount})");
-                OnLoadAsObservable.TrySetResult(grid);
+
+                OnLoadAsObservable.OnNext(grid);
             }
             catch (Exception e)
             {

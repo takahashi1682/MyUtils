@@ -1,5 +1,4 @@
 using System.IO;
-using MyUtils.Grid.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,8 +7,8 @@ namespace MyUtils.Grid.Editor
     public class GridPainter2D : EditorWindow
     {
         // --- 設定値 ---
-        private int _width = 16;
-        private int _height = 16;
+        private int _width = 50;
+        private int _height = 50;
         private float _cellSize = 1f;
 
         // GUI編集用（確定は Update Grid Size ボタンで）
@@ -24,7 +23,7 @@ namespace MyUtils.Grid.Editor
         private Grid<int> _grid;
         private bool _painting;
         private bool _erasing;
-        [SerializeField] private TextAsset _jsonAsset;
+        private TextAsset _jsonAsset;
         //  private string _jsonFilePath = "Assets/grid_data.json";
 
         [MenuItem("Tools/Grid Painter 2D")]
@@ -75,27 +74,8 @@ namespace MyUtils.Grid.Editor
             _isGridInteractionEnabled = EditorGUILayout.Toggle(_isGridInteractionEnabled);
             GUILayout.EndHorizontal();
             EditorGUILayout.Space(10);
-            // --- JSONパス入力 ---
-
-            // --- JSONアセット指定（推奨：.json） ---
-            GUILayout.Label("JSON Asset (optional)");
-            var newAsset = (TextAsset)EditorGUILayout.ObjectField(_jsonAsset, typeof(TextAsset), false);
-
-            // if (newAsset != _jsonAsset)
-            // {
-            //     _jsonAsset = newAsset;
-            //
-            //     if (_jsonAsset != null)
-            //     {
-            //         // TextAsset のパスを自動で取得して _jsonFilePath にセット
-            //         string assetPath = AssetDatabase.GetAssetPath(_jsonAsset);
-            //
-            //         if (!string.IsNullOrEmpty(assetPath))
-            //         {
-            //             _jsonFilePath = assetPath;
-            //         }
-            //     }
-            // }
+       
+            _jsonAsset = (TextAsset)EditorGUILayout.ObjectField(_jsonAsset, typeof(TextAsset), false);
 
             EditorGUILayout.Space(10);
 
@@ -224,14 +204,8 @@ namespace MyUtils.Grid.Editor
                 return;
             }
 
-            // if (string.IsNullOrEmpty(_jsonAsset))
-            // {
-            //     Debug.LogWarning("JSONファイルパスが未設定です");
-            //     return;
-            // }
-
             var jsonFilePath = AssetDatabase.GetAssetPath(_jsonAsset);
-            
+
             try
             {
                 File.WriteAllText(jsonFilePath, json);

@@ -1,16 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyUtils.Grid.Unit
+namespace MyUtils.Grid
 {
     public static class UnitManager
     {
-        public static List<UnitIdentity> Units { get; private set; } = new();
+        public static List<UnitIdentity> Units { get; } = new();
 
-        public static void AddUnitAt(UnitIdentity unit)
+        public static void AddUnit(UnitIdentity unit)
         {
             Units.Add(unit);
             Debug.Log($"✅ UnitMarkerを追加しました: {unit.GridPos}");
+        }
+
+        public static void RemoveUnit(UnitIdentity unit)
+        {
+            Units.Remove(unit);
+            Debug.Log($"✅ UnitMarkerを削除しました: {unit.GridPos}");
         }
 
         public static UnitIdentity GetPosUnit(Vector2Int gridPos)

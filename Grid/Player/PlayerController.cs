@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using MyUtils.Grid.Core;
 using MyUtils.Grid.Map;
-using MyUtils.Grid.Unit;
-using R3;
-using UnityEditor;
 using UnityEngine;
+using R3;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-namespace MyUtils.Grid.Control
+namespace MyUtils.Grid
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : AbstractSingletonBehaviour<PlayerController>
     {
         public static bool IsActive { get; set; } = true;
 

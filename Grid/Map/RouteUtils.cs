@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using MyUtils.Grid.Core;
-using MyUtils.Grid.Unit;
 using UnityEngine;
+using R3;
 
 namespace MyUtils.Grid.Map
 {
@@ -55,9 +54,15 @@ namespace MyUtils.Grid.Map
         [SerializeField] private MapLoader _mapLoader;
         private Grid<int> _map;
 
-        private async void Awake()
+        private void Awake()
         {
-            _map = await _mapLoader.OnLoadAsObservable.Task.AttachExternalCancellation(destroyCancellationToken);
+            _mapLoader.OnLoadAsObservable
+                .Where(grid => grid != null)
+                .Subscribe(grid =>
+                {
+                    _map = grid;
+                    Debug.Log($"✅ マップデータを受信しました ({grid.RowCount}x{grid.ColumnCount})");
+                }).AddTo(this);
         }
 
         /// <summary>

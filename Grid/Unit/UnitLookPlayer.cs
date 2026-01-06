@@ -1,4 +1,4 @@
-namespace MyUtils.Grid.Unit
+namespace MyUtils.Grid
 {
     public class UnitLookPlayer : UnitLookDirection
     {

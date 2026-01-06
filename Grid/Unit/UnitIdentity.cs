@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.Grid.Unit
+namespace MyUtils.Grid
 {
     public class UnitIdentity : MonoBehaviour
     {
@@ -11,7 +11,12 @@ namespace MyUtils.Grid.Unit
 
         private void Awake()
         {
-            UnitManager.AddUnitAt(this);
+            UnitManager.AddUnit(this);
+        }
+
+        private void OnDestroy()
+        {
+            UnitManager.RemoveUnit(this);
         }
     }
 }

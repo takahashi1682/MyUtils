@@ -1,6 +1,6 @@
 using System;
 
-namespace MyUtils.Grid.Core
+namespace MyUtils.Grid
 {
     public enum CellType
     {
