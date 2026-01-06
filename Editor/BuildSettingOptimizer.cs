@@ -19,7 +19,7 @@ namespace MyUtils.Editor
 
             bool isNormalModeActive = !EditorSettings.enterPlayModeOptionsEnabled;
 
-            DrawToggleRow("1. 通常リロード設定を使用 (ON=通常 / OFF=高速化)", isNormalModeActive, () =>
+            DrawToggleRow("通常リロード設定を使用 (ON=通常 / OFF=高速化)", isNormalModeActive, () =>
             {
                 EditorSettings.enterPlayModeOptionsEnabled = !EditorSettings.enterPlayModeOptionsEnabled;
             });
