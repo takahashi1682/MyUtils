@@ -1,12 +1,11 @@
 using System.Collections.Generic;
+using MyUtils.Grid.Core;
 using MyUtils.Grid.Map;
-using UnityEngine;
 using R3;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
+using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Player
 {
     public class PlayerController : AbstractSingletonBehaviour<PlayerController>
     {
@@ -98,7 +97,7 @@ namespace MyUtils.Grid
         private void HandleClick(Vector2Int clickedPos)
         {
             // プレイヤー位置をグリッド座標へ変換
-            Vector2Int playerGridPos = new((int)_unitMover.NextPoint.x, (int)_unitMover.NextPoint.y);
+            var playerGridPos = Vector2Int.FloorToInt(_unitMover.NextPoint);
 
             // 移動可能エリアを計算
             _currentMoveArea = _routeUtils.GetMoveArea(playerGridPos);
@@ -120,25 +119,6 @@ namespace MyUtils.Grid
                 route = RouteUtils.GetAreaBestRoute(_currentMoveArea, playerGridPos, nearestPos);
 
                 _lastDirectionalPos = GridMath.GetDirection4(nearestPos, clickedPos);
-
-                // 経路が存在しない場合は向きだけ更新
-                // if (route.Count == 0)
-                // {
-                //     _unitMoveAnim.SetDirection(_lastDirectionalPos);
-                //
-                //     // 移動先にユニットが存在する場合は中断
-                //     var target = playerGridPos + _lastDirectionalPos;
-                //     if (_units[target] is var unit && unit != null)
-                //     {
-                //         // ユニットのイベントを発火
-                //         if (unit.TryGetComponent(out UnitInteraction interaction))
-                //         {
-                //             interaction.OnInteract.Invoke();
-                //         }
-                //
-                //         return;
-                //     }
-                // }
             }
 
             // 経路をセットして移動開始

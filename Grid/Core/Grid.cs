@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Core
 {
     /// <summary>
     /// 2次元グリッドデータ構造体。UnityのJsonUtilityでシリアライズ可能にするため、

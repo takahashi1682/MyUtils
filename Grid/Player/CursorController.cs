@@ -1,14 +1,12 @@
-using MyUtils.Grid.Map;
+using MyUtils.Grid.Core;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace MyUtils.Grid
+namespace MyUtils.Grid.Player
 {
     public class CursorController : MonoBehaviour
     {
-        [SerializeField] private MapLoader _mapLoader;
-
         [SerializeField] private SerializableReactiveProperty<Vector2Int> _pos = new(Vector2Int.zero);
         public ReadOnlyReactiveProperty<Vector2Int> Pos => _pos.ToReadOnlyReactiveProperty();
 
@@ -18,16 +16,13 @@ namespace MyUtils.Grid
         private Camera _mainCamera;
         private Grid<int> _map;
 
-        private void Start()
+        public void Initialize(Grid<int> map)
         {
-            _mainCamera = Camera.main;
             _pos.AddTo(this);
             _clickSubject.AddTo(this);
 
-            _mapLoader.OnLoadAsObservable
-                .Where(grid => grid != null)
-                .Subscribe(grid => _map = grid)
-                .AddTo(this);
+            _mainCamera = Camera.main;
+            _map = map;
         }
 
         private void Update()

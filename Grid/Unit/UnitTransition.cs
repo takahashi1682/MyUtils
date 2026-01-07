@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
 using MyUtils.Grid.Map;
+using MyUtils.Grid.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,15 +15,12 @@ namespace MyUtils.Grid
 
         public async UniTask OnInteract(UnitIdentity unit)
         {
-            if (!unit.TryGetComponent<UnitMover>(out var move)) return;
+            if (!unit.transform.root.TryGetComponent<PlayerCore>(out var player)) return;
 
             await FadeScreenManager.BeginFadeOut(_fadeSetting);
+            await SceneManager.LoadSceneAsync(_nextMapData.Scene.SceneName);
 
-            await SceneManager.LoadSceneAsync(_nextMapData.name);
-
-            move.SetPosition(Vector2Int.RoundToInt(_nextStartPoint));
-
-            MapLoader.Singleton.Load(_nextMapData.GridData);
+            player.UnitMover.SetPosition(Vector2Int.RoundToInt(_nextStartPoint));
 
             await FadeScreenManager.BeginFadeIn(_fadeSetting);
         }

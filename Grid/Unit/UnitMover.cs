@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using R3;
 using UnityEngine;
@@ -21,7 +20,7 @@ namespace MyUtils.Grid
         private readonly Subject<Vector2Int> _onDirectionChangedSubject = new();
         public Observable<Vector2Int> OnDirectionChangedAsObservable => _onDirectionChangedSubject;
 
-        private Vector3 _startPoint;
+        public Vector3 CurrentPoint { get; private set; }
         public Vector3 NextPoint { get; private set; }
 
         private bool _isSteppingToNext;
@@ -32,15 +31,15 @@ namespace MyUtils.Grid
             _onArrivedSubject.AddTo(this);
             _onDirectionChangedSubject.AddTo(this);
 
-            _startPoint = transform.position;
-            NextPoint = _startPoint;
+            CurrentPoint = transform.position;
+            NextPoint = CurrentPoint;
         }
 
         public void SetPosition(Vector2Int gridPos)
         {
             var target = new Vector3(gridPos.x, gridPos.y, 0);
             transform.position = target;
-            _startPoint = target;
+            CurrentPoint = target;
             NextPoint = target;
             _moveRoute.Clear();
             _isMoving.Value = false;
@@ -53,7 +52,8 @@ namespace MyUtils.Grid
         {
             _moveRoute.Clear();
 
-            if (route == null || route.Count == 0)
+            // 移動経路が空の場合は移動を停止し、到着イベントを発行する
+            if (!_isSteppingToNext && (route == null || route.Count == 0))
             {
                 _isMoving.Value = false;
                 _onArrivedSubject.OnNext(Vector2Int.FloorToInt(NextPoint));
@@ -120,8 +120,8 @@ namespace MyUtils.Grid
             var direction = _moveRoute.Dequeue();
             _onDirectionChangedSubject.OnNext(direction);
 
-            _startPoint = transform.position;
-            var target = _startPoint + new Vector3(direction.x, direction.y, 0);
+            CurrentPoint = transform.position;
+            var target = CurrentPoint + new Vector3(direction.x, direction.y, 0);
 
             NextPoint = target;
             _isSteppingToNext = true;

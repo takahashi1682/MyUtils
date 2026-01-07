@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using MyUtils.Grid.Core;
 using UnityEngine;
 using R3;
 
@@ -51,18 +52,11 @@ namespace MyUtils.Grid.Map
             Vector2Int.up, // (0, 1)
         };
 
-        [SerializeField] private MapLoader _mapLoader;
         private Grid<int> _map;
 
-        private void Awake()
+        public void Initialize(Grid<int> map)
         {
-            _mapLoader.OnLoadAsObservable
-                .Where(grid => grid != null)
-                .Subscribe(grid =>
-                {
-                    _map = grid;
-                    Debug.Log($"✅ マップデータを受信しました ({grid.RowCount}x{grid.ColumnCount})");
-                }).AddTo(this);
+            _map = map;
         }
 
         /// <summary>

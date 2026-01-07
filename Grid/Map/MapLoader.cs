@@ -1,33 +1,19 @@
 using System;
-using R3;
+using MyUtils.Grid.Core;
 using UnityEngine;
 
 namespace MyUtils.Grid.Map
 {
-    public class MapLoader : AbstractSingletonBehaviour<MapLoader>
+    public class MapLoader : MonoBehaviour
     {
-        [SerializeField] private TextAsset _defaultJson;
-        [SerializeField] private bool _isAutoLoad = true;
+        public Grid<int> Grid { get; private set; }
 
-        public readonly BehaviorSubject<Grid<int>> OnLoadAsObservable = new(null);
-
-        protected override void Awake()
-        {
-            base.Awake();
-            OnLoadAsObservable.AddTo(this);
-
-            if (_isAutoLoad)
-                Load(_defaultJson);
-        }
-
-        public void Load(TextAsset gridJson)
+        public void Initialize(TextAsset mapJson)
         {
             try
             {
-                var grid = JsonUtility.FromJson<Grid<int>>(gridJson.text);
-                Debug.Log($"✅ Gridデータを読み込みました ({grid.RowCount}x{grid.ColumnCount})");
-
-                OnLoadAsObservable.OnNext(grid);
+                Grid = JsonUtility.FromJson<Grid<int>>(mapJson.text);
+                Debug.Log($"✅ Gridデータを読み込みました ({Grid.RowCount}x{Grid.ColumnCount})");
             }
             catch (Exception e)
             {
