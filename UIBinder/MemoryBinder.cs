@@ -7,7 +7,6 @@ namespace MyUtils.UIBinder
     /// <summary>
     ///  値をスライダーにバインドする機能
     /// </summary>
-    [RequireComponent(typeof(MemoryGauge))]
     public class MemoryBinder : MonoBehaviour
     {
         [SerializeField] private SerializableInterface<IRateBinder> _target;

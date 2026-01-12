@@ -87,5 +87,37 @@ namespace MyUtils.SceneLoader
             if (fadeSetting != null)
                 await FadeScreenManager.BeginFadeIn(fadeSetting);
         }
+
+        public static async UniTask UnloadSceneAsync(string unloadScene, FadeSetting fadeSetting = null)
+        {
+            if (_isRunning)
+            {
+                Debug.LogWarning("SceneLoader: すでにアンロード処理が実行中です。");
+                return;
+            }
+
+            _isRunning = true;
+            try
+            {
+                await UnloadSceneInternalAsync(unloadScene, fadeSetting);
+            }
+            finally
+            {
+                _isRunning = false;
+            }
+        }
+
+        private static async UniTask UnloadSceneInternalAsync(string unloadScene, FadeSetting fadeSetting)
+        {
+            // フェードアウト
+            if (fadeSetting != null)
+                await FadeScreenManager.BeginFadeOut(fadeSetting);
+
+            await SceneManager.UnloadSceneAsync(unloadScene);
+
+            // フェードイン
+            if (fadeSetting != null)
+                await FadeScreenManager.BeginFadeIn(fadeSetting);
+        }
     }
 }

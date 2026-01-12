@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace MyUtils.UIBinder
 {
-    [RequireComponent(typeof(TextMeshProUGUI))]
     public class RateToTextBinder : MonoBehaviour
     {
         [SerializeField] private SerializableInterface<IRateBinder> _target;

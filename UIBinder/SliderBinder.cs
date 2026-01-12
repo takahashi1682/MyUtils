@@ -8,7 +8,6 @@ namespace MyUtils.UIBinder
     /// <summary>
     ///  値をスライダーにバインドする機能
     /// </summary>
-    [RequireComponent(typeof(Slider))]
     public class SliderBinder : MonoBehaviour
     {
         [SerializeField] private SerializableInterface<IRateBinder> _target;

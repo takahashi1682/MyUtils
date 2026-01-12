@@ -14,20 +14,17 @@ namespace MyUtils.UIBinder
     /// <summary>
     /// 任意の型をTextMeshProにバインドする
     /// </summary>
-    [RequireComponent(typeof(TextMeshProUGUI))]
     public abstract class AbstractValueBinder<T> : MonoBehaviour
     {
-        [SerializeField] private SerializableInterface<IValueBinder<T>> _target;
-        [SerializeField] private string _textFormat = "{0}"; // デフォルト書式
+        [SerializeField] protected SerializableInterface<IValueBinder<T>> _inValue;
+        [SerializeField] protected TextMeshProUGUI _outText;
+        [SerializeField] protected string _textFormat = "{0}"; // デフォルト書式
 
-        private void Start()
+        protected virtual void Start()
         {
-            if (TryGetComponent<TextMeshProUGUI>(out var text))
-            {
-                _target.Value.CurrentValue
-                    .Subscribe(x => text.text = string.Format(_textFormat, x))
-                    .AddTo(this);
-            }
+            _inValue.Value.CurrentValue
+                .Subscribe(x => _outText.text = string.Format(_textFormat, x))
+                .AddTo(this);
         }
     }
 }

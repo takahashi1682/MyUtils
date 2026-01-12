@@ -9,7 +9,7 @@ namespace MyUtils.SceneLoader
     /// <summary>
     /// シーンの読み込みボタン
     /// </summary>
-    public class SceneLoaderButton : AbstractAwaitButton
+    public class SceneLoaderButton : AbstractAsyncButton
     {
         [SerializeField] private SceneReference _nextScene;
         [SerializeField] private LoadSceneMode _loadSceneMode = LoadSceneMode.Single;

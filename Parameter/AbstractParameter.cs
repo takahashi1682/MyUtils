@@ -1,31 +1,36 @@
 using System;
-using System.Globalization;
 using MyUtils.UIBinder;
 using R3;
 using UnityEngine;
 
 namespace MyUtils.Parameter
 {
-    public interface IParameter
+    public interface IParameter<T>
     {
-        SerializableReactiveProperty<float> Current { get; }
-        ReadOnlyReactiveProperty<int> CurrentInt { get; }
-        ReadOnlyReactiveProperty<double> CurrentDouble { get; }
-        ReadOnlyReactiveProperty<string> CurrentString { get; }
-        SerializableReactiveProperty<float> Min { get; }
-        SerializableReactiveProperty<float> Max { get; }
+        ReadOnlyReactiveProperty<T> Current { get; }
+        ReadOnlyReactiveProperty<T> Min { get; }
+        ReadOnlyReactiveProperty<T> Max { get; }
+
         ReadOnlyReactiveProperty<float> CurrentRate { get; }
+
+        ReadOnlyReactiveProperty<int> CurrentInt { get; }
+        ReadOnlyReactiveProperty<float> CurrentFloat { get; }
+        ReadOnlyReactiveProperty<string> CurrentString { get; }
 
         ReadOnlyReactiveProperty<bool> IsHalfOrLess { get; }
         ReadOnlyReactiveProperty<bool> IsAboveHalf { get; }
+
+        Observable<T> OnAdd { get; }
+        Observable<T> OnSub { get; }
+
         ReadOnlyReactiveProperty<bool> IsFull { get; }
         ReadOnlyReactiveProperty<bool> IsEmpty { get; }
 
-        void SetMin(float min);
-        void SetMax(float max);
-        void SetClampValue(float value);
-        void Add(float value);
-        void Sub(float value);
+        void SetMin(T min);
+        void SetMax(T max);
+        void SetClampValue(T value);
+        void Add(T value);
+        void Sub(T value);
         void SetFull();
         void SetEmpty();
     }
@@ -35,109 +40,67 @@ namespace MyUtils.Parameter
     /// 使用されないReactivePropertyは遅延初期化されます。
     /// </summary>
     [Serializable]
-    public abstract class AbstractParameter : MonoBehaviour,
-        IParameter,
+    public abstract class AbstractParameter<T> : MonoBehaviour,
+        IParameter<T>,
         IRateBinder,
         IViewSwitchBinder,
         IValueBinder<int>,
         IValueBinder<float>,
-        IValueBinder<double>,
         IValueBinder<string>
     {
-        [field: SerializeField] public SerializableReactiveProperty<float> Current { get; private set; } = new(1000f);
-        [field: SerializeField] public SerializableReactiveProperty<float> Min { get; private set; } = new(0f);
-        [field: SerializeField] public SerializableReactiveProperty<float> Max { get; private set; } = new(1000f);
+        public abstract ReadOnlyReactiveProperty<T> Current { get; }
+        public abstract ReadOnlyReactiveProperty<T> Min { get; }
+        public abstract ReadOnlyReactiveProperty<T> Max { get; }
 
-        // CurrentRate
-        private ReadOnlyReactiveProperty<float> _currentRate;
-        public ReadOnlyReactiveProperty<float> CurrentRate => _currentRate ??= Current
-            .CombineLatest(Max, Min,
-                (curr, max, min) => Mathf.Approximately(max, min) ? 0f : Mathf.Clamp01((curr - min) / (max - min)))
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
+        public abstract ReadOnlyReactiveProperty<float> CurrentRate { get; }
 
-        // CurrentInt
-        private ReadOnlyReactiveProperty<int> _currentInt;
-        public ReadOnlyReactiveProperty<int> CurrentInt => _currentInt ??= Current.Select(Mathf.FloorToInt)
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
+        public abstract ReadOnlyReactiveProperty<int> CurrentInt { get; }
+        public abstract ReadOnlyReactiveProperty<float> CurrentFloat { get; }
+        public abstract ReadOnlyReactiveProperty<string> CurrentString { get; }
 
-        // CurrentDouble
-        private ReadOnlyReactiveProperty<double> _currentDouble;
-        public ReadOnlyReactiveProperty<double> CurrentDouble => _currentDouble ??= Current
-            .Select(v => (double)v)
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
+        public abstract ReadOnlyReactiveProperty<bool> IsHalfOrLess { get; }
+        public abstract ReadOnlyReactiveProperty<bool> IsAboveHalf { get; }
 
-        // CurrentString
-        private ReadOnlyReactiveProperty<string> _currentString;
-        public ReadOnlyReactiveProperty<string> CurrentString => _currentString ??= Current
-            .Select(v => v.ToString(CultureInfo.CurrentCulture))
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
+        protected readonly Subject<T> _addSubject = new();
+        public Observable<T> OnAdd => _addSubject;
 
-        // IsHalfOrLess
-        private ReadOnlyReactiveProperty<bool> _isHalfOrLess;
-        public ReadOnlyReactiveProperty<bool> IsHalfOrLess => _isHalfOrLess ??= CurrentRate
-            .Select(rate => rate <= 0.5f)
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
+        protected readonly Subject<T> _subSubject = new();
+        public Observable<T> OnSub => _subSubject;
 
-        // IsAboveHalf
-        private ReadOnlyReactiveProperty<bool> _isAboveHalf;
-        public ReadOnlyReactiveProperty<bool> IsAboveHalf => _isAboveHalf ??= CurrentRate
-            .Select(rate => rate > 0.5f)
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
+        public abstract ReadOnlyReactiveProperty<bool> IsFull { get; }
+        public abstract ReadOnlyReactiveProperty<bool> IsEmpty { get; }
 
-        // IsFull
-        private ReadOnlyReactiveProperty<bool> _isFull;
-        public ReadOnlyReactiveProperty<bool> IsFull => _isFull ??= Current
-            .CombineLatest(Max, Mathf.Approximately)
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
-
-        // IsEmpty
-        private ReadOnlyReactiveProperty<bool> _isEmpty;
-        public ReadOnlyReactiveProperty<bool> IsEmpty => _isEmpty ??= Current
-            .CombineLatest(Min, Mathf.Approximately)
-            .ToReadOnlyReactiveProperty()
-            .AddTo(this);
-
-        // IValueBinder<T>は、privateな遅延初期化Getterを参照する。
-        ReadOnlyReactiveProperty<float> IValueBinder<float>.CurrentValue => Current; // floatはCurrentをそのまま使用
         ReadOnlyReactiveProperty<int> IValueBinder<int>.CurrentValue => CurrentInt;
-        ReadOnlyReactiveProperty<double> IValueBinder<double>.CurrentValue => CurrentDouble;
+        ReadOnlyReactiveProperty<float> IValueBinder<float>.CurrentValue => CurrentFloat;
         ReadOnlyReactiveProperty<string> IValueBinder<string>.CurrentValue => CurrentString;
 
         /// <summary>最小値を設定し、現在値を補正</summary>
-        public void SetMin(float min)
-        {
-            Min.Value = min;
-            SetClampValue(Current.Value);
-        }
+        public abstract void SetMin(T min);
 
         /// <summary>最大値を設定し、現在値を補正</summary>
-        public void SetMax(float max)
-        {
-            Max.Value = max;
-            SetClampValue(Current.Value);
-        }
+        public abstract void SetMax(T max);
+
+        private void Refresh() => SetClampValue(Current.CurrentValue);
 
         /// <summary>指定値を Min〜Max に制限して設定</summary>
-        public void SetClampValue(float value)
-            => Current.Value = Mathf.Clamp(value, Min.Value, Max.Value);
+        public abstract void SetClampValue(T value);
 
         /// <summary>現在値を加算（Maxを超えない）</summary>
-        public void Add(float value) => SetClampValue(Current.Value + value);
+        public abstract void Add(T value);
 
         /// <summary>現在値を減算（Min未満にならない）</summary>
-        public void Sub(float value) => SetClampValue(Current.Value - value);
+        public abstract void Sub(T value);
 
         /// <summary>現在値を最大値にする</summary>
-        public void SetFull() => Current.Value = Max.Value;
+        public abstract void SetFull();
 
         /// <summary>現在値を最小値にする</summary>
-        public void SetEmpty() => Current.Value = Min.Value;
+        public abstract void SetEmpty();
+
+        protected virtual void Awake()
+        {
+            _addSubject.AddTo(this);
+            _subSubject.AddTo(this);
+        }
     }
 }

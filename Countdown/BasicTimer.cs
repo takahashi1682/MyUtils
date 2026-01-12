@@ -8,7 +8,7 @@ namespace MyUtils.Countdown
     /// <summary>
     /// 購読可能なカウントダウン機能
     /// </summary>
-    public interface IBasicTimerObservable : IParameter
+    public interface IBasicTimerObservable : IFloatParameter
     {
         ReadOnlyReactiveProperty<bool> IsPlay { get; }
         Observable<Unit> OnStart { get; }
@@ -28,7 +28,7 @@ namespace MyUtils.Countdown
     /// <summary>
     /// 基本的なカウントダウン機能
     /// </summary>
-    public class BasicTimer : AbstractParameter,
+    public class BasicTimer : AbstractFloatParameter,
         IBasicTimerObservable,
         IBasicTimerHandler
     {

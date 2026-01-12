@@ -1,10 +1,10 @@
 namespace MyUtils.Parameter.Basic
 {
-    public interface ILevel : IParameter
+    public interface ILevel : IIntParameter
     {
     }
 
-    public class Level : AbstractParameter, ILevel
+    public class Level : AbstractIntParameter, ILevel
     {
     }
 }

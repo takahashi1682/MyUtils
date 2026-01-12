@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MyUtils.SceneLoader
 {
-    public class SceneUnloadButton : AbstractAsyncButton
+    public class SceneUnloadInputTrigger : AbstractInputTrigger
     {
         [SerializeField] private SceneReference _unloadScene;
 
@@ -13,7 +13,7 @@ namespace MyUtils.SceneLoader
         [SerializeField] private bool _isFade = true;
         [SerializeField] private FadeSetting _fadeSetting;
 
-        protected override async UniTask OnClick(CancellationToken cts)
+        protected override async UniTask OnPress(CancellationToken ct)
         {
             var fadeSetting = _isFade ? _fadeSetting : null;
             await SceneLoaderUtils.UnloadSceneAsync(_unloadScene.SceneName, fadeSetting);

@@ -19,7 +19,6 @@ namespace MyUtils.Editor
             EditorGUILayout.Space();
 
             bool isNormalModeActive = !EditorSettings.enterPlayModeOptionsEnabled;
-
             DrawToggleRow("通常リロード設定を使用 (ON=通常 / OFF=高速化)", isNormalModeActive, () =>
             {
                 EditorSettings.enterPlayModeOptionsEnabled = !EditorSettings.enterPlayModeOptionsEnabled;

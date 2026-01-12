@@ -41,14 +41,11 @@ namespace MyUtils
             _keyboard = Keyboard.current;
             _touchscreen = Touchscreen.current;
 
-            var objectScene = gameObject.scene;
-            var activeScene = SceneManager.GetActiveScene();
-
             await UniTask.Delay(TimeSpan.FromSeconds(FirstDelaySeconds), DelayType.Realtime,
                 cancellationToken: destroyCancellationToken);
 
             this.UpdateAsObservable()
-                .Where(_ => objectScene == activeScene && IsPressed())
+                .Where(_ => IsPressed())
                 .ThrottleFirst(TimeSpan.FromSeconds(TriggerThrottleSeconds),
                     timeProvider: UnityTimeProvider.UpdateRealtime)
                 .SubscribeAwait(async (_, ct) =>

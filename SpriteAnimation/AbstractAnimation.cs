@@ -14,12 +14,43 @@ namespace MyUtils.SpriteAnimation
 
         public EMode Mode = EMode.One;
         public float FPS = 16.0f;
+
+        public bool IsPlayOnAwake = true;
+        public bool IsPlayOnEnable;
         public bool IsAutoDestroy = true;
+
         public Sprite[] Sprites;
+        private Coroutine _animationCoroutine;
+
+        protected override void Start()
+        {
+            base.Start();
+            if (IsPlayOnAwake)
+            {
+                _animationCoroutine = StartCoroutine(MainProcess(1f / FPS));
+            }
+        }
 
         protected virtual void OnEnable()
         {
-            StartCoroutine(MainProcess(1f / FPS));
+            if (IsPlayOnEnable)
+            {
+                Play();
+            }
+        }
+
+        public void Play()
+        {
+            _animationCoroutine ??= StartCoroutine(MainProcess(1f / FPS));
+        }
+
+        public void Stop()
+        {
+            if (_animationCoroutine != null)
+            {
+                StopCoroutine(_animationCoroutine);
+                _animationCoroutine = null;
+            }
         }
 
         protected virtual IEnumerator MainProcess(float interval)

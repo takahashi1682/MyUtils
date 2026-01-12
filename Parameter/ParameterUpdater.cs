@@ -9,9 +9,9 @@ namespace MyUtils.Parameter
     {
         public bool IsRunning;
 
-        [SerializeField] private SerializableInterface<AbstractParameter> _parameter;
-        [SerializeField] private float _addValue;
-        [SerializeField] private float _subValue;
+        [SerializeField] private SerializableInterface<AbstractFloatParameter> _parameter;
+        [SerializeField] private int _addValue;
+        [SerializeField] private int _subValue;
         [SerializeField] private float _interval = 1f;
 
         private void Start()

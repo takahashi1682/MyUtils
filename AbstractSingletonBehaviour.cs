@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace MyUtils
@@ -22,7 +21,7 @@ namespace MyUtils
 
                     if (_instance == null)
                     {
-                        throw new Exception($"シーン上に {typeof(T).Name} が見つかりません。");
+                        Debug.LogError($"シーン上に {typeof(T).Name} が見つかりません。");
                     }
                 }
 
@@ -36,7 +35,7 @@ namespace MyUtils
 
             if (this != _instance)
             {
-                throw new Exception($"シーン上に {nameof(T)} が複数存在します。");
+                Debug.LogError($"シーン上に {nameof(T)} が複数存在します。");
             }
         }
 

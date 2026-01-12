@@ -1,10 +1,6 @@
-using TMPro;
-using UnityEngine;
-
 namespace MyUtils.UIBinder
 {
-    [RequireComponent(typeof(TextMeshProUGUI))]
-    public class IntBinder : MonoBehaviour
+    public class IntBinder : AbstractValueBinder<int>
     {
     }
 }

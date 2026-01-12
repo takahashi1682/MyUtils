@@ -1,10 +1,10 @@
 namespace MyUtils.Parameter.Basic
 {
-    public interface IExp : IParameter
+    public interface IExp : IIntParameter
     {
     }
 
-    public class Exp : AbstractParameter, IExp
+    public class Exp : AbstractIntParameter, IExp
     {
     }
 }

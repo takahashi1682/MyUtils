@@ -1,10 +1,10 @@
 namespace MyUtils.Parameter.Basic
 {
-    public interface IHealth : IParameter
+    public interface IHealth : IIntParameter
     {
     }
     
-    public class Health : AbstractParameter, IHealth
+    public class Health : AbstractIntParameter, IHealth
     {
     }
 }
