@@ -6,10 +6,12 @@ namespace MyUtils.ApplicationUtils
 {
     public class ResolutionSelect : AbstractTargetBehaviour<TMP_Dropdown>
     {
-        protected override void Start()
+        protected override async void Start()
         {
             base.Start();
-            Target.value = (int)PlayerSettingsStore.Singleton.Current.Resolution;
+
+            var setting = await PlayerSettingsStore.AsyncInstance;
+            Target.value = (int)setting.Current.Resolution;
 
             Target.OnValueChangedAsObservable()
                 .Skip(1)

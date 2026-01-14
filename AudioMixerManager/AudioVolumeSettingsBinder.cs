@@ -12,13 +12,15 @@ namespace MyUtils.AudioMixerManager
     {
         [SerializeField] private AudioMixerManager _manager;
 
-        private void Start()
+        private async void Start()
         {
-            var setting = PlayerSettingsStore.Singleton.Current;
+            var setting = await PlayerSettingsStore.AsyncInstance;
+            float[] volumes = setting.Current.Volumes;
+
             foreach (EAudioMixerParam pram in Enum.GetValues(typeof(EAudioMixerParam)))
             {
-                _manager.VolumeRates[pram].Value = setting.Volumes[(int)pram]; // 読み込み
-                _manager.VolumeRates[pram].Subscribe(v => setting.Volumes[(int)pram] = v).AddTo(this); // 書き込み
+                _manager.VolumeRates[pram].Value = volumes[(int)pram]; // 読み込み
+                _manager.VolumeRates[pram].Subscribe(v => volumes[(int)pram] = v).AddTo(this); // 書き込み
             }
         }
     }

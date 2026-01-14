@@ -26,10 +26,11 @@ namespace MyUtils.ApplicationUtils
         public static void ApplyResolution(int resolutionIndex)
             => ApplyResolution((EResolution)resolutionIndex);
 
-        public static void ApplyResolution(EResolution resolution)
+        public static async void ApplyResolution(EResolution resolution)
         {
             // 解像度の保存
-            PlayerSettingsStore.Singleton.Current.Resolution = resolution;
+            var setting = await PlayerSettingsStore.AsyncInstance;
+            setting.Current.Resolution = resolution;
 
             // 画面解像度の変更
             (int width, int height) = ResolutionList[(int)resolution];

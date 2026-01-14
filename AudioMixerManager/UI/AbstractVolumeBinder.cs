@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using MyUtils.AudioManager.Core;
 using R3;
 using UnityEngine;
@@ -18,9 +17,8 @@ namespace MyUtils.AudioMixerManager.UI
             VolumeLevel.AddTo(this);
 
             // AudioMixerManagerの読み込みを待機
-            var mixerManager = AudioMixerManager.Singleton;
-            var token = this.GetCancellationTokenOnDestroy();
-            _volumeRates = await mixerManager.OnLoadAsObservable.Task.AttachExternalCancellation(token);
+            var mixer = await AudioMixerManager.AsyncInstance;
+            _volumeRates = mixer.VolumeRates;
 
             // 初期化
             SubscribeToVolumeRates();

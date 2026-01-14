@@ -32,7 +32,6 @@ namespace MyUtils.TalkUtils
 
         protected override void Awake()
         {
-            base.Awake();
             TalkStart.AddTo(this);
             LineStart.AddTo(this);
             LineEnd.AddTo(this);
@@ -40,6 +39,8 @@ namespace MyUtils.TalkUtils
 
             _destroyCancellationToken = destroyCancellationToken;
             _leftMouseButton = Mouse.current.leftButton;
+            
+            base.Awake();
         }
 
         /// <summary>

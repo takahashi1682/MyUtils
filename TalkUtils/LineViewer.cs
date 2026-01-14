@@ -9,27 +9,31 @@ namespace MyUtils.TalkUtils
     /// <summary>
     ///  セリフ表示機能
     /// </summary>
-    public class LineViewer : MonoBehaviour
+    public sealed class LineViewer : MonoBehaviour
     {
-        [SerializeField] protected GameObject _talkWindow;
-        [SerializeField] protected TMPro.TextMeshProUGUI _nameText;
-        [SerializeField] protected TMPro.TextMeshProUGUI _linesText;
-        [SerializeField] protected GameObject _nextIcon;
+        [SerializeField] private GameObject _talkWindow;
+        [SerializeField] private TMPro.TextMeshProUGUI _nameText;
+        [SerializeField] private TMPro.TextMeshProUGUI _linesText;
+        [SerializeField] private GameObject _nextIcon;
 
         [Header("表示設定")]
-        [SerializeField, Tooltip("1文字ずつ表示")] protected bool _isIntervalEnabled;
+        [SerializeField, Tooltip("1文字ずつ表示")]
+        private bool _isIntervalEnabled;
 
-        protected CancellationTokenSource _cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource;
+        private TalkManager _talkManager;
 
-        protected virtual void Awake()
+        private async void Awake()
         {
-            TalkManager.Singleton.TalkStart.Subscribe(_ =>
+            _talkManager = await TalkManager.AsyncInstance;
+
+            _talkManager.TalkStart.Subscribe(_ =>
             {
                 _talkWindow.SetActive(true);
             }).AddTo(this);
 
             // 会話開始時にセリフを表示
-            TalkManager.Singleton.LineStart.Subscribe(lines =>
+            _talkManager.LineStart.Subscribe(lines =>
             {
                 _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource = new CancellationTokenSource();
@@ -37,13 +41,13 @@ namespace MyUtils.TalkUtils
             }).AddTo(this);
 
             // 会話終了時にセリフを非表示
-            TalkManager.Singleton.LineEnd.Subscribe(_ =>
+            _talkManager.LineEnd.Subscribe(_ =>
             {
                 _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource = null;
             }).AddTo(this);
 
-            TalkManager.Singleton.TalkEnd.Subscribe(_ =>
+            _talkManager.TalkEnd.Subscribe(_ =>
             {
                 _talkWindow.SetActive(false);
             }).AddTo(this);
@@ -53,7 +57,7 @@ namespace MyUtils.TalkUtils
         ///  セリフを表示
         /// </summary>
         /// <param name="lineData"></param>
-        protected virtual async UniTask DisplayLinesAsync(LineData lineData)
+        private async UniTask DisplayLinesAsync(LineData lineData)
         {
             if (_nameText != null)
             {
@@ -85,7 +89,7 @@ namespace MyUtils.TalkUtils
         }
 
         // 1文字ずつ表示
-        protected virtual async UniTask DisplayTextAsync(LineData lineData)
+        private async UniTask DisplayTextAsync(LineData lineData)
         {
             for (int i = 0; i < lineData.Lines.Length; i++)
             {
@@ -107,12 +111,12 @@ namespace MyUtils.TalkUtils
                     _linesText.text += lineData.Lines[i];
                 }
 
-                await UniTask.Delay(TimeSpan.FromSeconds(TalkManager.Singleton.OneCharInterval),
+                await UniTask.Delay(TimeSpan.FromSeconds(_talkManager.OneCharInterval),
                     cancellationToken: _cancellationTokenSource.Token);
             }
         }
 
-        protected virtual void OnDestroy()
+        private void OnDestroy()
         {
             _cancellationTokenSource?.Cancel();
         }

@@ -16,10 +16,10 @@ namespace MyUtils.DataStore.Core
 
         protected override void Awake()
         {
-            base.Awake();
-
             // JSONファイルのフルパスを取得し、設定をロード
             EncryptedJsonFileHandler<T>.LoadData(out Current, new T(), Setting);
+
+            base.Awake();
         }
 
         protected override void OnDestroy()

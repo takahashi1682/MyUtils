@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace MyUtils
@@ -8,40 +9,30 @@ namespace MyUtils
     /// <typeparam name="T">MonoBehaviourを継承したクラス</typeparam>
     public abstract class AbstractSingletonBehaviour<T> : MonoBehaviour where T : AbstractSingletonBehaviour<T>
     {
-        private static T _instance;
-
-        public static T Singleton
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    // シーン上からインスタンスを探す
-                    _instance = FindFirstObjectByType<T>();
-
-                    if (_instance == null)
-                    {
-                        Debug.LogError($"シーン上に {typeof(T).Name} が見つかりません。");
-                    }
-                }
-
-                return _instance;
-            }
-        }
+        protected static T Instance;
+        protected static UniTaskCompletionSource<T> Source = new();
+        public static UniTask<T> AsyncInstance => Source.Task;
 
         protected virtual void Awake()
         {
-            if (_instance == null) _instance = this as T;
-
-            if (this != _instance)
+            if (Instance != null && Instance != this)
             {
-                Debug.LogError($"シーン上に {nameof(T)} が複数存在します。");
+                Debug.LogError($"{this} は既に存在しています。重複したインスタンスを破棄します。");
+                Destroy(gameObject);
+                return;
             }
+
+            Instance = this as T;
+            Source.TrySetResult(Instance);
         }
 
         protected virtual void OnDestroy()
         {
-            if (this == _instance) _instance = null;
+            if (Instance == this)
+            {
+                Instance = null;
+                Source = new UniTaskCompletionSource<T>();
+            }
         }
     }
 }

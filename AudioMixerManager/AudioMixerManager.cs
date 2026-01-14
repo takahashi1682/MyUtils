@@ -1,5 +1,4 @@
 using System;
-using Cysharp.Threading.Tasks;
 using MyUtils.AudioManager.Core;
 using R3;
 using UnityEngine;
@@ -12,8 +11,6 @@ namespace MyUtils.AudioMixerManager
     /// </summary>
     public class AudioMixerManager : AbstractSingletonBehaviour<AudioMixerManager>
     {
-        public readonly UniTaskCompletionSource<AudioVolumeRates> OnLoadAsObservable = new();
-
         [field: SerializeField] public AudioMixer AudioMixer { get; private set; }
         [SerializeField] private SerializableReactiveProperty<float> _masterVolumeRate = new(1);
         [SerializeField] private SerializableReactiveProperty<float> _bgmVolumeRate = new(1);
@@ -23,8 +20,6 @@ namespace MyUtils.AudioMixerManager
 
         protected override void Awake()
         {
-            base.Awake();
-
             _masterVolumeRate.AddTo(this);
             _bgmVolumeRate.AddTo(this);
             _seVolumeRate.AddTo(this);
@@ -35,7 +30,7 @@ namespace MyUtils.AudioMixerManager
             VolumeRates[EAudioMixerParam.SE] = _seVolumeRate;
             VolumeRates[EAudioMixerParam.Voice] = _voiceVolumeRate;
 
-            OnLoadAsObservable.TrySetResult(VolumeRates);
+            base.Awake();
         }
 
         private void Start()
