@@ -10,8 +10,8 @@ namespace MyUtils
     public abstract class AbstractSingletonBehaviour<T> : MonoBehaviour where T : AbstractSingletonBehaviour<T>
     {
         public static T Instance { get; protected set; }
-        protected static UniTaskCompletionSource<T> _source = new();
-        public static UniTask<T> AsyncInstance => _source.Task;
+        protected static UniTaskCompletionSource<T> Source = new();
+        public static UniTask<T> AsyncInstance => Source.Task;
 
         protected virtual void Awake()
         {
@@ -23,7 +23,7 @@ namespace MyUtils
             }
 
             Instance = this as T;
-            _source.TrySetResult(Instance);
+            Source.TrySetResult(Instance);
         }
 
         protected virtual void OnDestroy()
@@ -31,7 +31,7 @@ namespace MyUtils
             if (Instance == this)
             {
                 Instance = null;
-                _source = new UniTaskCompletionSource<T>();
+                Source = new UniTaskCompletionSource<T>();
             }
         }
     }
