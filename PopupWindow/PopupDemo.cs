@@ -6,7 +6,7 @@ namespace MyUtils.PopupWindow
     {
         public async void OnShowPopup()
         {
-            var popup = await PopupPanel.AsyncInstance;
+            var popup = await PopupPanel.InitializeAsync;
             bool answer = await popup.ShowPopupPanel("Do you Playing Game?", PopupMode.DoubleButton);
             Debug.Log(answer);
         }

@@ -11,7 +11,7 @@ namespace MyUtils
     {
         public static T Instance { get; protected set; }
         protected static UniTaskCompletionSource<T> Source = new();
-        public static UniTask<T> AsyncInstance => Source.Task;
+        public static UniTask<T> InitializeAsync => Source.Task;
 
         protected virtual void Awake()
         {

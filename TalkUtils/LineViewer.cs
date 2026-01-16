@@ -25,7 +25,7 @@ namespace MyUtils.TalkUtils
 
         private async void Awake()
         {
-            _talkManager = await TalkManager.AsyncInstance;
+            _talkManager = await TalkManager.InitializeAsync;
 
             _talkManager.TalkStart.Subscribe(_ =>
             {

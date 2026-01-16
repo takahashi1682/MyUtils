@@ -23,7 +23,7 @@ namespace MyUtils.AudioManager.Core
                 Destroy(gameObject);
                 return;
             }
-
+            
             // この型(T)専用のCoreを生成
             Core = new AudioManager(this, VolumeRate, MixerGroup, MaxAudioStreams);
         }

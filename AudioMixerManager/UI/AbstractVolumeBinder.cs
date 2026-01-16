@@ -17,7 +17,7 @@ namespace MyUtils.AudioMixerManager.UI
             VolumeLevel.AddTo(this);
 
             // AudioMixerManagerの読み込みを待機
-            var mixer = await AudioMixerManager.AsyncInstance;
+            var mixer = await AudioMixerManager.InitializeAsync;
             _volumeRates = mixer.VolumeRates;
 
             // 初期化
