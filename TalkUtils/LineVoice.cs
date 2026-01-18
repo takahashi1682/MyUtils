@@ -14,7 +14,7 @@ namespace MyUtils.TalkUtils
 
         private async void Awake()
         {
-            var talk = await TalkManager.InitializeAsync;
+            var talk = await TalkManager.WaitInstanceAsync;
 
             // 会話開始時にボイス再生
             talk.LineStart.Subscribe(lines =>

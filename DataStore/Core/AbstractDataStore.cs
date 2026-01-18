@@ -1,3 +1,5 @@
+using System;
+using Cysharp.Threading.Tasks;
 using MyUtils.JsonUtils;
 using UnityEngine;
 
@@ -18,7 +20,6 @@ namespace MyUtils.DataStore.Core
         {
             // JSONファイルのフルパスを取得し、設定をロード
             EncryptedJsonFileHandler<T>.LoadData(out Current, new T(), Setting);
-
             base.Awake();
         }
 

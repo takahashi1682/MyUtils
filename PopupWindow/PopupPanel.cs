@@ -17,20 +17,20 @@ namespace MyUtils.PopupWindow
         [SerializeField] protected TMPro.TextMeshProUGUI _messageText;
         [SerializeField] protected Button _positiveButton;
         [SerializeField] protected Button _negativeButton;
-        protected bool _isShowing;
+        protected bool IsShowing;
 
         public virtual async UniTask<bool> ShowPopupPanel(
             string message = null,
             PopupMode mode = PopupMode.DoubleButton,
             CancellationToken ct = default)
         {
-            if (_isShowing)
+            if (IsShowing)
             {
                 Debug.LogError("Popup is already showing.");
                 return false;
             }
 
-            _isShowing = true;
+            IsShowing = true;
 
             if (message != null) { _messageText.text = message; }
 
@@ -62,7 +62,7 @@ namespace MyUtils.PopupWindow
         protected virtual void ClosePanel()
         {
             _panel.SetActive(false);
-            _isShowing = false;
+            IsShowing = false;
         }
     }
 }

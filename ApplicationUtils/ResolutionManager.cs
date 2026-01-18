@@ -29,7 +29,7 @@ namespace MyUtils.ApplicationUtils
         public static async void ApplyResolution(EResolution resolution)
         {
             // 解像度の保存
-            var setting = await PlayerSettingsStore.InitializeAsync;
+            var setting = await PlayerSettingsStore.WaitInstanceAsync;
             setting.Current.Resolution = resolution;
 
             // 画面解像度の変更

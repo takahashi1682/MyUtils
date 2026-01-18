@@ -10,7 +10,7 @@ namespace MyUtils.ApplicationUtils
         {
             base.Start();
 
-            var setting = await PlayerSettingsStore.InitializeAsync;
+            var setting = await PlayerSettingsStore.WaitInstanceAsync;
             Target.value = (int)setting.Current.Resolution;
 
             Target.OnValueChangedAsObservable()
