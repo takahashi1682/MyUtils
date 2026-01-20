@@ -27,8 +27,8 @@ namespace MyUtils.TalkUtils
         public Subject<LineData> LineStart { get; } = new();
         public Subject<LineData> LineEnd { get; } = new();
         public Subject<Unit> TalkEnd { get; } = new();
-        protected ButtonControl _leftMouseButton;
-        protected CancellationToken _destroyCancellationToken;
+        protected ButtonControl LeftMouseButton;
+        protected CancellationToken DestroyCancellationToken;
 
         protected override void Awake()
         {
@@ -37,8 +37,8 @@ namespace MyUtils.TalkUtils
             LineEnd.AddTo(this);
             TalkEnd.AddTo(this);
 
-            _destroyCancellationToken = destroyCancellationToken;
-            _leftMouseButton = Mouse.current.leftButton;
+            DestroyCancellationToken = destroyCancellationToken;
+            LeftMouseButton = Mouse.current.leftButton;
             
             base.Awake();
         }
@@ -79,14 +79,14 @@ namespace MyUtils.TalkUtils
                 }
 
                 await UniTask.WhenAny(
-                    UniTask.WaitUntil(() => _clickSkip && _leftMouseButton.wasPressedThisFrame,
-                        cancellationToken: _destroyCancellationToken),
-                    UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: _destroyCancellationToken));
+                    UniTask.WaitUntil(() => _clickSkip && LeftMouseButton.wasPressedThisFrame,
+                        cancellationToken: DestroyCancellationToken),
+                    UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: DestroyCancellationToken));
             }
             else
             {
-                await UniTask.WaitUntil(() => _clickSkip && _leftMouseButton.wasPressedThisFrame,
-                    cancellationToken: _destroyCancellationToken);
+                await UniTask.WaitUntil(() => _clickSkip && LeftMouseButton.wasPressedThisFrame,
+                    cancellationToken: DestroyCancellationToken);
             }
 
             LineEnd.OnNext(lineData);
