@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using MyUtils.JsonUtils;
 using UnityEngine;
@@ -8,30 +7,56 @@ namespace MyUtils.DataStore.Core
     /// <summary>
     ///  JSONファイルにデータを保存・読み込みするための抽象クラス
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class AbstractDataStore<T> : AbstractSingletonBehaviour<AbstractDataStore<T>>
-        where T : class, new()
+    /// <typeparam name="TType"></typeparam>
+    /// <typeparam name="TAsset"></typeparam>
+    public class AbstractDataStore<TType, TAsset> : MonoBehaviour
+        where TType : new()
+        where TAsset : AbstractDataAsset<TType>
     {
+        public static AbstractDataStore<TType, TAsset> Instance { get; private set; }
+        private static UniTaskCompletionSource<TType> _source = new();
+        public static UniTask<TType> WaitInstanceAsync => _source.Task;
+
+        [Header("Data")]
+        [field: SerializeField] public TAsset Default { get; private set; }
+        [SerializeField] private TType _current;
+        public TType Current => _current;
+
+        [Header("Settings")]
+        public bool LoadToOnAwake = true;
         public bool SaveToOnDestroy = true;
-        [field: SerializeField] public T Current;
-        [field: SerializeField] public DataStoreSetting Setting { get; private set; } = new();
+        [field: SerializeField] public EncryptSetting EncryptSetting { get; private set; } = new();
 
-        protected override void Awake()
+        protected void Awake()
         {
-            // JSONファイルのフルパスを取得し、設定をロード
-            EncryptedJsonFileHandler<T>.LoadData(out Current, new T(), Setting);
-            base.Awake();
+            if (LoadToOnAwake) LoadData();
+
+            if (Instance != null && Instance != this)
+            {
+                Debug.LogError($"{this} は既に存在しています。重複したインスタンスを破棄します。");
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+            _source.TrySetResult(Current);
         }
 
-        protected override void OnDestroy()
+        protected void OnDestroy()
         {
-            base.OnDestroy();
+            if (Instance == this)
+            {
+                Instance = null;
+                _source = new UniTaskCompletionSource<TType>();
+            }
 
-            // 設定をJSONファイルに保存
-            if (SaveToOnDestroy) SaveSettings();
+            if (SaveToOnDestroy) SaveData();
         }
 
-        public void SaveSettings()
-            => EncryptedJsonFileHandler<T>.SaveData(Current, Setting);
+        public bool LoadData()
+            => EncryptedJsonFileHandler<TType>.LoadData(out _current, Default.Data, EncryptSetting);
+
+        public void SaveData()
+            => EncryptedJsonFileHandler<TType>.SaveData(_current, EncryptSetting);
     }
 }

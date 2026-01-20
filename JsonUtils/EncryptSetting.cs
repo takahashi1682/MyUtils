@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-namespace MyUtils.DataStore.Core
+namespace MyUtils.JsonUtils
 {
     [Serializable]
-    public class DataStoreSetting
+    public class EncryptSetting
     {
         public bool IsEncrypt = true;
         [Range(16, 16)] public string AesKey = "e5Cp29Pda8n5Qv13";

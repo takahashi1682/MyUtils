@@ -10,8 +10,8 @@ namespace MyUtils.ApplicationUtils
         {
             base.Start();
 
-            var setting = await PlayerSettingsStore.WaitInstanceAsync;
-            Target.value = (int)setting.Current.Resolution;
+            var setting = await PlayerSettingStore.WaitInstanceAsync;
+            Target.value = (int)setting.Resolution;
 
             Target.OnValueChangedAsObservable()
                 .Skip(1)

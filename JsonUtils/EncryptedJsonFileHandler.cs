@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using MyUtils.DataStore.Core;
 using UnityEngine;
 
 namespace MyUtils.JsonUtils
@@ -16,7 +15,7 @@ namespace MyUtils.JsonUtils
         public static string GetIVFilePath(string fileName)
             => Path.Combine(Application.persistentDataPath, fileName);
 
-        public static void SaveData(T outputData, DataStoreSetting setting)
+        public static void SaveData(T outputData, EncryptSetting setting)
             => SaveData(outputData, setting.FileName, setting.IsEncrypt, setting.IvFileName, setting.AesKey);
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace MyUtils.JsonUtils
             PersistentDataTextFileHandler.SaveText(filePath, dataToSave);
         }
 
-        public static bool LoadData(out T loadData, T defaultValue, DataStoreSetting setting)
+        public static bool LoadData(out T loadData, T defaultValue, EncryptSetting setting)
             => LoadData(out loadData, defaultValue, setting.FileName, setting.IsEncrypt, setting.IvFileName,
                 setting.AesKey);
 

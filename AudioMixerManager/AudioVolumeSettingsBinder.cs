@@ -14,8 +14,8 @@ namespace MyUtils.AudioMixerManager
 
         private async void Start()
         {
-            var setting = await PlayerSettingsStore.WaitInstanceAsync;
-            float[] volumes = setting.Current.Volumes;
+            var setting = await PlayerSettingStore.WaitInstanceAsync;
+            float[] volumes = setting.Volumes;
 
             foreach (EAudioMixerParam pram in Enum.GetValues(typeof(EAudioMixerParam)))
             {
