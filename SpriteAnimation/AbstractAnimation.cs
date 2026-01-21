@@ -25,23 +25,19 @@ namespace MyUtils.SpriteAnimation
         protected override void Start()
         {
             base.Start();
-            if (IsPlayOnAwake)
-            {
-                _animationCoroutine = StartCoroutine(MainProcess(1f / FPS));
-            }
+            if (IsPlayOnAwake) Play();
         }
 
         protected virtual void OnEnable()
         {
-            if (IsPlayOnEnable)
-            {
-                Play();
-            }
+            if (IsPlayOnEnable) Play();
         }
 
-        public void Play()
+        public void Play() => _animationCoroutine ??= StartCoroutine(MainProcess(1f / FPS));
+
+        protected virtual void OnDisable()
         {
-            _animationCoroutine ??= StartCoroutine(MainProcess(1f / FPS));
+            Stop();
         }
 
         public void Stop()
