@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using MyUtils.JsonUtils;
 using UnityEngine;
+using R3;
 
 namespace MyUtils.DataStore.Core
 {
@@ -18,6 +19,7 @@ namespace MyUtils.DataStore.Core
         public static UniTask<TType> WaitInstanceAsync => _source.Task;
 
         [Header("Data")]
+        [field: SerializeField] public TAsset TestData { get; private set; }
         [field: SerializeField] public TAsset Default { get; private set; }
         [SerializeField] private TType _current;
         public TType Current => _current;
@@ -29,17 +31,28 @@ namespace MyUtils.DataStore.Core
 
         protected void Awake()
         {
-            if (LoadToOnAwake) LoadData();
-
-            if (Instance != null && Instance != this)
+            try
             {
-                Debug.LogError($"{this} は既に存在しています。重複したインスタンスを破棄します。");
-                Destroy(gameObject);
-                return;
-            }
+                if (LoadToOnAwake) LoadData();
 
-            Instance = this;
-            _source.TrySetResult(Current);
+                if (Instance != null && Instance != this)
+                {
+                    Debug.LogError($"{this} は既に存在しています。重複したインスタンスを破棄します。");
+                    Destroy(gameObject);
+                    return;
+                }
+
+                Instance = this;
+                if (!_source.Task.Status.IsCompleted())
+                {
+                    _source.TrySetResult(Current);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Awake処理中にエラーが発生しました: {ex.Message}");
+                _source.TrySetException(ex);
+            }
         }
 
         protected void OnDestroy()
@@ -50,13 +63,41 @@ namespace MyUtils.DataStore.Core
                 _source = new UniTaskCompletionSource<TType>();
             }
 
-            if (SaveToOnDestroy) SaveData();
+            if (SaveToOnDestroy)
+            {
+                try
+                {
+                    SaveData();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"データ保存中にエラーが発生しました: {ex.Message}");
+                }
+            }
         }
 
         public bool LoadData()
-            => EncryptedJsonFileHandler<TType>.LoadData(out _current, Default.Data, EncryptSetting);
+        {
+            if (TestData != null)
+            {
+                _current = TestData.Data;
+                Debug.Log($"{TestData.name} からデータを読み込みました。");
+                return true;
+            }
+
+            EncryptedJsonFileHandler<TType>.LoadData(out _current, Default.Data, EncryptSetting);
+            return true;
+        }
 
         public void SaveData()
-            => EncryptedJsonFileHandler<TType>.SaveData(_current, EncryptSetting);
+        {
+            if (TestData != null)
+            {
+                Debug.LogWarning($"{TestData.name} が設定されているため、データの保存をスキップしました。");
+                return;
+            }
+
+            EncryptedJsonFileHandler<TType>.SaveData(_current, EncryptSetting);
+        }
     }
 }
