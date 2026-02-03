@@ -6,6 +6,7 @@ using R3;
 using R3.Triggers;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 
 namespace MyUtils.InputTrigger
@@ -27,14 +28,10 @@ namespace MyUtils.InputTrigger
         [SerializeField] private bool _isEnableMouseClick = true;
         [SerializeField] private bool _isEnableTouchInput = true;
         [SerializeField] private Key[] _triggerKeys = { Key.Enter };
+        [SerializeField] private GamepadButton[] _triggerButtons = { GamepadButton.South };
 
         private readonly Subject<Unit> _pressedSubject = new();
         public Observable<Unit> OnTriggerObservable => _pressedSubject;
-
-        // デバイスへのショートカットプロパティ（実行時の接続切断に対応）
-        private Mouse Mouse => Mouse.current;
-        private Keyboard Keyboard => Keyboard.current;
-        private Touchscreen Touchscreen => Touchscreen.current;
 
         protected virtual async void Start()
         {
@@ -64,15 +61,19 @@ namespace MyUtils.InputTrigger
         private bool IsPressed()
         {
             // キーボード入力
-            if (Keyboard != null && _triggerKeys.Any(k => Keyboard[k].wasPressedThisFrame))
+            if (Keyboard.current != null && _triggerKeys.Any(k => Keyboard.current[k].wasPressedThisFrame))
+                return true;
+
+            // ゲームパッド入力
+            if (Gamepad.current != null && _triggerButtons.Any(b => Gamepad.current[b].wasPressedThisFrame))
                 return true;
 
             // マウス左クリック
-            if (_isEnableMouseClick && Mouse?.leftButton.wasPressedThisFrame == true)
+            if (_isEnableMouseClick && Mouse.current?.leftButton.wasPressedThisFrame == true)
                 return true;
 
             // タッチ入力
-            if (_isEnableTouchInput && Touchscreen?.primaryTouch.press.wasPressedThisFrame == true)
+            if (_isEnableTouchInput && Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true)
                 return true;
 
             return false;
