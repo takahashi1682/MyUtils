@@ -1,6 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
+using MyUtils.InputTrigger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,7 +21,7 @@ namespace MyUtils.SceneLoader
         [SerializeField] private bool _isFade = true;
         [SerializeField] private FadeSetting _fadeSetting;
 
-        protected override async UniTask OnPress(CancellationToken ct)
+        protected override async UniTask OnPressed(CancellationToken ct)
         {
             if (SceneManager.GetActiveScene().name == _nextScene.SceneName) return;
 

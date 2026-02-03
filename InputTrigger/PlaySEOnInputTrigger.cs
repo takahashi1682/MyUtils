@@ -4,9 +4,9 @@ using R3;
 using TNRD;
 using UnityEngine;
 
-namespace MyUtils
+namespace MyUtils.InputTrigger
 {
-    public class InputTriggerSound : MonoBehaviour
+    public class PlaySEOnInputTrigger : MonoBehaviour
     {
         [SerializeField] private SerializableInterface<IInputTriggerObservable> _inputTriggerInterface;
         [SerializeField] private AudioSetting _audioSetting;
