@@ -39,7 +39,7 @@ namespace MyUtils.FadeScreen
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = SortingOrder;
 
-            canvas.AddComponent<GraphicRaycaster>();
+            canvas.gameObject.AddComponent<GraphicRaycaster>();
 
             _fadePanel = _canvasObject.AddComponent<Image>();
             _fadePanel.raycastTarget = true;

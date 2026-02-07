@@ -1,0 +1,13 @@
+{
+    "name": "com.takahashi.myutils",
+    "version": "1.0.0",
+    "displayName": "My Utils",
+    "author": {
+        "name": "takahashi1682",
+        "url": "https://github.com/takahashi1682/MyUtils.git"
+    },
+    "dependencies": {
+        "com.cysharp.unitask": "2.5.0",
+        "com.cysharp.r3": "1.0.0"
+    }
+}
