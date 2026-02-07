@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace MyUtils
+namespace MyUtils.FeatureContainer
 {
     public class FeatureContainer
     {
