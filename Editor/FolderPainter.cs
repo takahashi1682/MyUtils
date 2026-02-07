@@ -40,9 +40,9 @@ namespace MyUtils.Editor
                 // 背景全体を塗るためのRect
                 // リスト表示の時は少し右にずらすとアイコンが見やすくなります
                 var backgroundRect = new Rect(rect);
-            
+
                 // 色の透明度を調整（0.1〜0.2くらいが文字も見やすくておすすめ）
-                color.a = 0.15f; 
+                color.a = 0.15f;
 
                 // 背景を描画
                 EditorGUI.DrawRect(backgroundRect, color);
