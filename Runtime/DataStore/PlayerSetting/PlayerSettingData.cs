@@ -1,7 +1,7 @@
 using System;
 using MyUtils.ApplicationUtils;
 
-namespace MyUtils.DataStore
+namespace MyUtils.DataStore.PlayerSetting
 {
     /// <summary>
     /// 実際に使用されるデータ

@@ -7,7 +7,7 @@ namespace MyUtils.SceneLoader
 {
     public class SceneUnloadButton : AbstractAsyncButton
     {
-        [SerializeField] private SceneReference _unloadScene;
+        [SerializeField] private SceneReference.SceneReference _unloadScene;
 
         [Header("フェード設定")]
         [SerializeField] private bool _isFade = true;

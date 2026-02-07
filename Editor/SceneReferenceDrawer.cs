@@ -1,8 +1,10 @@
 #if UNITY_EDITOR
+using MyUtils;
+using MyUtils.SceneReference;
 using UnityEditor;
 using UnityEngine;
 
-namespace MyUtils.Editor
+namespace Editor
 {
     [CustomPropertyDrawer(typeof(SceneReference))]
     public class SceneReferenceDrawer : PropertyDrawer

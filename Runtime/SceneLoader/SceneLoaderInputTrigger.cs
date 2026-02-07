@@ -9,12 +9,12 @@ namespace MyUtils.SceneLoader
 {
     public class SceneLoaderInputTrigger : AbstractInputTrigger
     {
-        [SerializeField] private SceneReference _nextScene;
+        [SerializeField] private SceneReference.SceneReference _nextScene;
         [SerializeField] private LoadSceneMode _loadSceneMode = LoadSceneMode.Single;
 
         [Header("ロード画面設定")]
         [SerializeField] private bool _isUseLoadingScene;
-        [SerializeField] private SceneReference _loadingScene;
+        [SerializeField] private SceneReference.SceneReference _loadingScene;
         [SerializeField] private int _minLoadingTime = 2;
 
         [Header("フェード設定")]

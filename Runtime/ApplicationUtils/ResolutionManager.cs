@@ -1,4 +1,5 @@
 using MyUtils.DataStore;
+using MyUtils.DataStore.PlayerSetting;
 using UnityEngine;
 
 namespace MyUtils.ApplicationUtils

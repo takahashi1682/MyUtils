@@ -8,7 +8,7 @@ namespace MyUtils.SceneLoader
 {
     public class SceneUnloadInputTrigger : AbstractInputTrigger
     {
-        [SerializeField] private SceneReference _unloadScene;
+        [SerializeField] private SceneReference.SceneReference _unloadScene;
 
         [Header("フェード設定")]
         [SerializeField] private bool _isFade = true;

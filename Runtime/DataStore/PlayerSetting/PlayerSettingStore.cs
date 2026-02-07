@@ -1,6 +1,6 @@
 using MyUtils.DataStore.Core;
 
-namespace MyUtils.DataStore
+namespace MyUtils.DataStore.PlayerSetting
 {
     /// <summary>
     /// 他クラスから参照するためのシングルトンクラス

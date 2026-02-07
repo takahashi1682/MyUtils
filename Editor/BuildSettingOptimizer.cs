@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace MyUtils.Editor
+namespace Editor
 {
     public class PlayModeOptimizer : EditorWindow
     {

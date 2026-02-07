@@ -9,7 +9,7 @@ namespace MyUtils
     public class SplashController : MonoBehaviour
     {
         [SerializeField] private float _waitTimeSecond = 1f;
-        [SerializeField] private SceneReference _nextScene;
+        [SerializeField] private SceneReference.SceneReference _nextScene;
         [SerializeField] private FadeSetting _fadeInSetting;
         [SerializeField] private FadeSetting _fadeOutSetting;
 

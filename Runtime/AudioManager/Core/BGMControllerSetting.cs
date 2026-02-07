@@ -15,7 +15,7 @@ namespace MyUtils.AudioManager.Core
     [Serializable]
     public class PlayBGMSetting
     {
-        public SceneReference SceneName;
+        public SceneReference.SceneReference SceneName;
         public AudioPlayMode AudioPlayMode;
         public AudioSetting AudioSetting;
     }

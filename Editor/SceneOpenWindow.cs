@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace MyUtils.Editor
+namespace Editor
 {
     public class SceneOpenWindow : EditorWindow
     {

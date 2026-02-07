@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MyUtils
+namespace MyUtils.SceneReference
 {
     [Serializable]
     public class SceneReference

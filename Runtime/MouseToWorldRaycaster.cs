@@ -1,5 +1,6 @@
 using R3;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace MyUtils
 {
@@ -9,7 +10,6 @@ namespace MyUtils
     /// </summary>
     public class MouseToWorldRaycaster : AbstractTargetBehaviour<Camera>
     {
-        [SerializeField] private InputPlayerReader _input;
         [SerializeField] private float _maxDistance = 100f;
         [SerializeField] private LayerMask _layerMask = ~0;
 
@@ -26,21 +26,23 @@ namespace MyUtils
         {
             base.Start();
             _cursorWorldPos.AddTo(this);
-            _input.MousePosition
-                .Subscribe(screenPos =>
-                {
-                    // カメラからRayを飛ばし、ヒットしたオブジェクトを取得する
-                    Ray ray = Target.ScreenPointToRay(screenPos);
-                    if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance, _layerMask))
-                    {
-                        if (hit.collider)
-                        {
-                            _cursorWorldPos.Value = hit.point;
-                        }
-                    }
-                }).AddTo(this);
         }
 
+        private void Update()
+        {
+            if (Mouse.current == null) return;
+
+            // カメラからRayを飛ばし、ヒットしたオブジェクトを取得する
+            Ray ray = Target.ScreenPointToRay(Mouse.current.position.value);
+            if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance, _layerMask))
+            {
+                if (hit.collider)
+                {
+                    _cursorWorldPos.Value = hit.point;
+                }
+            }
+        }
+        
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
