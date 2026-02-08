@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace MyUtils.AutoLauncher
@@ -10,18 +11,20 @@ namespace MyUtils.AutoLauncher
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
         {
-            var setting = Resources.Load<AutoLauncherSettings>(nameof(AutoLauncherSettings));
-            Debug.Log(setting);
-            if (setting == null) return;
+            var settings = Resources.LoadAll<AutoLauncherSettings>(string.Empty);
+            if (settings == null || settings.Length == 0) return;
 
-            foreach (var obj in setting.LaunchObjects)
+            var targets = settings.SelectMany(s => s.LaunchObjects).Where(obj => obj != null).Distinct();
+
+            foreach (var obj in targets)
             {
-                Debug.Log(obj.name);
-                if (obj == null) continue;
                 Object.Instantiate(obj);
             }
 
-            Resources.UnloadUnusedAssets();
+            foreach (var setting in settings)
+            {
+                Resources.UnloadAsset(setting);
+            }
         }
     }
 }
