@@ -57,8 +57,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb44281840f5cd42a2fac0fe2b56857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyUtils.GameSetting.PlayerSettingsStore
-  <TestData>k__BackingField: {fileID: 11400000, guid: 4e9a01a3fb00f624eb1d46de209b8eff, type: 2}
-  <Default>k__BackingField: {fileID: 11400000, guid: a2029dade0ae75841a5e0f410d17d6bc, type: 2}
+  <OverrideData>k__BackingField: {fileID: 0}
+  <DefaultData>k__BackingField: {fileID: 11400000, guid: a2029dade0ae75841a5e0f410d17d6bc, type: 2}
   _current:
     Volumes:
     - 1

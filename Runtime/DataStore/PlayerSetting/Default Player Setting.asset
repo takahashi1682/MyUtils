@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3368c2b704c44be7b0300cc450eb8b8c, type: 3}
-  m_Name: Test Player Setting Asset
+  m_Name: Default Player Setting
   m_EditorClassIdentifier: Assembly-CSharp::MyUtils.DataStore.PlayerSettingAsset
   Data:
     Volumes:
-    - 0
-    - 0
-    - 0
-    - 0
+    - 1
+    - 1
+    - 1
+    - 1
     Resolution: 0

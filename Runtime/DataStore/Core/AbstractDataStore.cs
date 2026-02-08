@@ -19,8 +19,8 @@ namespace MyUtils.DataStore.Core
         public static UniTask<TType> WaitInstanceAsync => _source.Task;
 
         [Header("Data")]
-        [field: SerializeField] public TAsset TestData { get; private set; }
-        [field: SerializeField] public TAsset Default { get; private set; }
+        [field: SerializeField] public TAsset OverrideData { get; private set; }
+        [field: SerializeField] public TAsset DefaultData { get; private set; }
         [SerializeField] private TType _current;
         public TType Current => _current;
 
@@ -78,22 +78,22 @@ namespace MyUtils.DataStore.Core
 
         public bool LoadData()
         {
-            if (TestData != null)
+            if (OverrideData != null)
             {
-                _current = TestData.Data;
-                Debug.Log($"{TestData.name} からデータを読み込みました。");
+                _current = OverrideData.Data;
+                Debug.Log($"{OverrideData.name} からデータを読み込みました。");
                 return true;
             }
 
-            EncryptedJsonFileHandler<TType>.LoadData(out _current, Default.Data, EncryptSetting);
+            EncryptedJsonFileHandler<TType>.LoadData(out _current, DefaultData.Data, EncryptSetting);
             return true;
         }
 
         public void SaveData()
         {
-            if (TestData != null)
+            if (OverrideData != null)
             {
-                Debug.LogWarning($"{TestData.name} が設定されているため、データの保存をスキップしました。");
+                Debug.LogWarning($"{OverrideData.name} が設定されているため、データの保存をスキップしました。");
                 return;
             }
 
