@@ -60,7 +60,8 @@ namespace MyUtils.JsonUtils
             if (dataToLoad == null)
             {
                 Debug.Log($"[EncryptedJsonFileHandler] File not found. Returning new instance: {filePath}");
-                loadData = defaultValue;
+                string json = JsonUtility.ToJson(defaultValue);
+                loadData = JsonUtility.FromJson<T>(json);
                 return false;
             }
 
