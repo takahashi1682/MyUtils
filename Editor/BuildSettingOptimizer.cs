@@ -2,13 +2,13 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace MyUtils
 {
     public class PlayModeOptimizer : EditorWindow
     {
         private Vector2 _scrollPos;
 
-        [MenuItem("Window/Build/Play Mode Optimizer")]
+        [MenuItem("Window/MyUtils/Play Mode Optimizer")]
         public static void ShowWindow() => GetWindow<PlayModeOptimizer>("PlayMode Optimizer");
 
         private void OnGUI()

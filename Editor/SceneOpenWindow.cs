@@ -4,11 +4,11 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace Editor
+namespace MyUtils
 {
     public class SceneOpenWindow : EditorWindow
     {
-        [MenuItem("Window/Scene Open Window")]
+        [MenuItem("Window/MyUtils/Scene Open Window")]
         public static void OpenWindow()
         {
             GetWindow<SceneOpenWindow>("Scene Open Window");

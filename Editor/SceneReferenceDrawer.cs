@@ -1,12 +1,10 @@
 #if UNITY_EDITOR
-using MyUtils;
-using MyUtils.SceneReference;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace MyUtils
 {
-    [CustomPropertyDrawer(typeof(SceneReference))]
+    [CustomPropertyDrawer(typeof(SceneReference.SceneReference))]
     public class SceneReferenceDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

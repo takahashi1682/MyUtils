@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace MyUtils
 {
     [InitializeOnLoad]
     public class FolderPainter
