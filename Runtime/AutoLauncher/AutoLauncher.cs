@@ -20,11 +20,6 @@ namespace MyUtils.AutoLauncher
             {
                 Object.Instantiate(obj);
             }
-
-            foreach (var setting in settings)
-            {
-                Resources.UnloadAsset(setting);
-            }
         }
     }
 }
