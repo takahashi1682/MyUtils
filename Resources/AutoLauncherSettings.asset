@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e75ce52fa76135b45ad867378ae98c39, type: 3}
+  m_Name: AutoLauncherSettings
+  m_EditorClassIdentifier: MyUtils.Runtime::MyUtils.AutoLauncher.AutoLauncherObjects
+  LaunchObjects:
+  - {fileID: 7292091918259133529, guid: 10eeb818fa8217a47b1e56ecd7ef6fa1, type: 3}
+  - {fileID: 2913428797061529736, guid: 9d5e47d0924ca4043bda465bfa688b64, type: 3}

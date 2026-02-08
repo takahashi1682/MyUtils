@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace MyUtils.AutoLauncher
 {
@@ -8,34 +7,21 @@ namespace MyUtils.AutoLauncher
     /// </summary>
     public static class AutoLauncher
     {
-        // Addressables側で設定するラベル名
-        private const string LaunchLabel = "AutoLaunch";
-
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static async void Initialize()
+        private static void Initialize()
         {
-            // ラベルがついた全てのアセットを非同期ロード
-            var handle = Addressables.LoadAssetsAsync<GameObject>(LaunchLabel, null);
+            var setting = Resources.Load<AutoLauncherSettings>(nameof(AutoLauncherSettings));
+            Debug.Log(setting);
+            if (setting == null) return;
 
-            try
+            foreach (var obj in setting.LaunchObjects)
             {
-                var prefabs = await handle.Task;
-
-                if (prefabs == null || prefabs.Count == 0) return;
-
-                foreach (var prefab in prefabs)
-                {
-                    if (prefab != null)
-                    {
-                        Object.Instantiate(prefab);
-                    }
-                }
+                Debug.Log(obj.name);
+                if (obj == null) continue;
+                Object.Instantiate(obj);
             }
-            finally
-            {
-                // ロード用ハンドルの解放（生成したインスタンスは残る）
-                Addressables.Release(handle);
-            }
+
+            Resources.UnloadUnusedAssets();
         }
     }
 }
