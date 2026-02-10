@@ -23,7 +23,7 @@ namespace MyUtils.AudioManager.Core
     [CreateAssetMenu(fileName = "BGMControllerSetting", menuName = "MyUtils/AudioManager/BGMControllerSetting")]
     public class BGMControllerSetting : ScriptableObject
     {
-        [field: SerializeField] public PlayBGMSetting[] SceneEnterAudioSettings { get; private set; }
+        [SerializeField] public PlayBGMSetting[] SceneEnterAudioSettings;
         [field: SerializeField] public PlayBGMSetting[] SceneExitAudioSettings { get; private set; }
     }
 }
