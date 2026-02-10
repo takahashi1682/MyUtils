@@ -1,13 +1,14 @@
 using MyUtils.AudioManager.Core;
 using MyUtils.AudioManager.Manager;
 using MyUtils.SceneChangeDetector;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace MyUtils.AudioManager
 {
     public class BGMController : AbstractSceneChangeDetector
     {
-        public BGMControllerSetting Setting;
+        [SerializeField] public BGMControllerSetting Setting;
 
         protected override void OnSceneEnter(Scene scene, LoadSceneMode mode)
         {
@@ -34,7 +35,7 @@ namespace MyUtils.AudioManager
             {
                 if (setting.SceneName == null) continue;
 
-                if (setting.SceneName.ToString() == sceneName)
+                if (setting.SceneName.SceneName == sceneName)
                 {
                     ExecuteBGMAction(setting);
                 }
