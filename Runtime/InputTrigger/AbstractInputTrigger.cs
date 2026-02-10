@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
+using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
 namespace MyUtils.InputTrigger
 {
@@ -25,8 +26,8 @@ namespace MyUtils.InputTrigger
         [SerializeField] private AwaitOperation _awaitOperation = AwaitOperation.Drop;
 
         [Header("Input Settings")]
-        [SerializeField] private bool _enableMouseClick = true;
-        [SerializeField] private bool _enableTouchInput = true;
+        [SerializeField] private MouseButton[] _mouseButton = { MouseButton.Left };
+        [SerializeField] private TouchPhase[] _touchPhases = { TouchPhase.Stationary };
         [SerializeField] private Key[] _triggerKeys = { Key.Enter };
         [SerializeField] private GamepadButton[] _triggerButtons = { GamepadButton.South };
 
@@ -68,16 +69,39 @@ namespace MyUtils.InputTrigger
             if (Gamepad.current != null && _triggerButtons.Any(b => Gamepad.current[b].wasPressedThisFrame))
                 return true;
 
-            // マウス左クリック
-            if (_enableMouseClick && Mouse.current?.leftButton.wasPressedThisFrame == true)
+            // マウス入力
+            if (Mouse.current != null && _mouseButton.Any(b =>
+                {
+                    return b switch
+                    {
+                        MouseButton.Left => Mouse.current.leftButton.wasPressedThisFrame,
+                        MouseButton.Right => Mouse.current.rightButton.wasPressedThisFrame,
+                        MouseButton.Middle => Mouse.current.middleButton.wasPressedThisFrame,
+                        MouseButton.Forward => Mouse.current.forwardButton.wasPressedThisFrame,
+                        MouseButton.Back => Mouse.current.backButton.wasPressedThisFrame,
+                        _ => false
+                    };
+                }))
                 return true;
 
             // タッチ入力
-            if (_enableTouchInput && Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true)
-                return true;
+            var screen = Touchscreen.current;
+            if (screen != null)
+            {
+                // 全てのタッチポイントを確認
+                foreach (var touch in screen.touches)
+                {
+                    var phase = touch.phase.ReadValue();
+                    if (_touchPhases.Contains(phase) && touch.press.wasPressedThisFrame)
+                    {
+                        return true;
+                    }
+                }
+            }
 
             return false;
         }
+
 
         /// <summary>
         /// 押下後に実行される処理（オーバーライド必須）
