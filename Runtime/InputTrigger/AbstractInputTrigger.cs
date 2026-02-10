@@ -19,14 +19,14 @@ namespace MyUtils.InputTrigger
     public abstract class AbstractInputTrigger : MonoBehaviour, IInputTriggerObservable
     {
         [Header("Basic Settings")]
-        [SerializeField] private bool _isCurrentSceneOnly = true;
+        [SerializeField] private bool _currentSceneOnly = true;
         [SerializeField] private float _firstDelaySeconds = 1f;
         [SerializeField] private float _triggerThrottleSeconds = 0.5f;
         [SerializeField] private AwaitOperation _awaitOperation = AwaitOperation.Drop;
 
         [Header("Input Settings")]
-        [SerializeField] private bool _isEnableMouseClick = true;
-        [SerializeField] private bool _isEnableTouchInput = true;
+        [SerializeField] private bool _enableMouseClick = true;
+        [SerializeField] private bool _enableTouchInput = true;
         [SerializeField] private Key[] _triggerKeys = { Key.Enter };
         [SerializeField] private GamepadButton[] _triggerButtons = { GamepadButton.South };
 
@@ -46,7 +46,7 @@ namespace MyUtils.InputTrigger
                     timeProvider: UnityTimeProvider.UpdateRealtime)
                 .SubscribeAwait(async (_, ct) =>
                 {
-                    if (_isCurrentSceneOnly &&
+                    if (_currentSceneOnly &&
                         SceneManager.GetActiveScene().name != gameObject.scene.name)
                         return;
 
@@ -69,11 +69,11 @@ namespace MyUtils.InputTrigger
                 return true;
 
             // マウス左クリック
-            if (_isEnableMouseClick && Mouse.current?.leftButton.wasPressedThisFrame == true)
+            if (_enableMouseClick && Mouse.current?.leftButton.wasPressedThisFrame == true)
                 return true;
 
             // タッチ入力
-            if (_isEnableTouchInput && Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true)
+            if (_enableTouchInput && Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true)
                 return true;
 
             return false;
