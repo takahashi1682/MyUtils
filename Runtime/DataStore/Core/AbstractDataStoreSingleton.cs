@@ -16,18 +16,11 @@ namespace MyUtils.DataStore.Core
         private static UniTaskCompletionSource<TType> _source = new();
         public static UniTask<TType> WaitInstanceAsync => _source.Task;
 
-        [Header("Auto Load/Save Settings")]
-        public bool LoadToOnAwake = true;
-        public bool SaveToOnDestroy = true;
-
-        public TType Current { get; private set; } = new();
-
-        protected void Awake()
+        protected override void Awake()
         {
             try
             {
-                if (LoadToOnAwake)
-                    Current = LoadData();
+                base.Awake();
 
                 if (Instance != null && Instance != this)
                 {
@@ -49,24 +42,13 @@ namespace MyUtils.DataStore.Core
             }
         }
 
-        protected void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             if (Instance == this)
             {
                 Instance = null;
                 _source = new UniTaskCompletionSource<TType>();
-            }
-
-            if (SaveToOnDestroy)
-            {
-                try
-                {
-                    SaveData(Current);
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogError($"データ保存中にエラーが発生しました: {ex.Message}");
-                }
             }
         }
     }

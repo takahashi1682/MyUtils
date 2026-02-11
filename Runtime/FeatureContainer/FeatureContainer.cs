@@ -25,6 +25,19 @@ namespace MyUtils.FeatureContainer
             }
         }
 
+        public void Remove<T>() where T : class
+        {
+            if (!Map.ContainsKey(typeof(T))) return;
+            Map.Remove(typeof(T));
+        }
+
+        public void Overwrite(object feature)
+        {
+            if (feature == null) return;
+            var type = feature.GetType();
+            Map[type] = feature;
+        }
+
         public T Get<T>() where T : class
         {
             if (Map.TryGetValue(typeof(T), out object val)) return (T)val;

@@ -20,13 +20,13 @@ namespace MyUtils.DOTweenUtils
     {
         public float Duration = 1;
         public float Delay;
-        public Ease Ease = Ease.InSine;
+        public Ease Ease = Ease.InOutQuad;
         public int Loops = -1;
         public LoopType LoopType = LoopType.Yoyo;
         public LinkBehaviour LinkBehaviour = LinkBehaviour.PauseOnDisable;
+        public bool Inverted;
         public bool IsAutoPlayOnStart = true;
         public bool IsAutoKill = true;
-
         public Tween TweenInstance { get; protected set; }
 
         protected abstract Tween CreateTween();
@@ -40,7 +40,7 @@ namespace MyUtils.DOTweenUtils
                 Play();
         }
 
-        private void InitializeTween()
+        protected virtual void InitializeTween()
         {
             TweenInstance?.Kill();
             TweenInstance = CreateTween();
@@ -53,6 +53,7 @@ namespace MyUtils.DOTweenUtils
                 .SetEase(Ease)
                 .SetLoops(Loops, LoopType)
                 .SetLink(gameObject, LinkBehaviour)
+                .SetInverted(Inverted)
                 .SetAutoKill(IsAutoKill)
                 .Pause();
 
