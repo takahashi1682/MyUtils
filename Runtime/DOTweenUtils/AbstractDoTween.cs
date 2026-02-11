@@ -18,7 +18,7 @@ namespace MyUtils.DOTweenUtils
 
     public abstract class AbstractDoTween<T> : AbstractTargetBehaviour<T>, IDoTween where T : Component
     {
-        public float Duration = 1;
+        public float Duration = 0.5f;
         public float Delay;
         public Ease Ease = Ease.InOutQuad;
         public int Loops = -1;
