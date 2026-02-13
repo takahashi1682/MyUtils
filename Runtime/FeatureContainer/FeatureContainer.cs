@@ -1,51 +1,80 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace MyUtils.FeatureContainer
 {
+    [Serializable]
     public class FeatureContainer
     {
-        public Dictionary<Type, object> Map { get; }
+        private readonly Dictionary<Type, object> _map;
 
         public FeatureContainer(FeatureContainer source = null)
         {
-            Map = source == null ? new Dictionary<Type, object>() : new Dictionary<Type, object>(source.Map);
+            _map = source == null
+                ? new Dictionary<Type, object>()
+                : new Dictionary<Type, object>(source._map);
         }
 
-        public void TryAdd(object feature)
+        /// <summary>
+        /// 厳格な登録。既に同じ型が登録されている場合はエラーログを出し、上書きしません。
+        /// </summary>
+        public void Add<T>(T feature) where T : class
         {
-            if (feature == null) return;
-            var type = feature.GetType();
+            if (feature == null) throw new ArgumentNullException(nameof(feature));
 
-            if (!Map.TryAdd(type, feature))
+            if (!TryAdd(feature))
             {
-                Debug.LogError($"重複したFeature登録を検知: {type.Name}");
+                Debug.LogError($"[FeatureContainer] 重複した登録を検知しました。型: {typeof(T).Name}");
             }
+        }
+
+        /// <summary>
+        /// 柔軟な登録。登録に成功した場合は true、既に存在した場合は false を返します。
+        /// </summary>
+        public bool TryAdd<T>(T feature) where T : class
+        {
+            if (feature == null) return false;
+            return _map.TryAdd(typeof(T), feature);
         }
 
         public void Remove<T>() where T : class
         {
-            if (!Map.ContainsKey(typeof(T))) return;
-            Map.Remove(typeof(T));
+            _map.Remove(typeof(T));
         }
 
-        public void Overwrite(object feature)
+        public void Overwrite<T>(T feature) where T : class
         {
             if (feature == null) return;
-            var type = feature.GetType();
-            Map[type] = feature;
+            _map[typeof(T)] = feature;
         }
 
+        /// <summary>
+        /// 厳密な型一致で取得
+        /// </summary>
+        /// <param name="feature"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool TryGet<T>(out T feature) where T : class
+        {
+            if (_map.TryGetValue(typeof(T), out var val))
+            {
+                feature = (T)val;
+                return true;
+            }
+
+            feature = null;
+            return false;
+        }
+
+        /// <summary>
+        /// 厳密な型一致で取得
+        /// </summary>
         public T Get<T>() where T : class
         {
-            if (Map.TryGetValue(typeof(T), out object val)) return (T)val;
+            if (TryGet<T>(out var feature)) return feature;
 
-            var found = Map.Values.OfType<T>().FirstOrDefault();
-            if (found != null) return found;
-
-            Debug.LogWarning($"Feature {typeof(T).Name} が見つかりませんでした。");
+            Debug.LogWarning($"Feature {typeof(T).Name} が登録されていません。");
             return null;
         }
     }
