@@ -75,6 +75,17 @@ namespace MyUtils.FeatureContainer
         }
 
         /// <summary>
+        /// 指定した型 T として上書き登録。
+        /// </summary>
+        /// <param name="feature"></param>
+        /// <typeparam name="T"></typeparam>
+        public void OverwriteAs<T>(T feature) where T : class
+        {
+            if (feature == null) return;
+            _map[typeof(T)] = feature;
+        }
+
+        /// <summary>
         /// 厳密な型一致(Key検索)で取得。
         /// </summary>
         public bool TryGet<T>(out T feature) where T : class
@@ -84,6 +95,7 @@ namespace MyUtils.FeatureContainer
                 feature = (T)val;
                 return true;
             }
+
             feature = null;
             return false;
         }
