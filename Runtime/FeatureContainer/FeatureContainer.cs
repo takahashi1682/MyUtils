@@ -19,26 +19,13 @@ namespace MyUtils.FeatureContainer
         /// <summary>
         /// 実行時の型(GetType)で厳格に登録。重複時はエラー。
         /// </summary>
-        public void Add(object feature)
+        public void Add<T>(T feature)
         {
             if (feature == null) throw new ArgumentNullException(nameof(feature));
 
             if (!TryAdd(feature))
             {
                 Debug.LogError($"[FeatureContainer] 重複登録(実型): {feature.GetType().Name}");
-            }
-        }
-
-        /// <summary>
-        /// 指定した型 T (インターフェース等) で厳格に登録。重複時はエラー。
-        /// </summary>
-        public void AddAs<T>(T feature) where T : class
-        {
-            if (feature == null) throw new ArgumentNullException(nameof(feature));
-
-            if (!TryAddAs<T>(feature))
-            {
-                Debug.LogError($"[FeatureContainer] 重複登録(指定型): {typeof(T).Name}");
             }
         }
 
@@ -50,16 +37,7 @@ namespace MyUtils.FeatureContainer
             if (feature == null) return false;
             return _map.TryAdd(feature.GetType(), feature);
         }
-
-        /// <summary>
-        /// ジェネリック引数 T (インターフェースや基底クラス) として登録。
-        /// </summary>
-        public bool TryAddAs<T>(T feature) where T : class
-        {
-            if (feature == null) return false;
-            return _map.TryAdd(typeof(T), feature);
-        }
-
+        
         /// <summary>
         /// 指定した型 T の登録を削除。
         /// </summary>
@@ -72,17 +50,6 @@ namespace MyUtils.FeatureContainer
         {
             if (feature == null) return;
             _map[feature.GetType()] = feature;
-        }
-
-        /// <summary>
-        /// 指定した型 T として上書き登録。
-        /// </summary>
-        /// <param name="feature"></param>
-        /// <typeparam name="T"></typeparam>
-        public void OverwriteAs<T>(T feature) where T : class
-        {
-            if (feature == null) return;
-            _map[typeof(T)] = feature;
         }
 
         /// <summary>
@@ -105,7 +72,6 @@ namespace MyUtils.FeatureContainer
         /// </summary>
         public T Get<T>() where T : class
         {
-            // 1. 高速な直接検索 (typeof(T) が Key の場合)
             if (_map.TryGetValue(typeof(T), out var val))
             {
                 return (T)val;
