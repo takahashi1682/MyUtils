@@ -57,16 +57,17 @@ namespace MyUtils.InputTrigger
                 .AddTo(this);
         }
 
-        protected virtual void OnEnable()
+        protected void OnEnable()
         {
-            TriggerInputAction?.Enable();
+            if (InputActionReference == null) return;
+            InputActionReference.action.Enable();
         }
 
-        protected virtual void OnDisable()
+        protected void OnDisable()
         {
-            TriggerInputAction?.Disable();
+            if (InputActionReference == null) return;
+            InputActionReference.action.Disable();
         }
-
 
         /// <summary>
         /// 押下後に実行される処理（オーバーライド必須）
