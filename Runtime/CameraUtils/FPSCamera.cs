@@ -10,17 +10,20 @@ namespace MyUtils.CameraUtils
         public Transform TargetVertical;
 
         [Header("FPS Settings")]
-        public bool Enable = true;
+        public bool Enabled = true;
         public float CamSpeedX = 2f;
         public float CamSpeedY = 0.2f;
         public float LookupLimit = -80f;
         public float LookdownLimit = 80f;
 
-        private float _currentPitch;
-        private float _currentYaw;
+        protected InputAction _lookAction;
+        protected float _currentPitch;
+        protected float _currentYaw;
 
-        private void Start()
+        protected virtual void Awake()
         {
+            _lookAction = LookActionReference.action.Clone();
+
             if (TargetHorizontal)
             {
                 _currentYaw = TargetHorizontal.eulerAngles.y;
@@ -33,21 +36,12 @@ namespace MyUtils.CameraUtils
             }
         }
 
-        private void OnEnable()
-        {
-            if (LookActionReference == null) return;
-            LookActionReference.action.Enable();
-        }
+        protected virtual void OnEnable() => _lookAction.Enable();
+        protected virtual void OnDisable() => _lookAction.Disable();
 
-        private void OnDisable()
+        protected virtual void Update()
         {
-            if (LookActionReference == null) return;
-            LookActionReference.action.Disable();
-        }
-
-        private void Update()
-        {
-            if (!Enable) return;
+            if (!Enabled) return;
 
             var inputLook = LookActionReference.action.ReadValue<Vector2>();
             _currentYaw += inputLook.x * CamSpeedX;
@@ -55,9 +49,9 @@ namespace MyUtils.CameraUtils
             _currentPitch = Mathf.Clamp(_currentPitch, LookupLimit, LookdownLimit);
         }
 
-        private void LateUpdate()
+        protected virtual void LateUpdate()
         {
-            if (!Enable) return;
+            if (!Enabled) return;
 
             if (TargetHorizontal)
                 TargetHorizontal.localRotation = Quaternion.Euler(0, _currentYaw, 0);

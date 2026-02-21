@@ -24,12 +24,16 @@ namespace MyUtils.InputTrigger
         public AwaitOperation AwaitOperation = AwaitOperation.Drop;
 
         [Header("Input Settings")]
-        public InputActionReference InputActionReference;
-
-        private readonly Subject<Unit> _pressedSubject = new();
+        [SerializeField] private InputActionReference _inputActionReference;
+        protected readonly Subject<Unit> _pressedSubject = new();
         public Observable<Unit> OnTriggerObservable => _pressedSubject;
 
-        public InputAction TriggerInputAction => InputActionReference.action;
+        protected InputAction _inputAction;
+
+        protected virtual void Awake()
+        {
+            _inputAction = _inputActionReference.action.Clone();
+        }
 
         protected virtual async void Start()
         {
@@ -39,8 +43,8 @@ namespace MyUtils.InputTrigger
                 cancellationToken: destroyCancellationToken);
 
             Observable.FromEvent<InputAction.CallbackContext>(
-                    h => TriggerInputAction.performed += h,
-                    h => TriggerInputAction.performed -= h,
+                    h => _inputAction.performed += h,
+                    h => _inputAction.performed -= h,
                     destroyCancellationToken
                 )
                 .Where(_ => IsEnabled)
@@ -57,17 +61,8 @@ namespace MyUtils.InputTrigger
                 .AddTo(this);
         }
 
-        protected void OnEnable()
-        {
-            if (InputActionReference == null) return;
-            InputActionReference.action.Enable();
-        }
-
-        protected void OnDisable()
-        {
-            if (InputActionReference == null) return;
-            InputActionReference.action.Disable();
-        }
+        protected virtual void OnEnable() => _inputAction?.Enable();
+        protected virtual void OnDisable() => _inputAction?.Disable();
 
         /// <summary>
         /// 押下後に実行される処理（オーバーライド必須）
