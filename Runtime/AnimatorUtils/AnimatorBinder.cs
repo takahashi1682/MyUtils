@@ -11,6 +11,10 @@ namespace MyUtils.AnimatorUtils
         private int? _parameterHash;
         private int ParamHash => _parameterHash ??= Animator.StringToHash(ParameterName);
 
+        public bool GetBoolParameter() => Target.GetBool(ParamHash);
+        public int GetIntParameter() => Target.GetInteger(ParamHash);
+        public float GetFloatParameter() => Target.GetFloat(ParamHash);
+
         public void SetBoolParameter(bool value) => Target.SetBool(ParamHash, value);
         public void SetIntParameter(int value) => Target.SetInteger(ParamHash, value);
         public void SetFloatParameter(float value) => Target.SetFloat(ParamHash, value);

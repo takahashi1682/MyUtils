@@ -8,14 +8,20 @@ namespace MyUtils
     [RequireComponent(typeof(Image))]
     public class GradientImage : BaseMeshEffect
     {
-        [SerializeField]
-        private Gradient _gradient = new Gradient();
+        [SerializeField] private Gradient _gradient = new();
+ 
         [SerializeField]
         protected GridLayoutGroup.Axis _axis = GridLayoutGroup.Axis.Vertical;
 
-        protected List<UIVertex> _vertexList = new();
+        protected readonly List<UIVertex> _vertexList = new();
         protected Vector2 _minMax;
         protected int _axisIndex;
+
+        public void SetGradient(Gradient gradient)
+        {
+            _gradient = gradient;
+            graphic.SetVerticesDirty();
+        }
 
         public override void ModifyMesh(VertexHelper helper)
         {

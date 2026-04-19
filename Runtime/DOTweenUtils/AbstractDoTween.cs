@@ -27,6 +27,8 @@ namespace MyUtils.DOTweenUtils
         public bool Inverted;
         public bool IsAutoPlayOnStart = true;
         public bool IsAutoKill = true;
+        public bool IsAutoDisable;
+        public bool IsAutoDestroy;
         public Tween TweenInstance { get; protected set; }
 
         protected abstract Tween CreateTween();
@@ -55,6 +57,11 @@ namespace MyUtils.DOTweenUtils
                 .SetLink(gameObject, LinkBehaviour)
                 .SetInverted(Inverted)
                 .SetAutoKill(IsAutoKill)
+                .OnComplete(() =>
+                {
+                    if (IsAutoDisable) gameObject.SetActive(false);
+                    if (IsAutoDestroy) Destroy(gameObject);
+                })
                 .Pause();
 
         public void Reset()
