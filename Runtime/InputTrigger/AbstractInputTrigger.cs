@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace MyUtils.InputTrigger
@@ -17,56 +16,44 @@ namespace MyUtils.InputTrigger
     {
         public bool IsEnabled = true;
 
-        [Header("Basic Settings")]
-        public bool CurrentSceneOnly;
+        [Header("Common Settings")]
+        public bool CurrentSceneOnly = true;
         public float FirstDelaySeconds = 1f;
         public float TriggerThrottleSeconds = 0.2f;
         public AwaitOperation AwaitOperation = AwaitOperation.Drop;
 
-        [Header("Input Settings")]
-        [SerializeField] private InputActionReference _inputActionReference;
-        protected readonly Subject<Unit> _pressedSubject = new();
-        public Observable<Unit> OnTriggerObservable => _pressedSubject;
+        private readonly Subject<Unit> _triggerSubject = new();
+        public Observable<Unit> OnTriggerObservable => _triggerSubject;
 
-        protected InputAction _inputAction;
-
-        protected virtual void Awake()
+        protected virtual void Start()
         {
-            _inputAction = _inputActionReference.action.Clone();
+            _triggerSubject.AddTo(this);
+            InitializeAsync().Forget();
         }
 
-        protected virtual async void Start()
+        private async UniTaskVoid InitializeAsync()
         {
-            _pressedSubject.AddTo(this);
+            // 初期ディレイ
+            await UniTask.Delay(TimeSpan.FromSeconds(FirstDelaySeconds), DelayType.Realtime, cancellationToken: destroyCancellationToken);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(FirstDelaySeconds), DelayType.Realtime,
-                cancellationToken: destroyCancellationToken);
-
-            Observable.FromEvent<InputAction.CallbackContext>(
-                    h => _inputAction.performed += h,
-                    h => _inputAction.performed -= h,
-                    destroyCancellationToken
-                )
+            // 各サブクラスで定義された入力ストリームを購読
+            CreateInputObservable()
                 .Where(_ => IsEnabled)
-                .ThrottleFirst(TimeSpan.FromSeconds(TriggerThrottleSeconds),
-                    timeProvider: UnityTimeProvider.UpdateRealtime)
+                .Where(_ => !CurrentSceneOnly || SceneManager.GetActiveScene() == gameObject.scene)
+                .ThrottleFirst(TimeSpan.FromSeconds(TriggerThrottleSeconds), UnityTimeProvider.UpdateRealtime)
                 .SubscribeAwait(async (_, ct) =>
                 {
-                    if (CurrentSceneOnly && SceneManager.GetActiveScene() != gameObject.scene)
-                        return;
-
-                    _pressedSubject.OnNext(Unit.Default);
+                    _triggerSubject.OnNext(Unit.Default);
                     await OnPressed(ct);
                 }, AwaitOperation)
                 .AddTo(this);
         }
 
-        protected virtual void OnEnable() => _inputAction?.Enable();
-        protected virtual void OnDisable() => _inputAction?.Disable();
-
         /// <summary>
-        /// 押下後に実行される処理（オーバーライド必須）
+        /// 入力の発生源を定義する（サブクラスで実装）
         /// </summary>
+        protected abstract Observable<Unit> CreateInputObservable();
+
         protected abstract UniTask OnPressed(CancellationToken ct);
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace MyUtils.SceneLoader
 {
-    public class SceneLoaderInputTrigger : AbstractInputTrigger
+    public class SceneLoaderInputTrigger : AbstractActionInputTrigger
     {
         [SerializeField] private SceneReference.SceneReference _nextScene;
         [SerializeField] private LoadSceneMode _loadSceneMode = LoadSceneMode.Single;

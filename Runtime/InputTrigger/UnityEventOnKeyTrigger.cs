@@ -1,13 +1,13 @@
-using System.Threading;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace MyUtils.InputTrigger
 {
-    public class UnityEventOnInputTrigger : AbstractInputTrigger
+    public class UnityEventOnKeyTrigger : AbstractKeyInputTrigger
     {
-        [Header("ObjectActivateOnInputTrigger")]
+        [Header("UnityActionOnKeyTrigger")]
         public UnityEvent OnTrigger;
 
         protected override UniTask OnPressed(CancellationToken ct)
