@@ -8,11 +8,13 @@ namespace MyUtils.DataStore.Core
     /// </summary>
     /// <typeparam name="TType"></typeparam>
     /// <typeparam name="TAsset"></typeparam>
-    public class AbstractDataStore<TType, TAsset> : MonoBehaviour
+    public abstract class AbstractDataStore<TType, TAsset> : MonoBehaviour
         where TType : new()
         where TAsset : AbstractDataAsset<TType>
     {
-        [Header("Data")]
+        protected abstract string FileName { get; }
+
+        [Header("Reference")]
         [field: SerializeField] public TAsset OverrideData { get; private set; }
         [field: SerializeField] public TAsset DefaultData { get; private set; }
         [SerializeField] private TType _current;
@@ -20,43 +22,34 @@ namespace MyUtils.DataStore.Core
 
         [Header("Settings")]
         public bool LoadToOnAwake = true;
-        public bool SaveToOnDestroy = true;
-        [field: SerializeField] public EncryptSetting EncryptSetting { get; private set; } = new();
+        [SerializeField] private bool _isEncrypt = true;
+        [SerializeField] private string _aesKey = "e5Cp29Pda8n5Qv13";
 
         protected virtual void Awake()
         {
             if (LoadToOnAwake) LoadData();
         }
 
-        protected virtual void OnDestroy()
-        {
-            if (SaveToOnDestroy)
-            {
-                try
-                {
-                    SaveData();
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogError($"データ保存中にエラーが発生しました: {ex.Message}");
-                }
-            }
-        }
+        public void LoadData() => LoadData(FileName);
 
-        public bool LoadData()
+        public void LoadData(int slotNumber) => LoadData($"{slotNumber}_{FileName}");
+
+        public void LoadData(string fileName)
         {
             if (OverrideData != null)
             {
                 _current = OverrideData.Data;
                 Debug.Log($"{OverrideData.name} からデータを読み込みました。");
-                return true;
             }
 
-            EncryptedJsonFileHandler<TType>.LoadData(out _current, DefaultData.Data, EncryptSetting);
-            return true;
+            EncryptedJsonFileHandler<TType>.LoadData(out _current, DefaultData.Data, fileName, _isEncrypt, _aesKey);
         }
 
-        public void SaveData()
+        public void SaveData() => SaveData(FileName);
+
+        public void SaveData(int slotNumber) => SaveData($"{slotNumber}_{FileName}");
+
+        public void SaveData(string fileName)
         {
             if (OverrideData != null)
             {
@@ -64,7 +57,7 @@ namespace MyUtils.DataStore.Core
                 return;
             }
 
-            EncryptedJsonFileHandler<TType>.SaveData(_current, EncryptSetting);
+            EncryptedJsonFileHandler<TType>.SaveData(_current, fileName, _isEncrypt, _aesKey);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace MyUtils.DataStore.Core
     /// </summary>
     /// <typeparam name="TType"></typeparam>
     /// <typeparam name="TAsset"></typeparam>
-    public class AbstractDataStoreSingleton<TType, TAsset> : AbstractDataStore<TType, TAsset>
+    public abstract class AbstractDataStoreSingleton<TType, TAsset> : AbstractDataStore<TType, TAsset>
         where TType : new()
         where TAsset : AbstractDataAsset<TType>
     {
@@ -42,9 +42,8 @@ namespace MyUtils.DataStore.Core
             }
         }
 
-        protected override void OnDestroy()
+        protected void OnDestroy()
         {
-            base.OnDestroy();
             if (Instance == this)
             {
                 Instance = null;

@@ -15,16 +15,19 @@ namespace MyUtils.JsonUtils
         public static string GetIVFilePath(string fileName)
             => Path.Combine(Application.persistentDataPath, fileName);
 
-        public static void SaveData(T outputData, EncryptSetting setting)
-            => SaveData(outputData, setting.FileName, setting.IsEncrypt, setting.IvFileName, setting.AesKey);
+        public static void SaveData(T outputData)
+            => SaveData(outputData, nameof(T));
+
+        public static void SaveData(T outputData, string fileName)
+            => SaveData(outputData, fileName, false, string.Empty);
 
         /// <summary>
         /// データオブジェクトを暗号化・保存します。
         /// </summary>
-        public static void SaveData(T outputData, string fileName, bool isEncrypt, string ivKeyFileName, string aesKey)
+        public static void SaveData(T outputData, string fileName, bool isEncrypt, string aesKey)
         {
             // JsonFileHandler にファイルパス生成を任せ、ローカル変数での再結合を避ける
-            string filePath = PersistentDataTextFileHandler.GetFilePath(fileName);
+            string filePath = PersistentDataTextFileHandler.GetFilePath($"{fileName}.json");
 
             // 1. JSONにシリアライズ
             string json = JsonUtility.ToJson(outputData, false);
@@ -36,7 +39,7 @@ namespace MyUtils.JsonUtils
                 dataToSave = AESEncryption.Encrypt(json, iv, aesKey);
 
                 // 2. IVを専用ファイルに保存 (エラー処理はJsonFileHandler側で担当)
-                string ivPath = GetIVFilePath(ivKeyFileName);
+                string ivPath = GetIVFilePath($"{fileName}.iv");
                 PersistentDataTextFileHandler.SaveText(ivPath, AESEncryption.BytesToHex(iv));
             }
 
@@ -44,17 +47,18 @@ namespace MyUtils.JsonUtils
             PersistentDataTextFileHandler.SaveText(filePath, dataToSave);
         }
 
-        public static bool LoadData(out T loadData, T defaultValue, EncryptSetting setting)
-            => LoadData(out loadData, defaultValue, setting.FileName, setting.IsEncrypt, setting.IvFileName,
-                setting.AesKey);
+        public static bool LoadData(out T loadData, T defaultValue)
+            => LoadData(out loadData, defaultValue, nameof(T));
+
+        public static bool LoadData(out T loadData, T defaultValue, string fileName)
+            => LoadData(out loadData, defaultValue, fileName, false, string.Empty);
 
         /// <summary>
         /// ファイルからデータをロードし、復号化・復元します。
         /// </summary>
-        public static bool LoadData(out T loadData, T defaultValue, string fileName, bool isEncrypt, string ivFileName,
-            string aesKey)
+        public static bool LoadData(out T loadData, T defaultValue, string fileName, bool isEncrypt, string aesKey)
         {
-            string filePath = PersistentDataTextFileHandler.GetFilePath(fileName);
+            string filePath = PersistentDataTextFileHandler.GetFilePath($"{fileName}.json");
             string dataToLoad = PersistentDataTextFileHandler.LoadText(filePath);
 
             if (dataToLoad == null)
@@ -71,7 +75,7 @@ namespace MyUtils.JsonUtils
 
                 if (isEncrypt)
                 {
-                    string ivPath = GetIVFilePath(ivFileName);
+                    string ivPath = GetIVFilePath($"{fileName}.iv");
                     string ivHex = PersistentDataTextFileHandler.LoadText(ivPath);
 
                     if (ivHex == null)
