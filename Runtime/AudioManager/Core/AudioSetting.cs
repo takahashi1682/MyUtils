@@ -53,14 +53,18 @@ namespace MyUtils.AudioManager.Core
         [Tooltip("最大距離")]
         [SerializeField] public float MaxDistance = 50f;
 
+        [HideInInspector]
+        [SerializeField] private bool _isInitialized;
+
         public void OnBeforeSerialize()
         {
         }
 
         public void OnAfterDeserialize()
         {
-            // デシリアライズ後にデフォルト値を適用(配列の要素追加時などに対応)
-           // ApplyDefaultValues();
+            if (_isInitialized) return;
+            ApplyDefaultValues();
+            _isInitialized = true;
         }
 
         private void ApplyDefaultValues()
