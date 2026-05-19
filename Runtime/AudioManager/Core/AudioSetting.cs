@@ -60,7 +60,7 @@ namespace MyUtils.AudioManager.Core
         public void OnAfterDeserialize()
         {
             // デシリアライズ後にデフォルト値を適用(配列の要素追加時などに対応)
-            ApplyDefaultValues();
+           // ApplyDefaultValues();
         }
 
         private void ApplyDefaultValues()
