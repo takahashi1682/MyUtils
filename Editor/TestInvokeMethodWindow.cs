@@ -106,8 +106,7 @@ namespace MyUtils
 
             // 非表示のオブジェクトも含めて全て取得
             var allComponents = FindObjectsByType<MonoBehaviour>(
-                FindObjectsInactive.Include,
-                FindObjectsSortMode.InstanceID);
+                FindObjectsInactive.Include);
 
             foreach (var mono in allComponents)
             {

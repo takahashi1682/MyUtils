@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace MyUtils.SceneLoader
 {
-    public class SceneUnloadInputTrigger : AbstractInputTrigger
+    public class SceneUnloadInputTrigger : AbstractActionInputTrigger
     {
         [SerializeField] private SceneReference.SceneReference _unloadScene;
 

@@ -12,11 +12,8 @@ namespace MyUtils
         private static readonly Dictionary<string, Color> ColorSettings = new()
         {
             { "Prefabs", new Color(0.2f, 0.5f, 1.0f) }, // 青
-            { "Materials", new Color(1.0f, 0.4f, 0.4f) }, // 赤
-            { "Scenes", new Color(0.4f, 1.0f, 0.4f) }, // 緑
-            { "Scripts", new Color(0.3f, 0.8f, 1.0f) }, // 水色
-            { "Sprites", new Color(0.8f, 0.4f, 1.0f) }, // 紫
-            { "Textures", new Color(1.0f, 0.8f, 0.2f) }, // オレンジ
+            { "Scripts", new Color(0.8f, 0.4f, 1.0f) }, // 紫
+            { "Sprites", new Color(0.4f, 1.0f, 0.4f) }, // 緑
         };
 
         static FolderPainter()
