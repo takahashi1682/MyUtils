@@ -7,6 +7,6 @@ namespace MyUtils.DataStore.PlayerSetting
     /// </summary>
     public class PlayerSettingStore : AbstractDataStoreSingleton<PlayerSetting, PlayerSettingAsset>
     {
+        protected override string FileName => nameof(PlayerSetting);
     }
 }
-
