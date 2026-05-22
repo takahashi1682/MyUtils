@@ -105,8 +105,7 @@ namespace MyUtils
             _parametersCache.Clear();
 
             // 非表示のオブジェクトも含めて全て取得
-            var allComponents = FindObjectsByType<MonoBehaviour>(
-                FindObjectsInactive.Include);
+            var allComponents = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
             foreach (var mono in allComponents)
             {
