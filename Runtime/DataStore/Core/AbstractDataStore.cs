@@ -1,4 +1,5 @@
 using MyUtils.JsonUtils;
+using R3;
 using UnityEngine;
 
 namespace MyUtils.DataStore.Core
@@ -15,18 +16,19 @@ namespace MyUtils.DataStore.Core
         protected abstract string FileName { get; }
 
         [Header("Reference")]
-        [field: SerializeField] public TAsset OverrideData { get; private set; }
-        [field: SerializeField] public TAsset DefaultData { get; private set; }
-        public TType CurrentData;
+        [field: SerializeField] public TAsset OverrideData { get; protected set; }
+        [field: SerializeField] public TAsset DefaultData { get; protected set; }
+        [field: SerializeField] public SerializableReactiveProperty<TType> CurrentData { get; private set; } = new();
 
         [Header("Settings")]
         public bool LoadToOnAwake = true;
-        [SerializeField] private bool _isEncrypt = true;
-        [SerializeField] private string _aesKey = "e5Cp29Pda8n5Qv13";
-        [SerializeField] private bool _showDebugInfo = true;
+        [SerializeField] protected bool _isEncrypt = true;
+        [SerializeField] protected string _aesKey = "e5Cp29Pda8n5Qv13";
+        [SerializeField] protected bool _showDebugInfo = true;
 
         protected virtual void Awake()
         {
+            CurrentData.AddTo(this);
             if (LoadToOnAwake) LoadData();
         }
 
@@ -35,7 +37,7 @@ namespace MyUtils.DataStore.Core
         public bool LoadData(out TType current, int slotNumber = 0) =>
             LoadData($"{slotNumber}_{FileName}", out current);
 
-        private bool LoadData(string fileName, out TType current)
+        protected bool LoadData(string fileName, out TType current)
         {
             bool isLoaded = false;
             if (OverrideData != null)
@@ -62,13 +64,13 @@ namespace MyUtils.DataStore.Core
                 }
             }
 
-            CurrentData = current;
+            CurrentData.OnNext(current);
             return isLoaded;
         }
 
         public void SaveData(int slotNumber = 0) => SaveData($"{slotNumber}_{FileName}");
 
-        private void SaveData(string fileName)
+        protected void SaveData(string fileName)
         {
             if (OverrideData != null)
             {
@@ -76,7 +78,7 @@ namespace MyUtils.DataStore.Core
                 return;
             }
 
-            EncryptedJsonFileHandler<TType>.SaveData(CurrentData, fileName, _isEncrypt, _aesKey);
+            EncryptedJsonFileHandler<TType>.SaveData(CurrentData.Value, fileName, _isEncrypt, _aesKey);
             if (_showDebugInfo) Debug.Log($"データの保存に成功しました: {fileName}");
         }
     }
