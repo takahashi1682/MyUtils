@@ -32,11 +32,14 @@ namespace MyUtils.DataStore.Core
             if (LoadToOnAwake) LoadData(out _, 0);
         }
 
-        public void LoadData(out TType current, int slotNumber = 0) =>
+        public bool LoadData() => LoadData(out _);
+
+        public bool LoadData(out TType current, int slotNumber = 0) =>
             LoadData($"{slotNumber}_{FileName}", out current);
 
-        private void LoadData(string fileName, out TType current)
+        private bool LoadData(string fileName, out TType current)
         {
+            bool isLoaded = false;
             if (OverrideData != null)
             {
                 current = _current.CurrentValue;
@@ -44,10 +47,12 @@ namespace MyUtils.DataStore.Core
             }
             else
             {
-                EncryptedJsonFileHandler<TType>.LoadData(out current, DefaultData.Data, fileName, _isEncrypt, _aesKey);
+                isLoaded = EncryptedJsonFileHandler<TType>.LoadData(out current, DefaultData.Data, fileName, _isEncrypt,
+                    _aesKey);
             }
 
             _current.Value = current;
+            return isLoaded;
         }
 
         public void SaveData(int slotNumber = 0) => SaveData($"{slotNumber}_{FileName}");
