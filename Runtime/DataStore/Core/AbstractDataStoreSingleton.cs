@@ -32,7 +32,7 @@ namespace MyUtils.DataStore.Core
                 Instance = this;
                 if (!_source.Task.Status.IsCompleted())
                 {
-                    _source.TrySetResult(Current);
+                    _source.TrySetResult(CurrentData);
                 }
             }
             catch (System.Exception ex)
