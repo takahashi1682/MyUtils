@@ -1,4 +1,5 @@
 using MyUtils.JsonUtils;
+using R3;
 using UnityEngine;
 
 namespace MyUtils.DataStore.Core
@@ -17,8 +18,8 @@ namespace MyUtils.DataStore.Core
         [Header("Reference")]
         [field: SerializeField] public TAsset OverrideData { get; private set; }
         [field: SerializeField] public TAsset DefaultData { get; private set; }
-        [SerializeField] private TType _current;
-        public TType Current => _current;
+        [field: SerializeField] private SerializableReactiveProperty<TType> _current = new(new TType());
+        public TType Current => _current.Value;
 
         [Header("Settings")]
         public bool LoadToOnAwake = true;
@@ -27,29 +28,31 @@ namespace MyUtils.DataStore.Core
 
         protected virtual void Awake()
         {
-            if (LoadToOnAwake) LoadData();
+            _current.AddTo(this);
+            if (LoadToOnAwake) LoadData(out _, 0);
         }
 
-        public void LoadData() => LoadData(FileName);
+        public void LoadData(out TType current, int slotNumber = 0) =>
+            LoadData($"{slotNumber}_{FileName}", out current);
 
-        public void LoadData(int slotNumber) => LoadData($"{slotNumber}_{FileName}");
-
-        public void LoadData(string fileName)
+        private void LoadData(string fileName, out TType current)
         {
             if (OverrideData != null)
             {
-                _current = OverrideData.Data;
+                current = _current.CurrentValue;
                 Debug.Log($"{OverrideData.name} からデータを読み込みました。");
             }
+            else
+            {
+                EncryptedJsonFileHandler<TType>.LoadData(out current, DefaultData.Data, fileName, _isEncrypt, _aesKey);
+            }
 
-            EncryptedJsonFileHandler<TType>.LoadData(out _current, DefaultData.Data, fileName, _isEncrypt, _aesKey);
+            _current.Value = current;
         }
 
-        public void SaveData() => SaveData(FileName);
+        public void SaveData(int slotNumber = 0) => SaveData($"{slotNumber}_{FileName}");
 
-        public void SaveData(int slotNumber) => SaveData($"{slotNumber}_{FileName}");
-
-        public void SaveData(string fileName)
+        private void SaveData(string fileName)
         {
             if (OverrideData != null)
             {
@@ -57,7 +60,7 @@ namespace MyUtils.DataStore.Core
                 return;
             }
 
-            EncryptedJsonFileHandler<TType>.SaveData(_current, fileName, _isEncrypt, _aesKey);
+            EncryptedJsonFileHandler<TType>.SaveData(_current.Value, fileName, _isEncrypt, _aesKey);
         }
     }
 }
