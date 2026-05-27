@@ -46,7 +46,6 @@ namespace MyUtils.DataStore.Core
 
         protected bool LoadData(string fileName, out TType current)
         {
-            // 1. 各ルートに応じて「current」にデータを確定させる
             if (Override != null)
             {
                 current = Override.Data;
@@ -68,7 +67,7 @@ namespace MyUtils.DataStore.Core
                 return false;
             }
 
-            Current.OnNext(current);
+            Current.Value = current;
             return true;
         }
 
