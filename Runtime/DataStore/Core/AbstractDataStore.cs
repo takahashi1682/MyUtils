@@ -15,10 +15,17 @@ namespace MyUtils.DataStore.Core
     {
         protected abstract string FileName { get; }
 
-        [Header("Reference")]
-        [field: SerializeField] public TAsset OverrideData { get; protected set; }
-        [field: SerializeField] public TAsset DefaultData { get; protected set; }
-        [field: SerializeField] public SerializableReactiveProperty<TType> CurrentData { get; private set; } = new();
+        [Header("Data")]
+        [field: SerializeField] public TAsset Override { get; protected set; }
+        [field: SerializeField] public TAsset Default { get; protected set; }
+        [field: SerializeField] public SerializableReactiveProperty<TType> Current { get; private set; } = new();
+
+        public TType CurrentValue => Current.CurrentValue;
+        public TType Value
+        {
+            get => Current.Value;
+            set => Current.Value = value;
+        }
 
         [Header("Settings")]
         public bool LoadToOnAwake = true;
@@ -28,7 +35,7 @@ namespace MyUtils.DataStore.Core
 
         protected virtual void Awake()
         {
-            CurrentData.AddTo(this);
+            Current.AddTo(this);
             if (LoadToOnAwake) LoadData();
         }
 
@@ -39,46 +46,43 @@ namespace MyUtils.DataStore.Core
 
         protected bool LoadData(string fileName, out TType current)
         {
-            bool isLoaded = false;
-            if (OverrideData != null)
+            // 1. 各ルートに応じて「current」にデータを確定させる
+            if (Override != null)
             {
-                current = OverrideData.Data;
-                if (_showDebugInfo) Debug.Log($"{OverrideData.name} が設定されているため、データの読み込みをスキップしました。");
+                current = Override.Data;
+                if (_showDebugInfo) Debug.LogWarning($"{Override.name} (Override) が設定されているため、ファイルからのデータ読み込みをスキップしました。");
+            }
+            else if (EncryptedJsonFileHandler<TType>.LoadData(out current, fileName, _isEncrypt, _aesKey))
+            {
+                if (_showDebugInfo) Debug.Log($"データの読み込みに成功しました: {fileName}");
+            }
+            else if (Default != null)
+            {
+                current = Default.Data;
+                if (_showDebugInfo) Debug.LogWarning($"データの読み込みに失敗したため、Defaultのデータを使用しました: {fileName}");
             }
             else
             {
-                isLoaded = EncryptedJsonFileHandler<TType>.LoadData(out current, DefaultData.Data, fileName,
-                    _isEncrypt,
-                    _aesKey);
-
-                if (_showDebugInfo)
-                {
-                    if (isLoaded)
-                    {
-                        Debug.Log($"データの読み込みに成功しました: {fileName}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"データの読み込みに失敗しました。デフォルトデータを使用します: {fileName}");
-                    }
-                }
+                current = CurrentValue;
+                if (_showDebugInfo) Debug.LogError($"データの読み込みに失敗し、Defaultも設定されていないため、Currentは初期値のままになります: {fileName}");
+                return false;
             }
 
-            CurrentData.OnNext(current);
-            return isLoaded;
+            Current.OnNext(current);
+            return true;
         }
 
         public void SaveData(int slotNumber = 0) => SaveData($"{slotNumber}_{FileName}");
 
         protected void SaveData(string fileName)
         {
-            if (OverrideData != null)
+            if (Override != null)
             {
-                if (_showDebugInfo) Debug.Log($"{OverrideData.name} が設定されているため、データの保存をスキップしました。");
+                if (_showDebugInfo) Debug.Log($"{Override.name} が設定されているため、データの保存をスキップしました。");
                 return;
             }
 
-            EncryptedJsonFileHandler<TType>.SaveData(CurrentData.Value, fileName, _isEncrypt, _aesKey);
+            EncryptedJsonFileHandler<TType>.SaveData(Current.Value, fileName, _isEncrypt, _aesKey);
             if (_showDebugInfo) Debug.Log($"データの保存に成功しました: {fileName}");
         }
     }

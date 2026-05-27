@@ -12,7 +12,7 @@ namespace MyUtils.JsonUtils
         /// <summary>
         /// IV (Initialization Vector) ファイルのフルパスを返します。
         /// </summary>
-        public static string GetIVFilePath(string fileName)
+        public static string GetIvFilePath(string fileName)
             => Path.Combine(Application.persistentDataPath, fileName);
 
         public static void SaveData(T outputData)
@@ -39,7 +39,7 @@ namespace MyUtils.JsonUtils
                 dataToSave = AESEncryption.Encrypt(json, iv, aesKey);
 
                 // 2. IVを専用ファイルに保存 (エラー処理はJsonFileHandler側で担当)
-                string ivPath = GetIVFilePath($"{fileName}.iv");
+                string ivPath = GetIvFilePath($"{fileName}.iv");
                 PersistentDataTextFileHandler.SaveText(ivPath, AESEncryption.BytesToHex(iv));
             }
 
@@ -47,25 +47,24 @@ namespace MyUtils.JsonUtils
             PersistentDataTextFileHandler.SaveText(filePath, dataToSave);
         }
 
-        public static bool LoadData(out T loadData, T defaultValue)
-            => LoadData(out loadData, defaultValue, nameof(T));
+        public static bool LoadData(out T loadData)
+            => LoadData(out loadData, nameof(T));
 
-        public static bool LoadData(out T loadData, T defaultValue, string fileName)
-            => LoadData(out loadData, defaultValue, fileName, false, string.Empty);
+        public static bool LoadData(out T loadData, string fileName)
+            => LoadData(out loadData, fileName, false, string.Empty);
 
         /// <summary>
         /// ファイルからデータをロードし、復号化・復元します。
         /// </summary>
-        public static bool LoadData(out T loadData, T defaultValue, string fileName, bool isEncrypt, string aesKey)
+        public static bool LoadData(out T loadData, string fileName, bool isEncrypt, string aesKey)
         {
             string filePath = PersistentDataTextFileHandler.GetFilePath($"{fileName}.json");
             string dataToLoad = PersistentDataTextFileHandler.LoadText(filePath);
 
             if (dataToLoad == null)
             {
-                Debug.Log($"[EncryptedJsonFileHandler] File not found. Returning new instance: {filePath}");
-                string json = JsonUtility.ToJson(defaultValue);
-                loadData = JsonUtility.FromJson<T>(json);
+                Debug.LogWarning($"[EncryptedJsonFileHandler] File not found. Returning new instance: {filePath}");
+                loadData = default;
                 return false;
             }
 
@@ -75,14 +74,14 @@ namespace MyUtils.JsonUtils
 
                 if (isEncrypt)
                 {
-                    string ivPath = GetIVFilePath($"{fileName}.iv");
+                    string ivPath = GetIvFilePath($"{fileName}.iv");
                     string ivHex = PersistentDataTextFileHandler.LoadText(ivPath);
 
                     if (ivHex == null)
                     {
                         Debug.LogError(
                             $"[EncryptedJsonFileHandler] IV key file not found for encrypted data: {ivPath}");
-                        loadData = defaultValue;
+                        loadData = default;
                         return false;
                     }
 
@@ -101,7 +100,7 @@ namespace MyUtils.JsonUtils
             {
                 Debug.LogError($"[EncryptedJsonFileHandler] Failed to load/decrypt/parse data from: {fileName}");
                 Debug.LogException(e);
-                loadData = defaultValue;
+                loadData = default;
                 return false;
             }
         }
