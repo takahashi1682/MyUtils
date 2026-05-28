@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.DataStore.Core
+namespace MyUtils.DataStore
 {
     public abstract class AbstractDataAsset<T> : ScriptableObject
     {

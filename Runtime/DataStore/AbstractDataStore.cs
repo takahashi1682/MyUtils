@@ -2,7 +2,7 @@ using MyUtils.JsonUtils;
 using R3;
 using UnityEngine;
 
-namespace MyUtils.DataStore.Core
+namespace MyUtils.DataStore
 {
     /// <summary>
     ///  JSONファイルにデータを保存・読み込みするための抽象クラス
@@ -43,6 +43,7 @@ namespace MyUtils.DataStore.Core
             if (AutoSaveOnChange) Current.Skip(1).Subscribe(_ => SaveData()).AddTo(this);
         }
 
+        [DebugMethod]
         public bool LoadData(int slotNumber = 0) => LoadData(out _, slotNumber);
 
         public bool LoadData(out TType current, int slotNumber = 0) =>
@@ -75,6 +76,7 @@ namespace MyUtils.DataStore.Core
             return true;
         }
 
+        [DebugMethod]
         public void SaveData(int slotNumber = 0) => SaveData($"{slotNumber}_{FileName}");
 
         protected void SaveData(string fileName)

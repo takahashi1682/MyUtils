@@ -18,7 +18,7 @@ namespace MyUtils.DebugMethod
         {
             _globalCache.Clear();
             var allComponents =
-                UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include,
+                Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include,
                     FindObjectsSortMode.None);
 
             foreach (var mono in allComponents)

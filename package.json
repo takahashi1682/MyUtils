@@ -1,6 +1,6 @@
 {
   "name": "com.takahashi.myutils",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "displayName": "My Utils",
   "author": {
     "name": "takahashi1682",
@@ -9,6 +9,7 @@
   "dependencies": {
     "com.cysharp.unitask": "2.5.0",
     "com.cysharp.r3": "1.3.0",
-    "net.tnrd.serializableinterface": "2.2.1"
+    "net.tnrd.serializableinterface": "2.2.1",
+    "jp.hadashikick.vcontainer": "1.18.0"
   }
 }

@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace MyUtils.DataStore.Core
+namespace MyUtils.DataStore
 {
     /// <summary>
     ///  JSONファイルにデータを保存・読み込みするための抽象クラス
