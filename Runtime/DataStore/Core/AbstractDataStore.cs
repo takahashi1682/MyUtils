@@ -28,15 +28,19 @@ namespace MyUtils.DataStore.Core
         }
 
         [Header("Settings")]
-        public bool LoadToOnAwake = true;
+        public bool LoadOnAwake = true;
+        public bool AutoSaveOnChange;
+        public bool ShowDebugInfo = true;
+
+        [Header("Encrypted Json")]
         [SerializeField] protected bool _isEncrypt = true;
         [SerializeField] protected string _aesKey = "e5Cp29Pda8n5Qv13";
-        [SerializeField] protected bool _showDebugInfo = true;
 
         protected virtual void Awake()
         {
             Current.AddTo(this);
-            if (LoadToOnAwake) LoadData();
+            if (LoadOnAwake) LoadData();
+            if (AutoSaveOnChange) Current.Skip(1).Subscribe(_ => SaveData()).AddTo(this);
         }
 
         public bool LoadData(int slotNumber = 0) => LoadData(out _, slotNumber);
@@ -48,22 +52,22 @@ namespace MyUtils.DataStore.Core
         {
             if (Override != null)
             {
-                current = Override.Data;
-                if (_showDebugInfo) Debug.LogWarning($"{Override.name} (Override) が設定されているため、ファイルからのデータ読み込みをスキップしました。");
+                current = Override.Clone();
+                if (ShowDebugInfo) Debug.LogWarning($"{Override.name} (Override) が設定されているため、ファイルからのデータ読み込みをスキップしました。");
             }
             else if (EncryptedJsonFileHandler<TType>.LoadData(out current, fileName, _isEncrypt, _aesKey))
             {
-                if (_showDebugInfo) Debug.Log($"データの読み込みに成功しました: {fileName}");
+                if (ShowDebugInfo) Debug.Log($"データの読み込みに成功しました: {fileName}");
             }
             else if (Default != null)
             {
-                current = Default.Data;
-                if (_showDebugInfo) Debug.LogWarning($"データの読み込みに失敗したため、Defaultのデータを使用しました: {fileName}");
+                current = Default.Clone();
+                if (ShowDebugInfo) Debug.LogWarning($"データの読み込みに失敗したため、Defaultのデータを使用しました: {fileName}");
             }
             else
             {
                 current = CurrentValue;
-                if (_showDebugInfo) Debug.LogError($"データの読み込みに失敗し、Defaultも設定されていないため、Currentは初期値のままになります: {fileName}");
+                if (ShowDebugInfo) Debug.LogError($"データの読み込みに失敗し、Defaultも設定されていないため、Currentは初期値のままになります: {fileName}");
                 return false;
             }
 
@@ -77,12 +81,12 @@ namespace MyUtils.DataStore.Core
         {
             if (Override != null)
             {
-                if (_showDebugInfo) Debug.Log($"{Override.name} が設定されているため、データの保存をスキップしました。");
+                if (ShowDebugInfo) Debug.Log($"{Override.name} が設定されているため、データの保存をスキップしました。");
                 return;
             }
 
             EncryptedJsonFileHandler<TType>.SaveData(Current.Value, fileName, _isEncrypt, _aesKey);
-            if (_showDebugInfo) Debug.Log($"データの保存に成功しました: {fileName}");
+            if (ShowDebugInfo) Debug.Log($"データの保存に成功しました: {fileName}");
         }
     }
 }
