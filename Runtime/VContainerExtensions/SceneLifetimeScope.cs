@@ -7,7 +7,7 @@ namespace MyUtils.VContainerExtensions
     /// <summary>
     /// シーン固有のコンテナ初期化プロセスを定義するインターフェース
     /// </summary>
-    public interface ISceneInitializable : IContainerInitializable
+    public interface ISceneInitializable2 : IContainerInitializable2
     {
     }
 
@@ -19,12 +19,12 @@ namespace MyUtils.VContainerExtensions
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            var targets = new List<ISceneInitializable>();
+            var targets = new List<ISceneInitializable2>();
             var rootObjects = gameObject.scene.GetRootGameObjects();
 
             foreach (var obj in rootObjects)
             {
-                targets.AddRange(obj.GetComponentsInChildren<ISceneInitializable>(true));
+                targets.AddRange(obj.GetComponentsInChildren<ISceneInitializable2>(true));
             }
 
             builder.RegisterBuildCallback(resolver =>

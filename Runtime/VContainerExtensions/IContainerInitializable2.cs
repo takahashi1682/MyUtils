@@ -2,7 +2,7 @@
 
 namespace MyUtils.VContainerExtensions
 {
-    public interface IContainerInitializable
+    public interface IContainerInitializable2
     {
         /// <summary>
         /// 依存性注入の登録時に呼び出される初期化処理
