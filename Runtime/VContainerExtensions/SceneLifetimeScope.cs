@@ -4,10 +4,25 @@ using VContainer.Unity;
 
 namespace MyUtils.VContainerExtensions
 {
+    public interface IContainerInitializable
+    {
+        /// <summary>
+        /// 依存性注入の登録時に呼び出される初期化処理
+        /// </summary>
+        /// <param name="builder"></param>
+        void OnRegister(IContainerBuilder builder);
+
+        /// <summary>
+        /// 依存性注入の解決時に呼び出される初期化処理
+        /// </summary>
+        /// <param name="resolver"></param>
+        void OnResolve(IObjectResolver resolver);
+    }
+
     /// <summary>
     /// シーン固有のコンテナ初期化プロセスを定義するインターフェース
     /// </summary>
-    public interface ISceneInitializable2 : IContainerInitializable2
+    public interface ISceneInitializable : IContainerInitializable
     {
     }
 
@@ -19,12 +34,12 @@ namespace MyUtils.VContainerExtensions
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            var targets = new List<ISceneInitializable2>();
+            var targets = new List<ISceneInitializable>();
             var rootObjects = gameObject.scene.GetRootGameObjects();
 
             foreach (var obj in rootObjects)
             {
-                targets.AddRange(obj.GetComponentsInChildren<ISceneInitializable2>(true));
+                targets.AddRange(obj.GetComponentsInChildren<ISceneInitializable>(true));
             }
 
             builder.RegisterBuildCallback(resolver =>
