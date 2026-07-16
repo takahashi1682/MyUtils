@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -20,6 +21,7 @@ namespace MyUtils.TalkUtils
         [SerializeField, Tooltip("1文字ずつ表示")]
         private bool _isIntervalEnabled;
 
+        private readonly StringBuilder _lineBuilder = new();
         private CancellationTokenSource _cancellationTokenSource;
         private TalkManager _talkManager;
 
@@ -91,6 +93,7 @@ namespace MyUtils.TalkUtils
         // 1文字ずつ表示
         private async UniTask DisplayTextAsync(LineData lineData)
         {
+            _lineBuilder.Clear();
             for (int i = 0; i < lineData.Lines.Length; i++)
             {
                 if (_cancellationTokenSource.Token.IsCancellationRequested) break;
@@ -101,15 +104,17 @@ namespace MyUtils.TalkUtils
                     // 改行コードの場合は改行
                     if (lineData.Lines[i + 1] == 'n')
                     {
-                        _linesText.text += '\n';
+                        _lineBuilder.Append('\n');
                         i++;
                     }
                 }
                 else
                 {
                     // 通常の文字の場合は1文字ずつ表示
-                    _linesText.text += lineData.Lines[i];
+                    _lineBuilder.Append(lineData.Lines[i]);
                 }
+
+                _linesText.SetText(_lineBuilder);
 
                 await UniTask.Delay(TimeSpan.FromSeconds(_talkManager.OneCharInterval),
                     cancellationToken: _cancellationTokenSource.Token);

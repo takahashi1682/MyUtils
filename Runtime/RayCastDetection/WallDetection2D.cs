@@ -8,7 +8,8 @@ namespace MyUtils.RayCastDetection
     /// </summary>
     public class WallDetection2D : BoxCast2dDetection
     {
+        private ReadOnlyReactiveProperty<bool> _isWall;
         public ReadOnlyReactiveProperty<bool> IsWall =>
-            Hit2D.Select(v => v.collider != null).ToReadOnlyReactiveProperty();
+            _isWall ??= Hit2D.Select(v => v.collider != null).ToReadOnlyReactiveProperty().AddTo(this);
     }
 }

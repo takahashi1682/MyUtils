@@ -12,10 +12,12 @@ namespace MyUtils.RayCastDetection
         [Header("地面までの距離がこの値以下なら地面と判定")]
         [SerializeField] private float _isGroundThreshold = 0.01f;
 
+        private ReadOnlyReactiveProperty<bool> _isGround;
         public ReadOnlyReactiveProperty<bool> IsGround =>
-            HitDistance.Select(v => v < _isGroundThreshold).ToReadOnlyReactiveProperty();
+            _isGround ??= HitDistance.Select(v => v < _isGroundThreshold).ToReadOnlyReactiveProperty().AddTo(this);
 
+        private ReadOnlyReactiveProperty<bool> _isAir;
         public ReadOnlyReactiveProperty<bool> IsAir =>
-            HitDistance.Select(v => v > _isGroundThreshold).ToReadOnlyReactiveProperty();
+            _isAir ??= HitDistance.Select(v => v > _isGroundThreshold).ToReadOnlyReactiveProperty().AddTo(this);
     }
 }

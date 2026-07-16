@@ -8,7 +8,8 @@ namespace MyUtils.RayCastDetection
     /// </summary>
     public class HoleDetection2D : BoxCast2dDetection
     {
+        private ReadOnlyReactiveProperty<bool> _isHole;
         public ReadOnlyReactiveProperty<bool> IsHole =>
-            Hit2D.Select(v => v.collider == null).ToReadOnlyReactiveProperty();
+            _isHole ??= Hit2D.Select(v => v.collider == null).ToReadOnlyReactiveProperty().AddTo(this);
     }
 }

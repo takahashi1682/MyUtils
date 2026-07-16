@@ -89,7 +89,7 @@ namespace MyUtils.AudioManager.Core
         protected List<AudioPlayer> GetPlayingAudioPlayers()
             => _audioPlayers.Where(p => p.IsInUse).ToList();
 
-        protected bool IsPlaying() => GetPlayingAudioPlayers().Count > 0;
+        protected bool IsPlaying() => _audioPlayers.Any(p => p.IsInUse);
 
         protected CancellationToken ResetCancellationToken()
         {
