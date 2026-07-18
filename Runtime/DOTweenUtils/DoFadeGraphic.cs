@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 
 namespace MyUtils.DOTweenUtils
@@ -11,7 +10,7 @@ namespace MyUtils.DOTweenUtils
         public float EndValue;
 
         protected override Tween CreateTween()
-            => DOVirtual.Float(StartValue, EndValue, Duration,
+            => Tween.Value(StartValue, EndValue, Duration,
                 alpha => Target.alpha = alpha);
     }
 }

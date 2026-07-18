@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 
 namespace MyUtils.DOTweenUtils
@@ -12,10 +11,11 @@ namespace MyUtils.DOTweenUtils
 
         protected override Tween CreateTween()
         {
-            var sequence = DOTween.Sequence();
-            sequence.Append(Target.material.DOFade(StartValue, 0));
-            sequence.Append(Target.material.DOFade(EndValue, Duration));
-            return sequence;
+            Color color = Target.material.color;
+            color.a = StartValue;
+            Target.material.color = color;
+
+            return Target.material.DOFade(EndValue, Duration);
         }
     }
 }
