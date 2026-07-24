@@ -4,9 +4,9 @@ using UnityEngine.UI;
 namespace MyUtils.DOTweenUtils
 {
     [RequireComponent(typeof(Image))]
-    public class DoImageAmount : AbstractDoTween<Image>
+    public class TweenImageAmount : AbstractDoTween<Image>
     {
-        [Header("DoFadeGraphic")]
+        [Header("TweenImageAmount")]
         public float StartValue = 1;
         public float EndValue;
 

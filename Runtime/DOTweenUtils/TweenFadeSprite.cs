@@ -3,9 +3,9 @@ using UnityEngine;
 namespace MyUtils.DOTweenUtils
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class DoFadeSprite : AbstractDoTween<SpriteRenderer>
+    public class TweenFadeSprite : AbstractDoTween<SpriteRenderer>
     {
-        [Header("DoFadeSprite")] [SerializeField]
+        [Header("TweenFadeSprite")] [SerializeField]
         public float StartValue = 1;
         public float EndValue;
 

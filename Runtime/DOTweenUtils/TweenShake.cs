@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MyUtils.DOTweenUtils
 {
-    public class DoShake : AbstractDoTween<Transform>
+    public class TweenShake : AbstractDoTween<Transform>
     {
         public float Strength = 0.3f; // 揺れの強さ
         public int Vibrato = 10; // 揺れる回数

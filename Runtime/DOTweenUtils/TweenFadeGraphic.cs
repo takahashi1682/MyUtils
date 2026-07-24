@@ -3,9 +3,9 @@ using UnityEngine;
 namespace MyUtils.DOTweenUtils
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public class DoFadeGraphic : AbstractDoTween<CanvasGroup>
+    public class TweenFadeGraphic : AbstractDoTween<CanvasGroup>
     {
-        [Header("DoFadeGraphic")]
+        [Header("TweenFadeGraphic")]
         public float StartValue = 1f;
         public float EndValue;
 

@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace MyUtils.DOTweenUtils
 {
-    public static class DoTweenExtensions
+    public static class TweenExtensions
     {
         public static Tween DOTextInt(this TMPro.TextMeshProUGUI text, int initialValue, int finalValue,
             float duration,

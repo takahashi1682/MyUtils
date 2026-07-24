@@ -5,9 +5,9 @@ namespace MyUtils.DOTweenUtils
     /// <summary>
     ///     シンプルな移動機能
     /// </summary>
-    public class DoLocalMove : AbstractDoTween<Transform>
+    public class TweenLocalMove : AbstractDoTween<Transform>
     {
-        [Header("DoLocalMove")]
+        [Header("TweenLocalMove")]
         public bool IsRelative;
         public Vector3 EndValue = new(300, 0, 0);
         

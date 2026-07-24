@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MyUtils.DOTweenUtils
 {
-    public class DoLocalJump : AbstractDoTween<Transform>
+    public class TweenJump : AbstractDoTween<Transform>
     {
         public float JumpPower = 2f; // ジャンプの高さ
         public int NumJumps = 1; // ジャンプの回数
