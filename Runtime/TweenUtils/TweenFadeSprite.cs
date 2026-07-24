@@ -3,7 +3,7 @@ using UnityEngine;
 namespace MyUtils.TweenUtils
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class TweenFadeSprite : AbstractDoTween<SpriteRenderer>
+    public class TweenFadeSprite : AbstractTween<SpriteRenderer>
     {
         [Header("TweenFadeSprite")] [SerializeField]
         public float StartValue = 1;

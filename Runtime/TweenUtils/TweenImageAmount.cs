@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace MyUtils.TweenUtils
 {
     [RequireComponent(typeof(Image))]
-    public class TweenImageAmount : AbstractDoTween<Image>
+    public class TweenImageAmount : AbstractTween<Image>
     {
         [Header("TweenImageAmount")]
         public float StartValue = 1;

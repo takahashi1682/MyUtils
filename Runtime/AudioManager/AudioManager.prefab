@@ -97,10 +97,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <AudioMixer>k__BackingField: {fileID: 24100000, guid: d14a71c9e37c4914792d17e86db57dea, type: 2}
   _masterVolumeRate:
-    value: 0.33
+    value: 1
   _bgmVolumeRate:
-    value: 0.79
+    value: 1
   _seVolumeRate:
-    value: 0.88
+    value: 1
   _voiceVolumeRate:
-    value: 0.6
+    value: 1

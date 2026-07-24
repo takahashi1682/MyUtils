@@ -3,7 +3,7 @@ using UnityEngine;
 namespace MyUtils.TweenUtils
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public class TweenFadeGraphic : AbstractDoTween<CanvasGroup>
+    public class TweenFadeGraphic : AbstractTween<CanvasGroup>
     {
         [Header("TweenFadeGraphic")]
         public float StartValue = 1f;

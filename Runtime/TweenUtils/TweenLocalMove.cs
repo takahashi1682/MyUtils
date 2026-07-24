@@ -5,13 +5,13 @@ namespace MyUtils.TweenUtils
     /// <summary>
     ///     シンプルな移動機能
     /// </summary>
-    public class TweenLocalMove : AbstractDoTween<Transform>
+    public class TweenLocalMove : AbstractTween<Transform>
     {
         [Header("TweenLocalMove")]
         public bool IsRelative;
         public Vector3 EndValue = new(300, 0, 0);
         
         protected override Tween CreateTween()
-            => Target.DOLocalMove(EndValue, Duration).SetRelative(IsRelative);
+            => Target.TweenLocalMove(EndValue, Duration).SetRelative(IsRelative);
     }
 }

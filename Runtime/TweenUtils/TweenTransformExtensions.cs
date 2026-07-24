@@ -4,7 +4,7 @@ namespace MyUtils.TweenUtils
 {
     public static class TweenTransformExtensions
     {
-        public static Tween DOLocalMove(this Transform transform, Vector3 endValue, float duration)
+        public static Tween TweenLocalMove(this Transform transform, Vector3 endValue, float duration)
         {
             Vector3 start = transform.localPosition;
             Tween tween = null;
@@ -16,7 +16,7 @@ namespace MyUtils.TweenUtils
             return tween;
         }
 
-        public static Tween DOScale(this Transform transform, Vector3 endValue, float duration)
+        public static Tween TweenScale(this Transform transform, Vector3 endValue, float duration)
         {
             Vector3 start = transform.localScale;
             return Tween.Create(duration,
@@ -26,7 +26,7 @@ namespace MyUtils.TweenUtils
         /// <summary>
         /// start(現在位置)からendValueへ移動しつつ、その間にnumJumps回、jumpPowerの高さで放物線状にバウンドする。
         /// </summary>
-        public static Tween DOLocalJump(this Transform transform, Vector3 endValue, float jumpPower, int numJumps,
+        public static Tween TweenLocalJump(this Transform transform, Vector3 endValue, float jumpPower, int numJumps,
             float duration)
         {
             Vector3 start = transform.localPosition;
@@ -46,7 +46,7 @@ namespace MyUtils.TweenUtils
         /// DOTween本家のシェイクアルゴリズムの完全再現ではなく、vibrato回のランダムオフセットを
         /// 時間経過で減衰させながら補間する簡易的な再現。
         /// </summary>
-        public static Tween DOShakePosition(this Transform transform, float duration, float strength, int vibrato,
+        public static Tween TweenShakePosition(this Transform transform, float duration, float strength, int vibrato,
             float randomness)
         {
             Vector3 start = transform.localPosition;

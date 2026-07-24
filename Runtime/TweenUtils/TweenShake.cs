@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MyUtils.TweenUtils
 {
-    public class TweenShake : AbstractDoTween<Transform>
+    public class TweenShake : AbstractTween<Transform>
     {
         public float Strength = 0.3f; // 揺れの強さ
         public int Vibrato = 10; // 揺れる回数
@@ -17,7 +17,7 @@ namespace MyUtils.TweenUtils
         }
 
         protected override Tween CreateTween()
-            => Target.DOShakePosition(Duration, Strength, Vibrato, Randomness)
+            => Target.TweenShakePosition(Duration, Strength, Vibrato, Randomness)
                 .OnComplete(() => Target.localPosition = _originalPos);
     }
 }
