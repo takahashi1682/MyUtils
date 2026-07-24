@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.DOTweenUtils
+namespace MyUtils.TweenUtils
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class TweenFadeSprite : AbstractDoTween<SpriteRenderer>

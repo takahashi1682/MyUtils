@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.DOTweenUtils
+namespace MyUtils.TweenUtils
 {
     public class TweenLocalJump : AbstractDoTween<Transform>
     {

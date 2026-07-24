@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.DOTweenUtils
+namespace MyUtils.TweenUtils
 {
     /// <summary>
     /// Tween.SetLink で対象GameObjectに自動アタッチされ、GameObjectのライフサイクルをTweenへ転送する。

@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace MyUtils.DOTweenUtils
+namespace MyUtils.TweenUtils
 {
     public enum Ease
     {

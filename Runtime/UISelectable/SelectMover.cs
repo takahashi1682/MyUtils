@@ -1,4 +1,4 @@
-using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 namespace MyUtils.UISelectable
@@ -13,21 +13,24 @@ namespace MyUtils.UISelectable
         [SerializeField] private float _duration = 0.1f;
 
         private Vector3 _defaultPosition;
-        private Tween _endMoveAnimation;
-        private Tween _startMoveAnimation;
+        private Coroutine _moveCoroutine;
 
         protected override void Start()
         {
             base.Start();
 
             _defaultPosition = _moveTarget.transform.localPosition;
-
-            SetupMoveAnimation();
         }
 
         protected override void SelectedAction()
         {
-            _startMoveAnimation.Restart();
+            // 既存のアニメーションを停止
+            if (_moveCoroutine != null)
+            {
+                StopCoroutine(_moveCoroutine);
+            }
+
+            _moveCoroutine = StartCoroutine(MoveToPosition(_selectedPosition, _duration));
         }
 
         protected override void SubmitAction()
@@ -36,20 +39,30 @@ namespace MyUtils.UISelectable
 
         protected override void DeselectAction()
         {
-            _endMoveAnimation.Restart();
+            // 既存のアニメーションを停止
+            if (_moveCoroutine != null)
+            {
+                StopCoroutine(_moveCoroutine);
+            }
+
+            _moveCoroutine = StartCoroutine(MoveToPosition(_defaultPosition, _duration));
         }
 
-        private void SetupMoveAnimation()
+        private IEnumerator MoveToPosition(Vector3 targetPosition, float duration)
         {
-            _startMoveAnimation = _moveTarget.transform.DOLocalMove(_selectedPosition, _duration);
-            _startMoveAnimation.SetAutoKill(false);
-            _startMoveAnimation.SetLink(gameObject);
-            _startMoveAnimation.Pause();
+            Vector3 startPosition = _moveTarget.transform.localPosition;
+            float elapsedTime = 0f;
 
-            _endMoveAnimation = _moveTarget.transform.DOLocalMove(_defaultPosition, _duration);
-            _endMoveAnimation.SetAutoKill(false);
-            _endMoveAnimation.SetLink(gameObject);
-            _endMoveAnimation.Pause();
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / duration);
+                _moveTarget.transform.localPosition = Vector3.Lerp(startPosition, targetPosition, t);
+                yield return null;
+            }
+
+            // 最終位置を確実に設定
+            _moveTarget.transform.localPosition = targetPosition;
         }
     }
 }

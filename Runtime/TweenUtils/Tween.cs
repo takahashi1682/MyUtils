@@ -3,7 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace MyUtils.DOTweenUtils
+namespace MyUtils.TweenUtils
 {
     /// <summary>
     /// DOTweenに依存しない軽量Tweenエンジン。UniTaskの毎フレームループで駆動する。

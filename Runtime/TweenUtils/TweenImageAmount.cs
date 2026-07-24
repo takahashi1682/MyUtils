@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MyUtils.DOTweenUtils
+namespace MyUtils.TweenUtils
 {
     [RequireComponent(typeof(Image))]
     public class TweenImageAmount : AbstractDoTween<Image>

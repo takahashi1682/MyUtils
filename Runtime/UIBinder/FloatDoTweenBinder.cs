@@ -1,4 +1,4 @@
-using DG.Tweening;
+using System.Collections;
 using R3;
 using UnityEngine;
 
@@ -10,7 +10,7 @@ namespace MyUtils.UIBinder
     public class FloatDoTweenBinder : AbstractValueBinder<float>
     {
         [SerializeField] private float _duration = 1;
-        private Tween _tween;
+        private Coroutine _animationCoroutine;
 
         protected override void Start()
         {
@@ -19,21 +19,35 @@ namespace MyUtils.UIBinder
             _inValue.Value.CurrentValue
                 .Subscribe(afterValue =>
                 {
-                    float currentValue = lastValue;
+                    // 既存のアニメーションを停止
+                    if (_animationCoroutine != null)
+                    {
+                        StopCoroutine(_animationCoroutine);
+                    }
 
-                    _tween?.Kill();
-                    _tween = DOTween.To(
-                            () => currentValue, // 開始値
-                            v => currentValue = v, // 更新時の処理
-                            afterValue,
-                            _duration)
-                        .OnKill(() => currentValue = afterValue)
-                        .OnUpdate(() => _outText.text = string.Format(_textFormat, currentValue));
-                    _tween.Play();
+                    // 新しいアニメーション開始
+                    _animationCoroutine = StartCoroutine(AnimateValue(lastValue, afterValue, _duration));
 
                     lastValue = afterValue;
                 })
                 .AddTo(this);
+        }
+
+        private IEnumerator AnimateValue(float startValue, float endValue, float duration)
+        {
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / duration); // 0～1 の補間値
+                float currentValue = Mathf.Lerp(startValue, endValue, t);
+                _outText.text = string.Format(_textFormat, currentValue);
+                yield return null;
+            }
+
+            // 最終値を確実に設定
+            _outText.text = string.Format(_textFormat, endValue);
         }
     }
 }

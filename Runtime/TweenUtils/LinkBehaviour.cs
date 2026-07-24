@@ -1,4 +1,4 @@
-namespace MyUtils.DOTweenUtils
+namespace MyUtils.TweenUtils
 {
     /// <summary>
     /// SetLink で紐づけたGameObjectのライフサイクルに応じたTweenの挙動。
