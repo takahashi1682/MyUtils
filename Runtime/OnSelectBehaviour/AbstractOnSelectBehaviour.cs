@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace MyUtils.UISelectable
+namespace MyUtils.OnSelectBehaviour
 {
     /// <summary>
     /// UIが選択された時に何かする機能
     /// </summary>
     [RequireComponent(typeof(Selectable))]
-    public abstract class AbstractTargetSelectable : AbstractTargetBehaviour<Selectable>,
+    public abstract class AbstractOnSelectBehaviour : AbstractTargetBehaviour<Selectable>,
         ISubmitHandler,
         IPointerClickHandler,
         IPointerEnterHandler, IPointerExitHandler,

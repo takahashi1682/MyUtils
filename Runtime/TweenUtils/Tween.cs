@@ -19,7 +19,6 @@ namespace MyUtils.TweenUtils
         private LoopType _loopType = LoopType.Restart;
         private bool _inverted;
         private bool _autoKill = true;
-        private bool _isRelative;
 
         private Action _onComplete;
         private Action _onKill;
@@ -32,7 +31,7 @@ namespace MyUtils.TweenUtils
         private bool _loopRunning;
         private CancellationTokenSource _cts;
 
-        public bool IsRelative => _isRelative;
+        public bool IsRelative { get; private set; }
 
         private Tween(float duration, Action<float, float> onProgress)
         {
@@ -52,27 +51,27 @@ namespace MyUtils.TweenUtils
 
         public static Tween To(Func<float> getter, Action<float> setter, float endValue, float duration)
         {
-            float start = getter != null ? getter() : 0f;
+            float start = getter?.Invoke() ?? 0f;
             return Value(start, endValue, duration, setter);
         }
 
         public static Tween To(Func<int> getter, Action<int> setter, int endValue, float duration)
         {
-            float start = getter != null ? getter() : 0;
+            float start = getter?.Invoke() ?? 0;
             return Create(duration,
                 eased => setter?.Invoke(Mathf.RoundToInt(Mathf.LerpUnclamped(start, endValue, eased))));
         }
 
         public static Tween To(Func<long> getter, Action<long> setter, long endValue, float duration)
         {
-            double start = getter != null ? getter() : 0L;
+            double start = getter?.Invoke() ?? 0L;
             double end = endValue;
             return Create(duration, eased => setter?.Invoke((long)Math.Round(start + (end - start) * eased)));
         }
 
         public static Tween To(Func<double> getter, Action<double> setter, double endValue, float duration)
         {
-            double start = getter != null ? getter() : 0d;
+            double start = getter?.Invoke() ?? 0d;
             return Create(duration, eased => setter?.Invoke(start + (endValue - start) * eased));
         }
 
@@ -85,7 +84,11 @@ namespace MyUtils.TweenUtils
             return this;
         }
 
-        public Tween SetEase(Ease ease) { _ease = ease; return this; }
+        public Tween SetEase(Ease ease)
+        {
+            _ease = ease;
+            return this;
+        }
 
         public Tween SetLoops(int loops, LoopType loopType = LoopType.Restart)
         {
@@ -94,13 +97,41 @@ namespace MyUtils.TweenUtils
             return this;
         }
 
-        public Tween SetInverted(bool inverted) { _inverted = inverted; return this; }
-        public Tween SetAutoKill(bool autoKill) { _autoKill = autoKill; return this; }
-        public Tween SetRelative(bool relative = true) { _isRelative = relative; return this; }
+        public Tween SetInverted(bool inverted)
+        {
+            _inverted = inverted;
+            return this;
+        }
 
-        public Tween OnComplete(Action callback) { _onComplete += callback; return this; }
-        public Tween OnKill(Action callback) { _onKill += callback; return this; }
-        public Tween OnUpdate(Action callback) { _onUpdate += callback; return this; }
+        public Tween SetAutoKill(bool autoKill)
+        {
+            _autoKill = autoKill;
+            return this;
+        }
+
+        public Tween SetRelative(bool relative = true)
+        {
+            IsRelative = relative;
+            return this;
+        }
+
+        public Tween OnComplete(Action callback)
+        {
+            _onComplete += callback;
+            return this;
+        }
+
+        public Tween OnKill(Action callback)
+        {
+            _onKill += callback;
+            return this;
+        }
+
+        public Tween OnUpdate(Action callback)
+        {
+            _onUpdate += callback;
+            return this;
+        }
 
         public Tween SetLink(GameObject target) => SetLink(target, LinkBehaviour.KillOnDestroy);
 
@@ -186,7 +217,7 @@ namespace MyUtils.TweenUtils
             if (_loopRunning || _isKilled) return;
             _loopRunning = true;
             _cts ??= new CancellationTokenSource();
-            RunLoopAsync(_cts.Token);
+            RunLoopAsync(_cts.Token).Forget();
         }
 
         private async UniTaskVoid RunLoopAsync(CancellationToken token)

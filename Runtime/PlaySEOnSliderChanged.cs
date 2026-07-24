@@ -2,16 +2,15 @@ using System;
 using MyUtils.AudioManager.Manager;
 using R3;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
-namespace MyUtils.UISelectable.UISliderChange
+namespace MyUtils
 {
     /// <summary>
     /// Sliderが変更された時に音を再生する機能
     /// </summary>
     [RequireComponent(typeof(Slider))]
-    public class UISliderChangeSoundPlayer : MonoBehaviour
+    public class PlaySEOnSliderChanged : MonoBehaviour
     {
         public AudioClip Clip;
         public float Interval = 0.3f;

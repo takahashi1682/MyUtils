@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MyUtils.UISelectable
+namespace MyUtils.OnSelectBehaviour
 {
-    public class SelectColor : AbstractTargetSelectable
+    public class ColorOnSelect : AbstractOnSelectBehaviour
     {
         public Graphic TargetGraphic;
         public Color SelectedColor = Color.cyan;

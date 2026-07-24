@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace _Projects.Utils.HTTPUtils
+namespace MyUtils.HTTPUtils
 {
     public static class HTTPConfig
     {

@@ -1,12 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-namespace MyUtils.UISelectable
+namespace MyUtils.OnSelectBehaviour
 {
     /// <summary>
     /// UIが選択された時に移動する機能
     /// </summary>
-    public class SelectMover : AbstractTargetSelectable
+    public class MoveOnSelect : AbstractOnSelectBehaviour
     {
         [SerializeField] private RectTransform _moveTarget;
         [SerializeField] private Vector3 _selectedPosition = new(-30, 0);

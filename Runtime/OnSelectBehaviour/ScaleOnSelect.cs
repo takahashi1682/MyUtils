@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace MyUtils.UISelectable
+namespace MyUtils.OnSelectBehaviour
 {
     /// <summary>
     /// UIが選択された時にサイズを変更する機能
     /// </summary>
-    public class SelectScaler : AbstractTargetSelectable
+    public class ScaleOnSelect : AbstractOnSelectBehaviour
     {
         [SerializeField] private float _selectedScale = 1.1f;
         private Vector3 _defaultScale;

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,11 +8,10 @@ using UnityEngine.Audio;
 
 namespace MyUtils.AudioManager.Core
 {
-    [Serializable]
     public class AudioManager
     {
-        public ReactiveProperty<float> VolumeRate;
-        public AudioMixerGroup MixerGroup;
+        public readonly ReactiveProperty<float> VolumeRate;
+        public readonly AudioMixerGroup MixerGroup;
 
         private readonly MonoBehaviour _parent;
         private readonly List<AudioPlayer> _audioPlayers = new();

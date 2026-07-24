@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace _Projects.Utils.HTTPUtils
+namespace MyUtils.HTTPUtils
 {
     /// <summary>
     /// APIから配列でデータを取得する際に使用するラッパークラス

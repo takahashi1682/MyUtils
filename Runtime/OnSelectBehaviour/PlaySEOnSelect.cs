@@ -1,12 +1,12 @@
 using MyUtils.AudioManager.Manager;
 using UnityEngine;
 
-namespace MyUtils.UISelectable
+namespace MyUtils.OnSelectBehaviour
 {
     /// <summary>
     /// UIが選択された時に音を再生する機能
     /// </summary>
-    public class SelectSEPlayer : AbstractTargetSelectable
+    public class PlaySEOnSelect : AbstractOnSelectBehaviour
     {
         public AudioClip SelectedSound;
         public AudioClip SubmitSound;

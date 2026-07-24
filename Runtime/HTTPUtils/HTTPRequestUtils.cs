@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace _Projects.Utils.HTTPUtils
+namespace MyUtils.HTTPUtils
 {
     /// <summary>
     /// UnityWebRequestを使用したHTTPリクエストを送信するためのユーティリティクラス
