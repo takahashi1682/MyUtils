@@ -18,8 +18,7 @@ namespace MyUtils.DebugMethod
         {
             _globalCache.Clear();
             var allComponents =
-                Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include,
-                    FindObjectsSortMode.None);
+                Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include);
 
             foreach (var mono in allComponents)
             {
