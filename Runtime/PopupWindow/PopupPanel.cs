@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -5,64 +7,38 @@ using UnityEngine.UI;
 
 namespace MyUtils.PopupWindow
 {
-    public enum PopupMode
-    {
-        SingleButton,
-        DoubleButton,
-    }
-
     public class PopupPanel : AbstractSingletonBehaviour<PopupPanel>
     {
         [SerializeField] protected GameObject _panel;
         [SerializeField] protected TMPro.TextMeshProUGUI _messageText;
-        [SerializeField] protected Button _positiveButton;
+        [SerializeField] protected List<Button> _buttons;
         [SerializeField] protected Button _negativeButton;
-        protected bool IsShowing;
+        protected bool _isShowing;
 
-        public virtual async UniTask<bool> ShowPopupPanel(
+        public virtual async UniTask<int> ShowPopupPanel(
             string message = null,
-            PopupMode mode = PopupMode.DoubleButton,
             CancellationToken ct = default)
         {
-            if (IsShowing)
+            if (_isShowing)
             {
-                Debug.LogError("Popup is already showing.");
-                return false;
+                Debug.LogError("PopupPanel is already showing. Please wait until the current popup is closed.");
+                return -1;
             }
 
-            IsShowing = true;
+            _isShowing = true;
 
             if (message != null) { _messageText.text = message; }
 
             _panel.SetActive(true);
 
-            bool isDouble = mode == PopupMode.DoubleButton;
-            if (_negativeButton != null) _negativeButton.gameObject.SetActive(isDouble);
+            int winIndex = await UniTask.WhenAny(
+                _buttons.Select(button => button.OnClickAsync(ct)).ToArray()
+            );
 
-            bool result;
-
-            if (isDouble)
-            {
-                int winIndex = await UniTask.WhenAny(
-                    _positiveButton.OnClickAsync(ct),
-                    _negativeButton.OnClickAsync(ct));
-
-                result = winIndex == 0;
-            }
-            else
-            {
-                await _positiveButton.OnClickAsync(ct);
-                result = true;
-            }
-
-            ClosePanel();
-            return result;
-        }
-
-        protected virtual void ClosePanel()
-        {
             _panel.SetActive(false);
-            IsShowing = false;
+            _isShowing = false;
+         
+            return winIndex;
         }
     }
 }

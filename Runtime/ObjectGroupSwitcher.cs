@@ -18,7 +18,7 @@ namespace MyUtils
         {
             for (int i = 0; i < Objects.Length; i++)
             {
-                Objects[i].SetActiveAll(i == activeIndex);
+                Objects[i].SetAllActive(i == activeIndex);
             }
         }
 

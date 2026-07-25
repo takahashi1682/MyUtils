@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace MyUtils
@@ -13,7 +12,7 @@ namespace MyUtils
         /// <summary>
         /// 全てのオブジェクトの活性状態を一括設定
         /// </summary>
-        public void SetActiveAll(bool isActive)
+        public void SetAllActive(bool isActive)
         {
             if (Objects == null) return;
 
@@ -29,7 +28,7 @@ namespace MyUtils
         /// <summary>
         /// 全てのオブジェクトの状態を反転
         /// </summary>
-        public void InvertActiveAll()
+        public void ToggleAllActive()
         {
             if (Objects == null) return;
 
@@ -45,7 +44,7 @@ namespace MyUtils
         /// <summary>
         /// 特定のインデックスのオブジェクトだけを表示し、他を非表示にする（よくあるユースケース）
         /// </summary>
-        public void ShowOnly(int index)
+        public void SetOnlyActive(int index)
         {
             if (Objects == null) return;
 
