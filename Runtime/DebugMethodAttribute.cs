@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System;
 
 namespace MyUtils
@@ -17,4 +16,3 @@ namespace MyUtils
         }
     }
 }
-#endif

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 
 namespace MyUtils.Separator
@@ -14,3 +15,4 @@ namespace MyUtils.Separator
         public static void CreateUI() => CreateSeparatorObject.Execute("UI");
     }
 }
+#endif
