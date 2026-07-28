@@ -1,28 +1,67 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace MyUtils
 {
-    public abstract class AbstractList<T> : MonoBehaviour
+    public abstract class AbstractList<TItem, T> : MonoBehaviour where TItem : AbstractListItem<T>
     {
-        [SerializeField] protected AbstractListItem<T> _listItemPrefab;
+        [SerializeField] protected TItem _listItemPrefab;
         [SerializeField] private Transform _container;
 
-        protected void CreateListItems(List<T> listData)
-        {
-            var container = _container != null ? _container : _listItemPrefab.transform.parent;
+        protected readonly List<TItem> _list = new();
 
-            foreach (var data in listData)
+        protected void RefreshList(IEnumerable<T> listData)
+        {
+            ClearItems();
+
+            if (_listItemPrefab == null)
             {
-                var listItem = Instantiate(_listItemPrefab, container);
-                listItem.Initialize(data);
-                listItem.GetComponent<Button>().onClick.AddListener(() => OnClickItem(data));
+                Debug.LogError($"{nameof(AbstractList<TItem, T>)}: {nameof(_listItemPrefab)} is not assigned.", this);
+                return;
             }
 
-            _listItemPrefab.gameObject.SetActive(false);
+            if (listData == null) return;
+
+            var dataList = listData as IList<T> ?? listData.ToList();
+            if (dataList.Count == 0) return;
+
+            var parent = _container != null ? _container : _listItemPrefab.transform.parent;
+
+            for (int i = 0; i < dataList.Count; i++)
+            {
+                var data = dataList[i];
+                var listItem = Instantiate(_listItemPrefab, parent);
+                listItem.gameObject.SetActive(true);
+                listItem.Initialize(i, data);
+
+                if (listItem.TryGetComponent(out Button button))
+                {
+                    button.onClick.AddListener(() => OnItemClicked(listItem));
+                }
+
+                _list.Add(listItem);
+            }
         }
 
-        protected abstract void OnClickItem(T data);
+        public void ClearItems()
+        {
+            foreach (var item in _list)
+            {
+                if (item == null) continue;
+
+                if (item.TryGetComponent(out Button button))
+                {
+                    button.onClick.RemoveAllListeners();
+                }
+
+                Destroy(item.gameObject);
+            }
+
+            _list.Clear();
+        }
+
+        protected abstract void OnItemClicked(TItem item);
     }
 }

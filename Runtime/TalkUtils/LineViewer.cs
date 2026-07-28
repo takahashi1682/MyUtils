@@ -37,7 +37,7 @@ namespace MyUtils.TalkUtils
             {
                 _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource = new CancellationTokenSource();
-                DisplayLinesAsync(lines).Forget();
+                ShowLinesAsync(lines).Forget();
             }).AddTo(this);
 
             // 会話終了時にセリフを非表示
@@ -57,7 +57,7 @@ namespace MyUtils.TalkUtils
         ///  セリフを表示
         /// </summary>
         /// <param name="lineData"></param>
-        private async UniTask DisplayLinesAsync(LineData lineData)
+        private async UniTask ShowLinesAsync(LineData lineData)
         {
             if (_nameText != null)
             {
@@ -74,7 +74,7 @@ namespace MyUtils.TalkUtils
             if (_isIntervalEnabled)
             {
                 // 1文字ずつ表示
-                await DisplayTextAsync(lineData);
+                await BindTextAsync(lineData);
 
                 if (_nextIcon != null)
                 {
@@ -89,7 +89,7 @@ namespace MyUtils.TalkUtils
         }
 
         // 1文字ずつ表示
-        private async UniTask DisplayTextAsync(LineData lineData)
+        private async UniTask BindTextAsync(LineData lineData)
         {
             for (int i = 0; i < lineData.Lines.Length; i++)
             {
