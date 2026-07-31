@@ -16,8 +16,8 @@ namespace MyUtils.DataStore
         protected abstract string FileName { get; }
 
         [Header("Data")]
-        [field: SerializeField] public TAsset Override { get; protected set; }
         [field: SerializeField] public TAsset Default { get; protected set; }
+        [field: SerializeField] public TAsset Override { get; protected set; }
         [field: SerializeField] public SerializableReactiveProperty<TType> Current { get; private set; } = new();
 
         public TType CurrentValue => Current.CurrentValue;
