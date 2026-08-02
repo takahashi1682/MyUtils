@@ -11,6 +11,7 @@ namespace MyUtils
         // フォルダ名と色の対応ルール
         private static readonly Dictionary<string, Color> _colorSettings = new()
         {
+            { "_Projects", new Color(0.8f, 0.4f, 1.0f) },
             { "Projects", new Color(0.8f, 0.4f, 1.0f) },
             { "Prefabs", new Color(0.9f, 0.9f, 0f) },
             { "Scripts", new Color(0.2f, 0.5f, 1.0f) },
