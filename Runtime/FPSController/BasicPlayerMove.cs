@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace MyUtils.FPSController
 {
-    public class BasicMove : MonoBehaviour
+    public class BasicPlayerMove : MonoBehaviour
     {
         [Header("References")]
         public InputActionReference MoveActionReference;

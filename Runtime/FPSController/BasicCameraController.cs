@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace MyUtils.FPSController
 {
-    public class BasicFPSCamera : MonoBehaviour
+    public class BasicCameraController : MonoBehaviour
     {
         public InputActionReference LookActionReference;
         public Transform TargetHorizontal;
