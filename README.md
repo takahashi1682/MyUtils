@@ -130,7 +130,7 @@ MyUtils/
 
 ### 3D・カメラ
 - `RayCastDetection`系: `GroundDetection` / `GroundDetection2D` / `WallDetection2D` / `HoleDetection2D` / `BoxCastDetection` / `LineCastDetection`(接地・壁・穴の検知) — Samples 11
-- `FPSController`: `BasicFPSCamera` / `BasicMove`(FPS視点カメラ・移動) — Samples 12
+- `Basic`: `BasicFPSCamera` / `BasicMove`(FPS視点カメラ・移動) — Samples 12
 
 ### UI部品
 - `FillSegmentGauge` / `MemoryGauge`(ゲージ表示) — Samples 20
