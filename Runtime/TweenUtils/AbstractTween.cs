@@ -1,4 +1,5 @@
 using UnityEngine;
+using MyUtils.Abstract;
 
 namespace MyUtils.TweenUtils
 {

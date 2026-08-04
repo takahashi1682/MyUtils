@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using MyUtils.Abstract;
 
 namespace MyUtils.UIPrefsBinder
 {

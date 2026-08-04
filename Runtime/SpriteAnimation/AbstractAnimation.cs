@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using MyUtils.Abstract;
 
 namespace MyUtils.SpriteAnimation
 {

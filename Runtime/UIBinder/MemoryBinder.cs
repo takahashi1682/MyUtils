@@ -1,6 +1,7 @@
 using R3;
 using TNRD;
 using UnityEngine;
+using MyUtils.Gauge;
 
 namespace MyUtils.UIBinder
 {

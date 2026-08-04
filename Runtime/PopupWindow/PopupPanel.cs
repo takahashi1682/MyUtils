@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using MyUtils.Abstract;
 
 namespace MyUtils.PopupWindow
 {

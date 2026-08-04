@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using MyUtils.Abstract;
 
 namespace MyUtils.UIPrefsBinder
 {

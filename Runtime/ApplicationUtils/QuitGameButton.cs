@@ -2,6 +2,7 @@
 using UnityEngine;
 using R3;
 using UnityEngine.UI;
+using MyUtils.Abstract;
 
 #if UNITY_EDITOR
 using UnityEditor;

@@ -2,6 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using MyUtils.FadeScreen;
 using UnityEngine;
+using MyUtils.Abstract;
 
 namespace MyUtils.SceneLoader
 {

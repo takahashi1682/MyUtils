@@ -2,6 +2,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using MyUtils.Abstract;
 
 namespace MyUtils.OnSelectBehaviour
 {

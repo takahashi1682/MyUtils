@@ -6,6 +6,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using MyUtils.Abstract;
 
 namespace MyUtils.TalkUtils
 {

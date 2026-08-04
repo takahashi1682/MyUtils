@@ -1,6 +1,7 @@
 using R3;
 using UnityEngine.UI;
 using Screen = UnityEngine.Device.Screen;
+using MyUtils.Abstract;
 
 namespace MyUtils.ApplicationUtils
 {
