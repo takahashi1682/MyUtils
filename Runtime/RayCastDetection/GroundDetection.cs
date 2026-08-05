@@ -7,7 +7,7 @@ namespace MyUtils.RayCastDetection
     /// <summary>
     /// 地面を検出する機能(3D)
     /// </summary>
-    public class GroundDetection : LineCastDetection, IGroundDetectionObservable
+    public class GroundDetection : BoxCastDetection, IGroundDetectionObservable
     {
         [Header("地面までの距離がこの値以下なら地面と判定")]
         [SerializeField] private float _isGroundThreshold = 0.1f;
