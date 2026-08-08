@@ -1,7 +1,7 @@
 using R3;
 using UnityEngine;
 
-namespace MyUtils.RayCastDetection.Core
+namespace MyUtils.RayCastDetection
 {
     public interface IRayCast2dDetection
     {

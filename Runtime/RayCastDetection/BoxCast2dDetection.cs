@@ -3,7 +3,7 @@ using R3.Triggers;
 using UnityEditor;
 using UnityEngine;
 
-namespace MyUtils.RayCastDetection.Core
+namespace MyUtils.RayCastDetection
 {
     public interface IBoxCast2dDetection : IRayCast2dDetection
     {
