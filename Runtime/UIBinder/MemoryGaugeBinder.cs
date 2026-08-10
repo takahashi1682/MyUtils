@@ -6,11 +6,11 @@ using MyUtils.Gauge;
 namespace MyUtils.UIBinder
 {
     /// <summary>
-    ///  値をスライダーにバインドする機能
+    ///  値をMemoryGaugeにバインドする機能
     /// </summary>
-    public class MemoryBinder : MonoBehaviour
+    public class MemoryGaugeBinder : MonoBehaviour
     {
-        [SerializeField] private SerializableInterface<IRateBinder> _target;
+        [SerializeField] private SerializableInterface<IRateProvider> _target;
 
         private void Start()
         {

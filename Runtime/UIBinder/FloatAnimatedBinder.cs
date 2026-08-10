@@ -7,7 +7,7 @@ namespace MyUtils.UIBinder
     /// <summary>
     ///  数値をテキストにバインドしアニメーションする機能
     /// </summary>
-    public class FloatDoTweenBinder : AbstractValueBinder<float>
+    public class FloatAnimatedBinder : AbstractValueBinder<float>
     {
         [SerializeField] private float _duration = 1;
         private Coroutine _animationCoroutine;

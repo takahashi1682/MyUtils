@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyUtils.UIBinder
 {
-    public interface IViewSwitchBinder
+    public interface IViewSwitchProvider
     {
         ReadOnlyReactiveProperty<bool> IsFull { get; }
         ReadOnlyReactiveProperty<bool> IsEmpty { get; }
@@ -15,7 +15,7 @@ namespace MyUtils.UIBinder
     /// </summary>
     public class ViewSwitchBinder : MonoBehaviour
     {
-        [SerializeField] private SerializableInterface<IViewSwitchBinder> _viewSwitcher;
+        [SerializeField] private SerializableInterface<IViewSwitchProvider> _viewSwitcher;
         public bool IsActiveWhenFull = true;
         public bool IsActiveWhenEmpty;
 

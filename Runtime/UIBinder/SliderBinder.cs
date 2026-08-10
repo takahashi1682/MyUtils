@@ -10,7 +10,7 @@ namespace MyUtils.UIBinder
     /// </summary>
     public class SliderBinder : MonoBehaviour
     {
-        [SerializeField] private SerializableInterface<IRateBinder> _target;
+        [SerializeField] private SerializableInterface<IRateProvider> _target;
 
         private void Start()
         {

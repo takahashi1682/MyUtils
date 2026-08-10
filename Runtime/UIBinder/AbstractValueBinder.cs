@@ -6,7 +6,7 @@ using UnityEngine;
 namespace MyUtils.UIBinder
 {
     // 共通インターフェース
-    public interface IValueBinder<T>
+    public interface IValueProvider<T>
     {
         ReadOnlyReactiveProperty<T> CurrentValue { get; }
     }
@@ -16,7 +16,7 @@ namespace MyUtils.UIBinder
     /// </summary>
     public abstract class AbstractValueBinder<T> : MonoBehaviour
     {
-        [SerializeField] protected SerializableInterface<IValueBinder<T>> _inValue;
+        [SerializeField] protected SerializableInterface<IValueProvider<T>> _inValue;
         [SerializeField] protected TextMeshProUGUI _outText;
         [SerializeField] protected string _textFormat = "{0}"; // デフォルト書式
 

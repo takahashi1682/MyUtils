@@ -8,7 +8,7 @@ namespace MyUtils.UIBinder
 {
     public class RateToTextBinder : MonoBehaviour
     {
-        [SerializeField] private SerializableInterface<IRateBinder> _target;
+        [SerializeField] private SerializableInterface<IRateProvider> _target;
 
         [Header("未指定時は同じGameObjectのTextMeshProUGUIを使用")]
         [SerializeField] private TextMeshProUGUI _text;

@@ -42,11 +42,11 @@ namespace MyUtils.Parameter
     [Serializable]
     public abstract class AbstractParameter<T> : MonoBehaviour,
         IParameter<T>,
-        IRateBinder,
-        IViewSwitchBinder,
-        IValueBinder<int>,
-        IValueBinder<float>,
-        IValueBinder<string>
+        IRateProvider,
+        IViewSwitchProvider,
+        IValueProvider<int>,
+        IValueProvider<float>,
+        IValueProvider<string>
     {
         public abstract ReadOnlyReactiveProperty<T> Current { get; }
         public abstract ReadOnlyReactiveProperty<T> Min { get; }
@@ -70,9 +70,9 @@ namespace MyUtils.Parameter
         public abstract ReadOnlyReactiveProperty<bool> IsFull { get; }
         public abstract ReadOnlyReactiveProperty<bool> IsEmpty { get; }
 
-        ReadOnlyReactiveProperty<int> IValueBinder<int>.CurrentValue => CurrentInt;
-        ReadOnlyReactiveProperty<float> IValueBinder<float>.CurrentValue => CurrentFloat;
-        ReadOnlyReactiveProperty<string> IValueBinder<string>.CurrentValue => CurrentString;
+        ReadOnlyReactiveProperty<int> IValueProvider<int>.CurrentValue => CurrentInt;
+        ReadOnlyReactiveProperty<float> IValueProvider<float>.CurrentValue => CurrentFloat;
+        ReadOnlyReactiveProperty<string> IValueProvider<string>.CurrentValue => CurrentString;
 
         /// <summary>最小値を設定し、現在値を補正</summary>
         public abstract void SetMin(T min);

@@ -6,11 +6,11 @@ using UnityEngine.UI;
 namespace MyUtils.UIBinder
 {
     /// <summary>
-    ///  値をグラデーションにバインドする機能
+    ///  Rateをグラデーション評価した色にバインドする機能
     /// </summary>
-    public class GradientBinder : MonoBehaviour
+    public class RateToGradientBinder : MonoBehaviour
     {
-        [SerializeField] private SerializableInterface<IRateBinder> _target;
+        [SerializeField] private SerializableInterface<IRateProvider> _target;
         [SerializeField] private Gradient _gradient;
 
         private void Start()
