@@ -1,19 +1,30 @@
 using R3;
 using R3.Triggers;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-namespace MyUtils.RayCastDetection
+namespace MyUtils.Detection
 {
-    public class RayCastDetection : MonoBehaviour, IRayCastDetection
+    public interface ISphereCastDetection : IDetection
     {
+    }
+
+    /// <summary>
+    /// SphereCastの当たり判定を行う機能
+    /// </summary>
+    public class SphereCastDetection : MonoBehaviour, ISphereCastDetection
+    {
+        [Header("Settings")]
         [SerializeField] private Transform _rayPosition;
-        [SerializeField] private Vector3 _rayDirection = Vector3.forward;
+        [SerializeField] private float _radius = 0.5f;
+        [SerializeField] private Vector3 _rayDirection = Vector3.down;
         [SerializeField] private float _maxRayDistance = 10;
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
 
         [Header("Target")]
-        [SerializeField] private float _isDistanceThreshold = 0.01f;
+        [SerializeField] private float _isHitThreshold = 0.01f;
 
         [Header("Debug")]
 #if UNITY_EDITOR
@@ -37,19 +48,19 @@ namespace MyUtils.RayCastDetection
             _isHit.AddTo(this);
 
             _hitDistance
-                .Subscribe(distance => _isHit.Value = distance < _isDistanceThreshold)
+                .Subscribe(distance => _isHit.Value = distance < _isHitThreshold)
                 .AddTo(this);
 
             this.FixedUpdateAsObservable()
                 .Subscribe(_ =>
                 {
-                    Physics.Raycast(
+                    Physics.SphereCast(
                         _rayPosition.position,
-                        _rayPosition.rotation * _rayDirection,
-                        out RaycastHit hitInfo,
+                        _radius,
+                        _rayDirection,
+                        out var hitInfo,
                         _maxRayDistance,
-                        _layerMask
-                    );
+                        _layerMask);
 
                     _hitObject.Value = hitInfo;
                     _hitDistance.Value =
@@ -62,23 +73,31 @@ namespace MyUtils.RayCastDetection
 
 #if UNITY_EDITOR
         /// <summary>
-        /// RayCastの当たり判定を描画
+        /// SphereCastの当たり判定を描画
         /// </summary>
         private void OnDrawGizmos()
         {
             if (!_isShowGizmos) return;
 
-            Vector3 from = _rayPosition.position;
-            Vector3 direction = _rayPosition.rotation * _rayDirection;
+            var from = _rayPosition.position;
+
             if (Application.isPlaying)
             {
-                Debug.DrawRay(from, direction * _hitDistance.CurrentValue, Color.red);
+                var to = from + _rayDirection * _hitDistance.Value;
+                Gizmos.DrawWireSphere(from, _radius);
+                Gizmos.DrawWireSphere(to, _radius);
+
+                Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
                 Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hitObject.Value.collider?.gameObject}",
                     GUI.skin.box);
             }
             else
             {
-                Debug.DrawRay(from, direction * _maxRayDistance, Color.red);
+                var to = from + _rayDirection * _maxRayDistance;
+                Gizmos.DrawWireSphere(from, _radius);
+                Gizmos.DrawWireSphere(to, _radius);
+
+                Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
             }
         }
 #endif

@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace MyUtils.RayCastDetection
+namespace MyUtils.Detection
 {
-    public interface IBoxCastDetection : IRayCastDetection
+    public interface IBoxCastDetection : IDetection
     {
     }
 
@@ -26,7 +26,7 @@ namespace MyUtils.RayCastDetection
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
 
         [Header("Target")]
-        [SerializeField] private float _isDistanceThreshold = 0.01f;
+        [SerializeField] private float _isHitThreshold = 0.01f;
 
         [Header("Debug")]
 #if UNITY_EDITOR
@@ -50,7 +50,7 @@ namespace MyUtils.RayCastDetection
             _isHit.AddTo(this);
 
             _hitDistance
-                .Subscribe(distance => _isHit.Value = distance < _isDistanceThreshold)
+                .Subscribe(distance => _isHit.Value = distance < _isHitThreshold)
                 .AddTo(this);
 
             this.FixedUpdateAsObservable()
@@ -83,17 +83,28 @@ namespace MyUtils.RayCastDetection
             if (!_isShowGizmos) return;
 
             var from = _rayPosition.position;
-            var to = from + _rayDirection * _hitDistance.Value;
-
             var previousMatrix = Gizmos.matrix;
-            DrawBoxGizmo(from);
-            DrawBoxGizmo(to);
-            Gizmos.matrix = previousMatrix;
 
-            Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, Color.red);
+            if (Application.isPlaying)
+            {
+                var to = from + _rayDirection * _hitDistance.Value;
+                DrawBoxGizmo(from);
+                DrawBoxGizmo(to);
+                Gizmos.matrix = previousMatrix;
 
-            Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hitObject.Value.collider?.gameObject}",
-                GUI.skin.box);
+                Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
+                Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hitObject.Value.collider?.gameObject}",
+                    GUI.skin.box);
+            }
+            else
+            {
+                var to = from + _rayDirection * _maxRayDistance;
+                DrawBoxGizmo(from);
+                DrawBoxGizmo(to);
+                Gizmos.matrix = previousMatrix;
+
+                Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
+            }
         }
 
         /// <summary>
