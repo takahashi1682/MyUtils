@@ -1,43 +1,64 @@
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
+using VContainer.Unity;
 
 namespace MyUtils.VContainerExtensions
 {
-    public interface IScopeInitializable : IContainerInitializable
+    public interface IContainerInitializable
     {
+        /// <summary>
+        /// 依存性注入の登録時に呼び出される初期化処理
+        /// </summary>
+        /// <param name="builder"></param>
+        void OnRegister(IContainerBuilder builder);
+
+        /// <summary>
+        /// 依存性注入の解決時に呼び出される初期化処理
+        /// </summary>
+        /// <param name="resolver"></param>
+        void OnResolve(IObjectResolver resolver);
     }
 
-    public abstract class AbstractScopeRoot<T> : MonoBehaviour, ISceneInitializable
+    public abstract class AbstractScopeRoot<T> : MonoBehaviour, IContainerInitializable
         where T : IContainerInitializable
     {
+        [Tooltip("Tの検索対象に追加するGameObject(自身の子孫は常に検索対象に含まれます)")]
+        [SerializeField] private List<GameObject> _additionalScanRoots = new();
+
         public IObjectResolver Container { get; protected set; }
 
-        public virtual void OnRegister(IContainerBuilder builder) { }
+        public abstract void OnRegister(IContainerBuilder builder);
 
         public virtual void OnResolve(IObjectResolver resolver)
         {
-            // プレイヤー配下の IPlayerContainerInitializable を取得
-            var targets = gameObject.GetComponentsInChildren<T>(true);
+            var targets = new List<T>(GetComponentsInChildren<T>(true));
 
-            // プレイヤー専用のコンテナを生成
+            foreach (var scanRoot in _additionalScanRoots)
+            {
+                if (scanRoot == null) continue;
+                targets.AddRange(scanRoot.GetComponentsInChildren<T>(true));
+            }
+
             Container = resolver.CreateScope(newBuilder =>
             {
-                ConfigureScope(newBuilder);
+                RegisterScope(newBuilder);
 
-                // その他、IPlayerContainerInitializable を実装するコンポーネントの登録
                 foreach (var target in targets)
                 {
                     target.OnRegister(newBuilder);
                 }
             });
 
-            // 構築されたプレイヤーコンテナを用いて、各コンポーネントの解決を行う
             foreach (var target in targets)
             {
                 target.OnResolve(Container);
             }
+
+            ResolveScope(Container);
         }
 
-        protected abstract void ConfigureScope(IContainerBuilder builder);
+        protected virtual void RegisterScope(IContainerBuilder builder) { }
+        protected virtual void ResolveScope(IObjectResolver resolver) { }
     }
 }
