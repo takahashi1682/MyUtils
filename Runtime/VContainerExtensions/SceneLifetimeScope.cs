@@ -6,7 +6,7 @@ namespace MyUtils.VContainerExtensions
 {
     public class SceneLifetimeScope : LifetimeScope
     {
-        public SerializableInterface<IContainerInitializable> ScopeRoot;
+        public SerializableInterface<IScopeInitializable> ScopeRoot;
 
         protected override void Configure(IContainerBuilder builder)
         {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MyUtils.Abstract;
 using R3;
 using TMPro;
 using TNRD;
@@ -6,23 +7,16 @@ using UnityEngine;
 
 namespace MyUtils.UIBinder
 {
-    public class RateToTextBinder : MonoBehaviour
+    public class RateToTextBinder : AbstractTargetBehaviour<TextMeshProUGUI>
     {
         [SerializeField] private SerializableInterface<IRateProvider> _target;
-
-        [Header("未指定時は同じGameObjectのTextMeshProUGUIを使用")]
-        [SerializeField] private TextMeshProUGUI _text;
 
         [Header("Rateを0~100で分割して表示するメッセージ")]
         [SerializeField] private List<string> _messages;
 
-        private void Awake()
+        protected override void Start()
         {
-            if (_text == null) _text = GetComponent<TextMeshProUGUI>();
-        }
-
-        private void Start()
-        {
+            base.Start();
             _target.Value.CurrentRate
                 .Subscribe(UpdateText)
                 .AddTo(this);
@@ -33,7 +27,7 @@ namespace MyUtils.UIBinder
             // 0~1のRateからインデックス計算
             int index = Mathf.FloorToInt(rateValue * _messages.Count);
             index = Mathf.Clamp(index, 0, _messages.Count - 1);
-            _text.text = _messages[index];
+            Target.text = _messages[index];
         }
     }
 }

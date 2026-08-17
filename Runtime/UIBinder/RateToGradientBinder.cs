@@ -1,3 +1,4 @@
+using MyUtils.Abstract;
 using R3;
 using TNRD;
 using UnityEngine;
@@ -8,17 +9,15 @@ namespace MyUtils.UIBinder
     /// <summary>
     ///  Rateをグラデーション評価した色にバインドする機能
     /// </summary>
-    public class RateToGradientBinder : MonoBehaviour
+    public class RateToGradientBinder : AbstractTargetBehaviour<Graphic>
     {
         [SerializeField] private SerializableInterface<IRateProvider> _target;
         [SerializeField] private Gradient _gradient;
 
-        private void Start()
+        protected override void Start()
         {
-            if (TryGetComponent<Graphic>(out var graphic))
-            {
-                _target.Value.CurrentRate.Subscribe(x => graphic.color = _gradient.Evaluate(x)).AddTo(this);
-            }
+            base.Start();
+            _target.Value.CurrentRate.Subscribe(x => Target.color = _gradient.Evaluate(x)).AddTo(this);
         }
     }
 }

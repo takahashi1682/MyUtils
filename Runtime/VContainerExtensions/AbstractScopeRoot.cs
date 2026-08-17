@@ -5,7 +5,7 @@ using VContainer.Unity;
 
 namespace MyUtils.VContainerExtensions
 {
-    public interface IContainerInitializable
+    public interface IScopeInitializable
     {
         /// <summary>
         /// 依存性注入の登録時に呼び出される初期化処理
@@ -20,8 +20,8 @@ namespace MyUtils.VContainerExtensions
         void OnResolve(IObjectResolver resolver);
     }
 
-    public abstract class AbstractScopeRoot<T> : MonoBehaviour, IContainerInitializable
-        where T : IContainerInitializable
+    public abstract class AbstractScopeRoot<T> : MonoBehaviour, IScopeInitializable
+        where T : IScopeInitializable
     {
         [Tooltip("Tの検索対象に追加するGameObject(自身の子孫は常に検索対象に含まれます)")]
         [SerializeField] private List<GameObject> _additionalScanRoots = new();

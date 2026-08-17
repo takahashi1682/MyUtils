@@ -1,3 +1,4 @@
+using MyUtils.Abstract;
 using R3;
 using TNRD;
 using UnityEngine;
@@ -8,18 +9,16 @@ namespace MyUtils.UIBinder
     /// <summary>
     ///  値をスライダーにバインドする機能
     /// </summary>
-    public class SliderBinder : MonoBehaviour
+    public class SliderBinder : AbstractTargetBehaviour<Slider>
     {
         [SerializeField] private SerializableInterface<IRateProvider> _target;
 
-        private void Start()
+        protected override void Start()
         {
-            if (TryGetComponent<Slider>(out var slider))
-            {
-                _target.Value.CurrentRate
-                    .Subscribe(x => slider.value = x)
-                    .AddTo(this);
-            }
+            base.Start();
+            _target.Value.CurrentRate
+                .Subscribe(x => Target.value = x)
+                .AddTo(this);
         }
     }
 }

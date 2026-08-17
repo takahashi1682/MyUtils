@@ -1,3 +1,4 @@
+using MyUtils.Abstract;
 using R3;
 using TMPro;
 using TNRD;
@@ -14,17 +15,26 @@ namespace MyUtils.UIBinder
     /// <summary>
     /// 任意の型をTextMeshProにバインドする
     /// </summary>
-    public abstract class AbstractValueBinder<T> : MonoBehaviour
+    public abstract class AbstractValueBinder<T> : AbstractTargetBehaviour<TMP_Text>
     {
         [SerializeField] protected SerializableInterface<IValueProvider<T>> _inValue;
-        [SerializeField] protected TextMeshProUGUI _outText;
         [SerializeField] protected string _textFormat = "{0}"; // デフォルト書式
 
-        protected virtual void Start()
+        protected override void Start()
         {
+            base.Start();
             _inValue.Value.CurrentValue
-                .Subscribe(x => _outText.text = string.Format(_textFormat, x))
+                .Subscribe(OnValueChanged)
                 .AddTo(this);
+        }
+
+        /// <summary>
+        /// 値が変化するたびに呼ばれる。既定では書式に従いそのままテキストへ反映する。
+        /// アニメーション等の独自表示を行いたい場合はオーバーライドする。
+        /// </summary>
+        protected virtual void OnValueChanged(T value)
+        {
+            Target.text = string.Format(_textFormat, value);
         }
     }
 }
