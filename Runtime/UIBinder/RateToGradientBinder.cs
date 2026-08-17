@@ -11,13 +11,13 @@ namespace MyUtils.UIBinder
     /// </summary>
     public class RateToGradientBinder : AbstractTargetBehaviour<Graphic>
     {
-        [SerializeField] private SerializableInterface<IRateProvider> _target;
+        [SerializeField] private SerializableInterface<IRateProvider> _inRate;
         [SerializeField] private Gradient _gradient;
 
         protected override void Start()
         {
             base.Start();
-            _target.Value.CurrentRate.Subscribe(x => Target.color = _gradient.Evaluate(x)).AddTo(this);
+            _inRate.Value.CurrentRate.Subscribe(x => Target.color = _gradient.Evaluate(x)).AddTo(this);
         }
     }
 }

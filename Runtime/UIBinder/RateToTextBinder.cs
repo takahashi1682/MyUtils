@@ -9,7 +9,7 @@ namespace MyUtils.UIBinder
 {
     public class RateToTextBinder : AbstractTargetBehaviour<TextMeshProUGUI>
     {
-        [SerializeField] private SerializableInterface<IRateProvider> _target;
+        [SerializeField] private SerializableInterface<IRateProvider> _inRate;
 
         [Header("Rateを0~100で分割して表示するメッセージ")]
         [SerializeField] private List<string> _messages;
@@ -17,7 +17,7 @@ namespace MyUtils.UIBinder
         protected override void Start()
         {
             base.Start();
-            _target.Value.CurrentRate
+            _inRate.Value.CurrentRate
                 .Subscribe(UpdateText)
                 .AddTo(this);
         }

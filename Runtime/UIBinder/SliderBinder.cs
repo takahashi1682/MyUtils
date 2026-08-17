@@ -11,12 +11,12 @@ namespace MyUtils.UIBinder
     /// </summary>
     public class SliderBinder : AbstractTargetBehaviour<Slider>
     {
-        [SerializeField] private SerializableInterface<IRateProvider> _target;
+        [SerializeField] private SerializableInterface<IRateProvider> _inRate;
 
         protected override void Start()
         {
             base.Start();
-            _target.Value.CurrentRate
+            _inRate.Value.CurrentRate
                 .Subscribe(x => Target.value = x)
                 .AddTo(this);
         }

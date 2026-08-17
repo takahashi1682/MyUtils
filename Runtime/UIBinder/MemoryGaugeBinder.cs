@@ -11,12 +11,12 @@ namespace MyUtils.UIBinder
     /// </summary>
     public class MemoryGaugeBinder : AbstractTargetBehaviour<MemoryGauge>
     {
-        [SerializeField] private SerializableInterface<IRateProvider> _target;
+        [SerializeField] private SerializableInterface<IRateProvider> _inRate;
 
         protected override void Start()
         {
             base.Start();
-            _target.Value.CurrentRate
+            _inRate.Value.CurrentRate
                 .Subscribe(x => Target.Current.Value = Mathf.CeilToInt(x * Target.Max))
                 .AddTo(this);
         }
