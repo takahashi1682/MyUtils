@@ -6,6 +6,12 @@ namespace MyUtils.Parameter
 {
     public interface IParameter<T>
     {
+        T CurrentValue { get; }
+
+        T MinValue { get; }
+
+        T MaxValue { get; }
+
         /// <summary>現在値</summary>
         ReadOnlyReactiveProperty<T> Current { get; }
 
@@ -79,6 +85,10 @@ namespace MyUtils.Parameter
         IValueProvider<float>,
         IValueProvider<string>
     {
+        public T CurrentValue => Current.CurrentValue;
+        public T MinValue => Min.CurrentValue;
+        public T MaxValue => Max.CurrentValue;
+        
         public abstract ReadOnlyReactiveProperty<T> Current { get; }
         public abstract ReadOnlyReactiveProperty<T> Min { get; }
         public abstract ReadOnlyReactiveProperty<T> Max { get; }
