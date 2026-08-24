@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
-using VContainer.Unity;
 
 namespace MyUtils.VContainerExtensions
 {
@@ -32,6 +31,14 @@ namespace MyUtils.VContainerExtensions
 
         public virtual void OnResolve(IObjectResolver resolver)
         {
+            BuildChildScope(resolver);
+        }
+
+        protected virtual void RegisterScope(IContainerBuilder builder) { }
+        protected virtual void ResolveScope(IObjectResolver resolver) { }
+
+        public void BuildChildScope(IObjectResolver resolver)
+        {
             var targets = new List<T>(GetComponentsInChildren<T>(true));
 
             foreach (var scanRoot in _additionalScanRoots)
@@ -57,8 +64,5 @@ namespace MyUtils.VContainerExtensions
 
             ResolveScope(Container);
         }
-
-        protected virtual void RegisterScope(IContainerBuilder builder) { }
-        protected virtual void ResolveScope(IObjectResolver resolver) { }
     }
 }
