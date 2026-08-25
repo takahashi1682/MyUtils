@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MyUtils.Parameter
 {
-    public abstract class AbstractFlagsParameter : MonoBehaviour
+    public abstract class AbstractFlagsParameter<T> : MonoBehaviour where T : System.Enum
     {
         [SerializeField] private SerializableReactiveProperty<ulong> _current = new(0);
         public ReadOnlyReactiveProperty<ulong> Current => _current;
@@ -18,6 +18,9 @@ namespace MyUtils.Parameter
         public void ClearAllFlags() => _current.Value = 0UL;
 
         /// <summary>フラグを設定する</summary>
+        public void SetFlag(T index, bool value) => SetFlag((int)(object)index, value);
+
+        /// <summary>フラグを設定する</summary>
         public void SetFlag(int index, bool value)
         {
             if (IsIndexOutOfRange(index)) return;
@@ -27,11 +30,17 @@ namespace MyUtils.Parameter
         }
 
         /// <summary>フラグを反転させる</summary>
+        public void ToggleFlag(T index) => ToggleFlag((int)(object)index);
+
+        /// <summary>フラグを反転させる</summary>
         public void ToggleFlag(int index)
         {
             if (IsIndexOutOfRange(index)) return;
             _current.Value ^= (1UL << index);
         }
+
+        /// <summary>フラグを持っているか確認</summary>
+        public bool HasFlag(T index) => HasFlag((int)(object)index);
 
         /// <summary>フラグを持っているか確認</summary>
         public bool HasFlag(int index)
