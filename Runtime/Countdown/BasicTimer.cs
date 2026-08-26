@@ -10,7 +10,6 @@ namespace MyUtils.Countdown
     /// </summary>
     public interface IBasicTimerObservable : IFloatParameter
     {
-        ReadOnlyReactiveProperty<bool> IsPlay { get; }
         Observable<Unit> OnStart { get; }
         Observable<Unit> OnFinish { get; }
     }
@@ -20,6 +19,7 @@ namespace MyUtils.Countdown
     /// </summary>
     public interface IBasicTimerHandler
     {
+        SerializableReactiveProperty<bool> IsPlay { get; }
         void StartCountdown();
         void StopCountdown();
         void ResetCountdown();
@@ -32,8 +32,7 @@ namespace MyUtils.Countdown
         IBasicTimerObservable,
         IBasicTimerHandler
     {
-        [SerializeField] private SerializableReactiveProperty<bool> _isPlay = new();
-        public ReadOnlyReactiveProperty<bool> IsPlay => _isPlay;
+        [field: SerializeField] public SerializableReactiveProperty<bool> IsPlay { get; private set; } = new();
 
         private readonly Subject<Unit> _onStart = new();
         public Observable<Unit> OnStart => _onStart;
@@ -47,25 +46,25 @@ namespace MyUtils.Countdown
             _onFinish.AddTo(this);
 
             this.UpdateAsObservable()
-                .Where(_ => _isPlay.CurrentValue)
+                .Where(_ => IsPlay.CurrentValue)
                 .Subscribe(_ => Sub(Time.deltaTime))
                 .AddTo(this);
 
             IsEmpty.Where(x => x).Subscribe(_ =>
             {
-                _isPlay.Value = false;
+                IsPlay.Value = false;
                 _onFinish.OnNext(Unit.Default);
             }).AddTo(this);
         }
 
         public void StartCountdown()
         {
-            _isPlay.Value = true;
+            IsPlay.Value = true;
             _onStart.OnNext(Unit.Default);
         }
 
         public void StopCountdown()
-            => _isPlay.Value = false;
+            => IsPlay.Value = false;
 
         public void ResetCountdown()
             => SetFull();
