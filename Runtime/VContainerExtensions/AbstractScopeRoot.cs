@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using R3;
 using UnityEngine;
 using VContainer;
 
@@ -26,6 +27,15 @@ namespace MyUtils.VContainerExtensions
         [SerializeField] private List<GameObject> _additionalScanRoots = new();
 
         public IObjectResolver Container { get; protected set; }
+        private readonly BehaviorSubject<IObjectResolver> _resolved = new(null);
+        public Observable<IObjectResolver> OnResolved => _resolved;
+
+        [SerializeField, ReadOnly] private bool _isBuilt;
+
+        protected void Awake()
+        {
+            _resolved.AddTo(this);
+        }
 
         public abstract void OnRegister(IContainerBuilder builder);
 
@@ -39,6 +49,13 @@ namespace MyUtils.VContainerExtensions
 
         public void BuildChildScope(IObjectResolver resolver)
         {
+            if (_isBuilt)
+            {
+                Debug.LogWarning($"{name}: BuildChildScope was already called.", this);
+                return;
+            }
+            _isBuilt = true;
+
             var targets = new List<T>(GetComponentsInChildren<T>(true));
 
             foreach (var scanRoot in _additionalScanRoots)
@@ -63,6 +80,8 @@ namespace MyUtils.VContainerExtensions
             }
 
             ResolveScope(Container);
+
+            _resolved.OnNext(Container);
         }
     }
 }
