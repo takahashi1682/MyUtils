@@ -5,12 +5,12 @@ namespace MyUtils.VContainerExtensions
 {
     public class SceneLifetimeScope : LifetimeScope
     {
-        public AbstractScopeRoot ScopeRoot;
+        public AbstractScopeRoot SceneScopeRoot;
 
         protected override void Configure(IContainerBuilder builder)
         {
-            ScopeRoot.OnRegister(builder);
-            builder.RegisterBuildCallback(resolver => ScopeRoot.Run(resolver));
+            SceneScopeRoot.OnRegister(builder);
+            builder.RegisterBuildCallback(resolver => SceneScopeRoot.Build(resolver));
         }
     }
 }

@@ -31,11 +31,12 @@ namespace MyUtils.VContainerExtensions
         public virtual void OnResolve(IObjectResolver resolver) { }
 
         /// <summary>
-        /// ツリー最上位のルートとして呼び出すエントリーポイント（SceneLifetimeScopeから使用）。
+        /// ツリー最上位のルートとして呼び出すエントリーポイント（SceneLifetimeScopeや、
+        /// PlayerなどのインスタンスをRuntimeで生成する側から使用）。
         /// 自身の子孫すべての登録を終えたあと、ツリー全体で見つかったIScopeInitializableに対して
         /// 一度だけOnResolveを呼び出す。
         /// </summary>
-        public void Run(IObjectResolver resolver)
+        public void Build(IObjectResolver resolver)
         {
             var collector = new List<(IScopeInitializable Target, IObjectResolver Resolver)>();
             ResolveChildren(resolver, collector);
