@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using MyUtils.Abstract;
 
@@ -20,8 +19,18 @@ namespace MyUtils.SpriteAnimation
         public bool IsPlayOnEnable;
         public bool IsAutoDestroy = true;
 
+        /// <summary>
+        /// Normal: Time.deltaTime（Time.timeScaleの影響を受ける）
+        /// UnscaledTime: Time.unscaledDeltaTime（Time.timeScaleの影響を受けない）
+        /// ※AnimatePhysicsは非推奨のため未対応（Normalと同じ扱い）
+        /// </summary>
+        public AnimatorUpdateMode UpdateMode = AnimatorUpdateMode.Normal;
+
         public Sprite[] Sprites;
-        private Coroutine _animationCoroutine;
+
+        private bool _isPlaying;
+        private float _elapsed;
+        private int _count;
 
         protected override void Start()
         {
@@ -34,7 +43,14 @@ namespace MyUtils.SpriteAnimation
             if (IsPlayOnEnable) Play();
         }
 
-        public void Play() => _animationCoroutine ??= StartCoroutine(MainProcess(1f / FPS));
+        public void Play()
+        {
+            if (_isPlaying) return;
+            _isPlaying = true;
+            _elapsed = 0f;
+            _count = 0;
+            SetSprite(GetIndex(0));
+        }
 
         protected virtual void OnDisable()
         {
@@ -43,36 +59,48 @@ namespace MyUtils.SpriteAnimation
 
         public void Stop()
         {
-            if (_animationCoroutine != null)
-            {
-                StopCoroutine(_animationCoroutine);
-                _animationCoroutine = null;
-            }
+            _isPlaying = false;
         }
 
-        protected virtual IEnumerator MainProcess(float interval)
+        private void Update()
+        {
+            if (!_isPlaying) return;
+            Tick(UpdateMode == AnimatorUpdateMode.UnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
+        }
+
+        private void Tick(float deltaTime)
         {
             bool isLoop = Mode != EMode.One;
             int spriteLength = Sprites.Length;
-            var secondWait = new WaitForSeconds(interval);
-            for (int count = 0; isLoop || count < spriteLength; count++)
+            float interval = 1f / FPS;
+
+            _elapsed += deltaTime;
+
+            while (_elapsed >= interval)
             {
-                int index = Mode switch
+                _elapsed -= interval;
+                _count++;
+
+                if (!isLoop && _count >= spriteLength)
                 {
-                    EMode.Repeat => (int)Mathf.Repeat(count, spriteLength),
-                    EMode.PingPong => (int)Mathf.PingPong(count, spriteLength - 1),
-                    _ => count
-                };
+                    _isPlaying = false;
+                    if (IsAutoDestroy) Destroy(gameObject);
+                    return;
+                }
 
-                SetSprite(index);
-
-                yield return secondWait;
+                SetSprite(GetIndex(_count));
             }
+        }
 
-            if (IsAutoDestroy)
+        private int GetIndex(int count)
+        {
+            int spriteLength = Sprites.Length;
+            return Mode switch
             {
-                Destroy(gameObject);
-            }
+                EMode.Repeat => (int)Mathf.Repeat(count, spriteLength),
+                EMode.PingPong => (int)Mathf.PingPong(count, spriteLength - 1),
+                _ => count
+            };
         }
 
         protected abstract void SetSprite(int index);
