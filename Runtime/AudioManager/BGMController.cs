@@ -1,5 +1,6 @@
 using MyUtils.AudioManager.Core;
 using MyUtils.AudioManager.Manager;
+using MyUtils.AudioManager.Player;
 using MyUtils.SceneChangeDetector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -54,7 +55,10 @@ namespace MyUtils.AudioManager
                     break;
 
                 case AudioPlayMode.HasPlay:
-                    BGMManager.HasPlay(setting.AudioSetting);
+                    if (!BGMManager.HasPlay(setting.AudioSetting))
+                    {
+                        BGMManager.Play(setting.AudioSetting);
+                    }
                     break;
 
                 case AudioPlayMode.Stop:
