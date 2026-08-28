@@ -22,7 +22,7 @@ namespace MyUtils.SpriteAnimation
         /// <summary>
         /// Normal: Time.deltaTime（Time.timeScaleの影響を受ける）
         /// UnscaledTime: Time.unscaledDeltaTime（Time.timeScaleの影響を受けない）
-        /// ※AnimatePhysicsは非推奨のため未対応（Normalと同じ扱い）
+        /// ※Fixedは未対応（Normalと同じ扱い）
         /// </summary>
         public AnimatorUpdateMode UpdateMode = AnimatorUpdateMode.Normal;
 
