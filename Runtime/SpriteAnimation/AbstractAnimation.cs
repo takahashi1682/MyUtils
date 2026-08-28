@@ -29,6 +29,7 @@ namespace MyUtils.SpriteAnimation
         public Sprite[] Sprites;
 
         private bool _isPlaying;
+        private bool _forceLoop;
         private float _elapsed;
         private int _count;
 
@@ -40,13 +41,15 @@ namespace MyUtils.SpriteAnimation
 
         protected virtual void OnEnable()
         {
-            if (IsPlayOnEnable) Play();
+            // Modeが Oneでも、OnEnable経由の再生は毎回のEnableで繰り返し再生させたいため強制的にループさせる
+            if (IsPlayOnEnable) Play(forceLoop: true);
         }
 
-        public void Play()
+        public void Play(bool forceLoop = false)
         {
             if (_isPlaying) return;
             _isPlaying = true;
+            _forceLoop = forceLoop;
             _elapsed = 0f;
             _count = 0;
             SetSprite(GetIndex(0));
@@ -70,7 +73,7 @@ namespace MyUtils.SpriteAnimation
 
         private void Tick(float deltaTime)
         {
-            bool isLoop = Mode != EMode.One;
+            bool isLoop = Mode != EMode.One || _forceLoop;
             int spriteLength = Sprites.Length;
             float interval = 1f / FPS;
 
@@ -99,7 +102,8 @@ namespace MyUtils.SpriteAnimation
             {
                 EMode.Repeat => (int)Mathf.Repeat(count, spriteLength),
                 EMode.PingPong => (int)Mathf.PingPong(count, spriteLength - 1),
-                _ => count
+                // Modeが Oneのまま強制ループする場合は、Repeatと同じ折り返しでインデックスを求める
+                _ => _forceLoop ? (int)Mathf.Repeat(count, spriteLength) : count
             };
         }
 
