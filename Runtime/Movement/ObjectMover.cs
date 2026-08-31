@@ -7,7 +7,7 @@ namespace MyUtils.Movement
     /// </summary>
     public class ObjectMover : MonoBehaviour
     {
-        [SerializeField] private Vector3 _direction = Vector3.up;
+        public Vector3 Direction = Vector3.up;
         [SerializeField] private float _speed = 5;
         [SerializeField] private bool _isGlobal;
 
@@ -16,8 +16,8 @@ namespace MyUtils.Movement
             float delta = _speed * Time.deltaTime;
             transform.position +=
                 _isGlobal ?
-                    _direction * delta : // グローバル座標で移動
-                    transform.rotation * _direction * delta; // ローカル座標で移動
+                    Direction * delta : // グローバル座標で移動
+                    transform.rotation * Direction * delta; // ローカル座標で移動
         }
     }
 }
