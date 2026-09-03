@@ -59,13 +59,13 @@ namespace MyUtils.VContainerExtensions
 
     public abstract class AbstractScopeRoot<T> : AbstractScopeRoot where T : IScopeInitializable
     {
+        [ReadOnly, SerializeField] private bool _isBuilt;
+        
         [Tooltip("Tの検索対象に追加するGameObject(自身の子孫は常に検索対象に含まれます)")]
         [SerializeField] private List<GameObject> _additionalScanRoots = new();
 
         public IObjectResolver Container { get; protected set; }
-
-        [ReadOnly] private bool _isBuilt;
-
+        
         protected virtual void ConfigureScope(IContainerBuilder builder) { }
 
         internal override void ResolveChildren(
@@ -77,6 +77,7 @@ namespace MyUtils.VContainerExtensions
                 Debug.LogWarning($"{name}: scope was already built.", this);
                 return;
             }
+
             _isBuilt = true;
 
             var targets = new List<T>(GetComponentsInChildren<T>(true));
