@@ -2,22 +2,21 @@ using MyUtils.Abstract;
 using R3;
 using TNRD;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MyUtils.UIBinder
 {
     /// <summary>
-    ///  値をスライダーにバインドする機能
+    /// 値をGaugeにバインドする機能
     /// </summary>
-    public class SliderBinder : AbstractTargetBehaviour<Slider>
+    public class GaugeBinder : AbstractTargetBehaviour<UI.Gauge>
     {
-        [SerializeField] protected SerializableInterface<IRateProvider> _inRate;
+        [SerializeField] private SerializableInterface<IRateProvider> _inRate;
 
         protected override void Start()
         {
             base.Start();
             _inRate.Value.CurrentRate
-                .Subscribe(x => Target.value = x)
+                .Subscribe(x => Target.Value = x)
                 .AddTo(this);
         }
     }
