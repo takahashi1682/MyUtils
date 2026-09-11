@@ -10,17 +10,17 @@ namespace MyUtils.Parameter
     /// </summary>
     public abstract class AbstractParameterUpdater<T> : MonoBehaviour where T : IComparable<T>
     {
-        [field: SerializeField] public bool IsRunning { get; set; }
+        [field: SerializeField] public bool IsEnable { get; set; }
 
         [SerializeField] protected SerializableInterface<AbstractParameter<T>> _parameter;
         [SerializeField] protected T _addValue;
         [SerializeField] protected T _subValue;
-        [SerializeField] protected float _interval = 1f;
+        [SerializeField] protected int _intervalMs = 1000;
 
         private void Start()
         {
-            Observable.Interval(TimeSpan.FromSeconds(_interval))
-                .Where(_ => IsRunning)
+            Observable.Interval(TimeSpan.FromMilliseconds(_intervalMs))
+                .Where(_ => IsEnable)
                 .Subscribe(_ =>
                 {
                     if (_addValue.CompareTo(default) >= 0)

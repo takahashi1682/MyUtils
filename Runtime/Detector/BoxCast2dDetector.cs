@@ -5,19 +5,22 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace MyUtils.Detection
+namespace MyUtils.Detector
 {
-    public interface ILineCast2dDetection : IDetection2d
+    public interface IBoxCast2dDetector : IDetector2d
     {
     }
 
     /// <summary>
-    /// LineCast(2D)の当たり判定を行う機能
+    /// BoxCast(2D)の当たり判定を行う機能
     /// </summary>
-    public class LineCast2dDetection : MonoBehaviour, ILineCast2dDetection
+    public class BoxCast2dDetector : MonoBehaviour, IBoxCast2dDetector
     {
         [Header("Settings")]
         [SerializeField] private Transform _rayPosition;
+        [SerializeField] private Vector2 _raySize = new(1f, 0.1f);
+        [Tooltip("ボックスの回転（度数、Z軸）")]
+        [SerializeField] private float _rayAngle;
         [SerializeField] private Vector2 _rayDirection = Vector2.down;
         [SerializeField] private float _maxRayDistance = 10;
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
@@ -53,10 +56,14 @@ namespace MyUtils.Detection
             this.FixedUpdateAsObservable()
                 .Subscribe(_ =>
                 {
-                    Vector2 from = _rayPosition.position;
-                    Vector2 to = from + _rayDirection * _maxRayDistance;
-
-                    _hit2D.Value = Physics2D.Linecast(from, to, _layerMask);
+                    _hit2D.Value =
+                        Physics2D.BoxCast(
+                            _rayPosition.position,
+                            _raySize,
+                            _rayAngle,
+                            _rayDirection,
+                            _maxRayDistance,
+                            _layerMask);
 
                     _hitDistance.Value =
                         _hit2D.Value
@@ -68,24 +75,44 @@ namespace MyUtils.Detection
 
 #if UNITY_EDITOR
         /// <summary>
-        /// LineCastの当たり判定を描画
+        /// BoxCastの当たり判定を描画
         /// </summary>
         private void OnDrawGizmos()
         {
             if (!_isShowGizmos) return;
 
             var from = _rayPosition.position;
+            var previousMatrix = Gizmos.matrix;
 
             if (Application.isPlaying)
             {
+                var to = from + (Vector3)(_rayDirection * _hitDistance.Value);
+                DrawBoxGizmo(from);
+                DrawBoxGizmo(to);
+                Gizmos.matrix = previousMatrix;
+
                 Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
                 Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hit2D.Value.collider?.gameObject}",
                     GUI.skin.box);
             }
             else
             {
+                var to = from + (Vector3)(_rayDirection * _maxRayDistance);
+                DrawBoxGizmo(from);
+                DrawBoxGizmo(to);
+                Gizmos.matrix = previousMatrix;
+
                 Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
             }
+        }
+
+        /// <summary>
+        /// _rayAngleの回転を反映したワイヤーキューブをGizmos.matrix経由で描画
+        /// </summary>
+        private void DrawBoxGizmo(Vector3 center)
+        {
+            Gizmos.matrix = Matrix4x4.TRS(center, Quaternion.Euler(0, 0, _rayAngle), Vector3.one);
+            Gizmos.DrawWireCube(Vector3.zero, _raySize);
         }
 #endif
     }

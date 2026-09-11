@@ -1,8 +1,14 @@
+using System;
+
 namespace MyUtils.Parameter
 {
-    public abstract class AbstractFlagsParameter<T> : AbstractFlagsParameterBase where T : System.Enum
+    /// <summary>
+    /// enum Tの各値をビット位置として扱う、型付きのFlagsParameterBase。
+    /// </summary>
+    [Serializable]
+    public class FlagsParameter<T> : FlagsParameterBase where T : Enum
     {
-        public override System.Type FlagEnumType => typeof(T);
+        public override Type FlagEnumType => typeof(T);
 
         /// <summary>フラグを設定する</summary>
         public void SetFlag(T index, bool value) => SetFlag((int)(object)index, value);

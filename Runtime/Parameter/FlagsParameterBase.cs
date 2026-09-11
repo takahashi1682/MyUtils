@@ -4,13 +4,19 @@ using UnityEngine;
 
 namespace MyUtils.Parameter
 {
-    public abstract class AbstractFlagsParameterBase : MonoBehaviour
+    /// <summary>
+    /// 64個までのbool状態をulongのビットフラグとして保持する、シリアライズ可能なプレーンクラス。
+    /// MonoBehaviourを継承しないため、他のMonoBehaviour内にフィールドとして複数個持つことができる。
+    /// Inspector表示は FlagsParameterDrawer (CustomPropertyDrawer) が担当する。
+    /// </summary>
+    [Serializable]
+    public class FlagsParameterBase
     {
         [SerializeField] private SerializableReactiveProperty<ulong> _current = new(0);
         public ReadOnlyReactiveProperty<ulong> Current => _current;
 
-        /// <summary>Inspector表示用: フラグに対応するenumの型</summary>
-        public abstract Type FlagEnumType { get; }
+        /// <summary>Inspector表示用: フラグに対応するenumの型。型を持たない場合はnull。</summary>
+        public virtual Type FlagEnumType => null;
 
         /// <summary>現在のフラグ値を設定する</summary>
         public void SetFlags(ulong value) => _current.Value = value;

@@ -5,21 +5,22 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace MyUtils.Detection
+namespace MyUtils.Detector
 {
-    public interface IBoxCastDetection : IDetection
+    public interface ICapsuleCastDetector : IDetector
     {
     }
 
     /// <summary>
-    /// BoxCastの当たり判定を行う機能
+    /// CapsuleCastの当たり判定を行う機能
     /// </summary>
-    public class BoxCastDetection : MonoBehaviour, IBoxCastDetection
+    public class CapsuleCastDetector : MonoBehaviour, ICapsuleCastDetector
     {
         [Header("Settings")]
         [SerializeField] private Transform _rayPosition;
-        [SerializeField] private Vector3 _raySize = Vector3.one;
-        [Tooltip("ボックスの回転（オイラー角、度数）")]
+        [SerializeField] private float _capsuleRadius = 0.5f;
+        [SerializeField] private float _capsuleHeight = 2f;
+        [Tooltip("カプセルの回転（オイラー角、度数）。未回転時はY軸方向が高さ方向。")]
         [SerializeField] private Vector3 _rayAngle = Vector3.zero;
         [SerializeField] private Vector3 _rayDirection = Vector3.down;
         [SerializeField] private float _maxRayDistance = 10;
@@ -56,12 +57,14 @@ namespace MyUtils.Detection
             this.FixedUpdateAsObservable()
                 .Subscribe(_ =>
                 {
-                    Physics.BoxCast(
-                        _rayPosition.position,
-                        _raySize * 0.5f,
+                    GetCapsulePoints(_rayPosition.position, out var point1, out var point2);
+
+                    Physics.CapsuleCast(
+                        point1,
+                        point2,
+                        _capsuleRadius,
                         _rayDirection,
                         out var hitInfo,
-                        Quaternion.Euler(_rayAngle),
                         _maxRayDistance,
                         _layerMask);
 
@@ -74,23 +77,32 @@ namespace MyUtils.Detection
                 .AddTo(this);
         }
 
+        /// <summary>
+        /// カプセルの上下半球の中心座標を算出する
+        /// </summary>
+        private void GetCapsulePoints(Vector3 center, out Vector3 point1, out Vector3 point2)
+        {
+            var halfLineHeight = Mathf.Max(_capsuleHeight * 0.5f - _capsuleRadius, 0f);
+            var up = Quaternion.Euler(_rayAngle) * Vector3.up;
+            point1 = center + up * halfLineHeight;
+            point2 = center - up * halfLineHeight;
+        }
+
 #if UNITY_EDITOR
         /// <summary>
-        /// BoxCastの当たり判定を描画
+        /// CapsuleCastの当たり判定を描画
         /// </summary>
         private void OnDrawGizmos()
         {
             if (!_isShowGizmos) return;
 
             var from = _rayPosition.position;
-            var previousMatrix = Gizmos.matrix;
 
             if (Application.isPlaying)
             {
                 var to = from + _rayDirection * _hitDistance.Value;
-                DrawBoxGizmo(from);
-                DrawBoxGizmo(to);
-                Gizmos.matrix = previousMatrix;
+                DrawCapsuleGizmo(from);
+                DrawCapsuleGizmo(to);
 
                 Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
                 Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hitObject.Value.collider?.gameObject}",
@@ -99,21 +111,21 @@ namespace MyUtils.Detection
             else
             {
                 var to = from + _rayDirection * _maxRayDistance;
-                DrawBoxGizmo(from);
-                DrawBoxGizmo(to);
-                Gizmos.matrix = previousMatrix;
+                DrawCapsuleGizmo(from);
+                DrawCapsuleGizmo(to);
 
                 Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
             }
         }
 
         /// <summary>
-        /// _rayAngleの回転を反映したワイヤーキューブをGizmos.matrix経由で描画
+        /// カプセル形状を上下半球のワイヤースフィアで簡易描画
         /// </summary>
-        private void DrawBoxGizmo(Vector3 center)
+        private void DrawCapsuleGizmo(Vector3 center)
         {
-            Gizmos.matrix = Matrix4x4.TRS(center, Quaternion.Euler(_rayAngle), Vector3.one);
-            Gizmos.DrawWireCube(Vector3.zero, _raySize);
+            GetCapsulePoints(center, out var point1, out var point2);
+            Gizmos.DrawWireSphere(point1, _capsuleRadius);
+            Gizmos.DrawWireSphere(point2, _capsuleRadius);
         }
 #endif
     }

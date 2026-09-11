@@ -4,7 +4,7 @@ using MyUtils.AudioManager.Core;
 using MyUtils.AudioManager.Manager;
 using UnityEngine;
 
-namespace MyUtils.AudioManager.Sample
+namespace MyUtils
 {
     public class BGMSample : MonoBehaviour
     {

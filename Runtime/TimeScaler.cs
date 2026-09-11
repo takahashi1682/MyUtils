@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyUtils.Misc
+namespace MyUtils
 {
     /// <summary>
     /// タイムスケールを制御するクラス

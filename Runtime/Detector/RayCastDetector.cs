@@ -5,21 +5,20 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace MyUtils.Detection
+namespace MyUtils.Detector
 {
-    public interface ISphereCastDetection : IDetection
+    public interface IRayCastDetector : IDetector
     {
     }
 
     /// <summary>
-    /// SphereCastの当たり判定を行う機能
+    /// RayCastの当たり判定を行う機能
     /// </summary>
-    public class SphereCastDetection : MonoBehaviour, ISphereCastDetection
+    public class RayCastDetector : MonoBehaviour, IRayCastDetector
     {
         [Header("Settings")]
         [SerializeField] private Transform _rayPosition;
-        [SerializeField] private float _radius = 0.5f;
-        [SerializeField] private Vector3 _rayDirection = Vector3.down;
+        [SerializeField] private Vector3 _rayDirection = Vector3.forward;
         [SerializeField] private float _maxRayDistance = 10;
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
 
@@ -54,13 +53,13 @@ namespace MyUtils.Detection
             this.FixedUpdateAsObservable()
                 .Subscribe(_ =>
                 {
-                    Physics.SphereCast(
+                    Physics.Raycast(
                         _rayPosition.position,
-                        _radius,
                         _rayDirection,
-                        out var hitInfo,
+                        out RaycastHit hitInfo,
                         _maxRayDistance,
-                        _layerMask);
+                        _layerMask
+                    );
 
                     _hitObject.Value = hitInfo;
                     _hitDistance.Value =
@@ -73,31 +72,23 @@ namespace MyUtils.Detection
 
 #if UNITY_EDITOR
         /// <summary>
-        /// SphereCastの当たり判定を描画
+        /// RayCastの当たり判定を描画
         /// </summary>
         private void OnDrawGizmos()
         {
             if (!_isShowGizmos) return;
 
-            var from = _rayPosition.position;
-
+            Vector3 from = _rayPosition.position;
+            Vector3 direction = _rayDirection;
             if (Application.isPlaying)
             {
-                var to = from + _rayDirection * _hitDistance.Value;
-                Gizmos.DrawWireSphere(from, _radius);
-                Gizmos.DrawWireSphere(to, _radius);
-
-                Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
+                Debug.DrawRay(from, direction * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
                 Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hitObject.Value.collider?.gameObject}",
                     GUI.skin.box);
             }
             else
             {
-                var to = from + _rayDirection * _maxRayDistance;
-                Gizmos.DrawWireSphere(from, _radius);
-                Gizmos.DrawWireSphere(to, _radius);
-
-                Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
+                Debug.DrawRay(from, direction * _maxRayDistance, Color.yellow);
             }
         }
 #endif

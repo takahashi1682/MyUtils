@@ -3,7 +3,7 @@ using R3;
 using R3.Triggers;
 using UnityEngine;
 
-namespace MyUtils.Countdown
+namespace MyUtils
 {
     /// <summary>
     /// 購読可能なカウントダウン機能
@@ -20,9 +20,21 @@ namespace MyUtils.Countdown
     public interface IBasicTimerHandler
     {
         SerializableReactiveProperty<bool> IsPlay { get; }
-        void StartCountdown();
-        void StopCountdown();
-        void ResetCountdown();
+        void StartTimer();
+        void StopTimer();
+        void ResetTimer();
+    }
+
+    public enum ETimerType
+    {
+        /// <summary>
+        /// カウントダウン
+        /// </summary>
+        Countdown,
+        /// <summary>
+        /// カウントアップ
+        /// </summary>
+        Countup
     }
 
     /// <summary>
@@ -33,6 +45,7 @@ namespace MyUtils.Countdown
         IBasicTimerHandler
     {
         [field: SerializeField] public SerializableReactiveProperty<bool> IsPlay { get; private set; } = new();
+        [field: SerializeField] public ETimerType TimerType { get; private set; }
 
         private readonly Subject<Unit> _onStart = new();
         public Observable<Unit> OnStart => _onStart;
@@ -47,7 +60,17 @@ namespace MyUtils.Countdown
 
             this.UpdateAsObservable()
                 .Where(_ => IsPlay.CurrentValue)
-                .Subscribe(_ => Sub(Time.deltaTime))
+                .Subscribe(_ =>
+                {
+                    if (TimerType == ETimerType.Countdown)
+                    {
+                        Sub(Time.deltaTime);
+                    }
+                    else
+                    {
+                        Add(Time.deltaTime);
+                    }
+                })
                 .AddTo(this);
 
             IsEmpty.Where(x => x).Subscribe(_ =>
@@ -57,16 +80,16 @@ namespace MyUtils.Countdown
             }).AddTo(this);
         }
 
-        public void StartCountdown()
+        public void StartTimer()
         {
             IsPlay.Value = true;
             _onStart.OnNext(Unit.Default);
         }
 
-        public void StopCountdown()
+        public void StopTimer()
             => IsPlay.Value = false;
 
-        public void ResetCountdown()
+        public void ResetTimer()
             => SetFull();
     }
 }

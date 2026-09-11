@@ -5,16 +5,16 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace MyUtils.Detection
+namespace MyUtils.Detector
 {
-    public interface ILineCastDetection : IDetection
+    public interface ILineCastDetector : IDetector
     {
     }
 
     /// <summary>
     ///  LineCastの当たり判定を行う機能
     /// </summary>
-    public class LineCastDetection : MonoBehaviour, ILineCastDetection
+    public class LineCastDetector : MonoBehaviour, ILineCastDetector
     {
         [Header("Settings")]
         [SerializeField] private Transform _rayPosition;

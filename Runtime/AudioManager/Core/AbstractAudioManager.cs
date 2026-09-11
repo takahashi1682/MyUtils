@@ -23,7 +23,7 @@ namespace MyUtils.AudioManager.Core
                 Destroy(gameObject);
                 return;
             }
-            
+
             // この型(T)専用のCoreを生成
             Core = new AudioManager(this, VolumeRate, MixerGroup, MaxAudioStreams);
         }
@@ -53,6 +53,7 @@ namespace MyUtils.AudioManager.Core
 
         public static void Stop(AudioClip clip) => Core.Stop(clip);
         public static void StopAll() => Core.StopAll();
+        public static UniTask StopAllFadeOutAsync(float duration = 1) => Core.StopAllFadeOutAsync(duration);
 
         public static UniTask FadeOutAsync(AudioSetting setting, float duration = 1) =>
             Core.FadeOutAsync(setting.Clip, duration);
@@ -69,5 +70,12 @@ namespace MyUtils.AudioManager.Core
         public static UniTask CrossFadeAsync(AudioPlayer prev, AudioSetting setting, float duration = 1,
             Transform trackingTarget = null)
             => Core.CrossFadeAsync(prev, setting, duration, trackingTarget);
+
+        public static async UniTask CrossFadeAsync(AudioSetting setting, float duration = 1,
+            Transform trackingTarget = null)
+        {
+            await Core.StopAllFadeOutAsync(duration);
+            await Core.FadeInAsync(setting, duration, trackingTarget);
+        }
     }
 }

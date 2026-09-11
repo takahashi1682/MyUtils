@@ -1,14 +1,14 @@
 using R3;
 using UnityEngine;
 
-namespace MyUtils.Detection
+namespace MyUtils.Detector
 {
-    public interface IDetection2d
+    public interface IDetector
     {
         /// <summary>
         /// ヒットしたオブジェクト
         /// </summary>
-        ReadOnlyReactiveProperty<RaycastHit2D> Hit2D { get; }
+        ReadOnlyReactiveProperty<RaycastHit> HitObject { get; }
 
         /// <summary>
         /// ヒットしたオブジェクトまでの距離

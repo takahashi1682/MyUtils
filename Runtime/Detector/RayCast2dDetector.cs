@@ -5,20 +5,19 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace MyUtils.Detection
+namespace MyUtils.Detector
 {
-    public interface ICircleCast2dDetection : IDetection2d
+    public interface IRayCast2dDetector : IDetector2d
     {
     }
 
     /// <summary>
-    /// CircleCastの当たり判定を行う機能
+    /// RayCast(2D)の当たり判定を行う機能
     /// </summary>
-    public class CircleCast2dDetection : MonoBehaviour, ICircleCast2dDetection
+    public class RayCast2dDetector : MonoBehaviour, IRayCast2dDetector
     {
         [Header("Settings")]
         [SerializeField] private Transform _rayPosition;
-        [SerializeField] private float _radius = 0.5f;
         [SerializeField] private Vector2 _rayDirection = Vector2.down;
         [SerializeField] private float _maxRayDistance = 10;
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
@@ -55,9 +54,8 @@ namespace MyUtils.Detection
                 .Subscribe(_ =>
                 {
                     _hit2D.Value =
-                        Physics2D.CircleCast(
+                        Physics2D.Raycast(
                             _rayPosition.position,
-                            _radius,
                             _rayDirection,
                             _maxRayDistance,
                             _layerMask);
@@ -72,7 +70,7 @@ namespace MyUtils.Detection
 
 #if UNITY_EDITOR
         /// <summary>
-        /// CircleCastの当たり判定を描画
+        /// RayCastの当たり判定を描画
         /// </summary>
         private void OnDrawGizmos()
         {
@@ -82,20 +80,12 @@ namespace MyUtils.Detection
 
             if (Application.isPlaying)
             {
-                var to = from + (Vector3)(_rayDirection * _hitDistance.Value);
-                Gizmos.DrawWireSphere(from, _radius);
-                Gizmos.DrawWireSphere(to, _radius);
-
                 Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
                 Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hit2D.Value.collider?.gameObject}",
                     GUI.skin.box);
             }
             else
             {
-                var to = from + (Vector3)(_rayDirection * _maxRayDistance);
-                Gizmos.DrawWireSphere(from, _radius);
-                Gizmos.DrawWireSphere(to, _radius);
-
                 Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
             }
         }

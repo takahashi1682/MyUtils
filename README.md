@@ -123,55 +123,63 @@ MyUtils/
 対応する `MyUtilsProject` のサンプル番号もあわせて記載。
 
 ### 入力・カーソル
-- Input System統合による入力読み取り(`AbstractInputReader` 派生) — Samples 01
-- `InputTrigger`系: `UnityEventOnKeyTrigger` / `UnityEventOnActionTrigger` / `PlaySEOnInputTrigger`(キー・アクション入力をUnityEventに変換) — Samples 02
+- `InputTrigger`系: `AbstractKeyInputTrigger` / `AbstractActionInputTrigger` / `UnityEventOnKeyTrigger` / `UnityEventOnActionTrigger` / `PlaySEOnInputTrigger`(キー・アクション入力をUnityEventに変換) — Samples 01 / 02
 - `Cursor`: `CursorTexture` / `CursorSetting`(カスタムカーソル表示) — Samples 03
 - `MouseToWorldRaycaster` / `LookAtMouseCursor`(マウス位置のワールド座標変換と追従) — Samples 10
 
-### 3D・カメラ
-- `RayCastDetection`系: `GroundDetection` / `GroundDetection2D` / `WallDetection2D` / `HoleDetection2D` / `BoxCastDetection` / `LineCastDetection`(接地・壁・穴の検知) — Samples 11
-- `Basic`: `BasicFPSCamera` / `BasicMove`(FPS視点カメラ・移動) — Samples 12
+### 3D・カメラ・検知
+- `Detector`系: `IDetector` / `IDetector2d` を実装した `RayCastDetector` / `BoxCastDetector` / `SphereCastDetector` / `CapsuleCastDetector`(3D)、`RayCast2dDetector` / `BoxCast2dDetector` / `CircleCast2dDetector` / `LineCast2dDetector`(2D)、および連続移動時のすり抜けを検知する `AbstractSweepDetector` — Samples 11
+- `FPSController`: `BasicCameraController` / `BasicPlayerMove`(FPS視点カメラ・移動) — Samples 12
 
 ### UI部品
-- `FillSegmentGauge` / `MemoryGauge`(ゲージ表示) — Samples 20
+- `Gauge`: `FillSegmentGauge` / `MemoryGauge`、`UI.Gauge`(RectTransformベースのゲージ) — Samples 20
 - `UIPrefsBinder`系: `SliderPrefsBinder` / `TogglePrefsBinder` / `DropdownPrefsBinder` / `InputFieldPrefsBinder`(UIとPlayerPrefsの自動バインド) — Samples 21
 - `CustomScrollView<T>` / `CustomScrollViewItem`(ファン型など自由レイアウトのスクロールリスト) — Samples 22
 - `ObjectGroup` / `ObjectGroupSwitcher`(オブジェクト群のタブ切り替え表示) — Samples 23
 - `ApplicationUtils`: `FullScreenToggle` / `QuitGameButton` / `ResolutionSelect` / `ResolutionApplier` — Samples 24
 - `PopupWindow`: `PopupPanel` — Samples 25
 - `AbstractList` / `AbstractListItem`(テンプレートInstantiateによる動的リスト) — Samples 26
-- `UIBinder`系: `FloatBinder` / `IntBinder` / `StringBinder` / `SliderBinder` / `GradientBinder` / `MemoryBinder` / `RateToTextBinder` / `ViewSwitchBinder` 等の値⇔UIバインダー群
-- `UIViewToggler` / `UISwitchAnimationPlayer` / `UISelectedOnEnable` / `UICursorTrakingObject`
+- `UIBinder`系: `FloatBinder` / `IntBinder` / `StringBinder` / `SliderBinder` / `FloatAnimatedBinder` / `GaugeBinder` / `MemoryGaugeBinder` / `RateToTextBinder` / `RateToGradientBinder` / `ViewSwitchBinder` 等の値⇔UIバインダー群 — Samples 27
+- `AudioMixerManager.UI`: `VolumeSliderBinder` / `VolumeInputFieldBinder`(AudioMixerパラメータのUIバインド) — Samples 43
+- `UI`: `UIViewToggler` / `UISwitchAnimationPlayer` / `UISelectedOnEnable` / `UICursorTrackingObject`
 
 ### 演出・アニメーション
 - `OnSelectBehaviour`系: `ColorOnSelect` / `MoveOnSelect` / `ScaleOnSelect` / `PlaySEOnSelect`(選択時演出) — Samples 30
-- `TweenUtils`系: `TweenLocalMove` / `TweenScale` / `TweenJump` / `TweenFadeGraphic` / `TweenFadeSprite` / `TweenImageAmount` / `TweenShake` — Samples 30
-- `AnimatorUtils`: `AnimatorStateObserver`(Animatorの状態遷移をR3で購読) / `AnimatorBinder` — Samples 31
-- `SpriteAnimation`系: `SpriteAnimation` / `ImageAnimation` — Samples 32
-- `FadeScreen`: `FadeScreenManager` / `FadeSetting`(画面フェード) — Samples 33
-- その他: `GradientImage` / `MaterialOffsetMover` / `SpriteScroller` / `ParticleSystemSimulator` / `ObjectMover` / `ObjectRotator` 等の小物演出系 — Samples 90
+- `TweenUtils`系: `TweenLocalMove` / `TweenScale` / `TweenJump` / `TweenFadeGraphic` / `TweenFadeSprite` / `TweenImageAmount` / `TweenShake`、`Ease` / `LoopType` — Samples 30
+- `AnimatorUtils`: `AnimatorStateObserver`(Animatorの状態遷移をR3で購読) / `AnimatorBinder` / `AnimatorExtensions`(UniTaskベースの再生待機) — Samples 31
+- `SpriteAnimation`系: `AbstractAnimation<T>`(Time.timeScale非依存の`AnimatorUpdateMode`対応) / `SpriteAnimation` / `ImageAnimation` — Samples 32
+- `FadeScreen`: `FadeScreenManager` / `FadeSetting`(画面フェード)、`SplashController` — Samples 33 / 62
+- `Movement`: `MaterialOffsetMover` / `SpriteScroller` / `ObjectMover` / `ObjectRotator` / `DelayTrack`、`ParticleSystemSimulator` / `GradientImage` 等の小物演出系 — Samples 90
 
 ### ゲームシステム
-- `Parameter`系: `AbstractIntParameter` / `AbstractFloatParameter` / `AbstractFlagsParameter`、および `Parameter.Basic` の `Health` / `Level` / `Exp` — Samples 40
-- `Countdown`系: `BasicTimer` / `StartTimer` / `GameTimer` — Samples 41
+- `Parameter`系: `AbstractIntParameter` / `AbstractFloatParameter` / `AbstractLongParameter` / `FlagsParameterBase` / `ParameterManager`、および `Parameter.Basic` の `Health` / `Level` / `Exp` — Samples 40
+- `BasicTimer`(`ETimerType`によるカウントダウン/カウントアップ、`IBasicTimerObservable` / `IBasicTimerHandler`) — Samples 41
 - `TalkUtils`: `TalkManager` / `LineViewer` / CSVベースの会話データ管理 — Samples 42
-- `AudioManager`(`BGMManager` / `SEManager` / `VoiceManager`) と `AudioMixerManager` — Samples 43
+- `AudioManager`(`BGMManager` / `SEManager` / `VoiceManager` と各 `Player`)、`AudioMixerManager`(`EAudioMixerParam`) — Samples 43
+- `BGMController`: `BGMControllerSetting` / `EAudioPlayMode`(シーン遷移に応じたBGMの自動再生・停止・フェード・クロスフェード切り替え) — Samples 44
 
 ### データ管理・通信
 - `DataStore`系: `AbstractDataStore` / `AbstractDataAsset` / `AbstractDataStoreSingleton`(JSONセーブデータ管理) — Samples 50 / 51
-- `HTTPUtils`(`HTTPRequestUtils` / `HTTPConfig`)、`AESEncryption`、`JsonUtils`(`EncryptedJsonFileHandler`) — Samples 52
+- `HTTPUtils`(`HTTPRequestUtils` / `HTTPConfig`)、`JsonUtils`(`AESEncryption` / `EncryptedJsonFileHandler` / `PersistentDataTextFileHandler`) — Samples 52
 - `Csv`: `CsvUtils` / `AbstractCsvData`
 
 ### シーン管理
-- `SceneLoader`系: `SceneLoaderButton` / `SceneLoaderInputTrigger` / `SceneUnloadButton` / `SceneUnloadInputTrigger` — Samples 60
+- `SceneLoader`系: `SceneLoaderButton` / `SceneLoaderInputTrigger` / `SceneUnloadButton` / `SceneUnloadInputTrigger` / `SceneLoaderUtils` — Samples 60
 - `SceneReference`(SceneAssetをguidで安全に参照) — Samples 61
-- `SplashController`、`SceneChangeDetector`系 — Samples 62
+- `SceneChangeDetector`系: `AbstractSceneChangeDetector` / `CurrentSceneTransitionActivator` / `CurrentSceneTransitionAnimationPlayer` / `CurrentSceneTransitionUISelecter` — Samples 62
 
 ### アーキテクチャ(DI)
-- `VContainerExtensions`: `AbstractScopeRoot` / `SceneLifetimeScope`(VContainerを使ったスコープ構築) — Samples 70
+- `VContainerExtensions`: `IScopeInitializable` / `IScopeRoot` / `AbstractScopeRoot<T>`(型ごとのスコープ自動収集・登録・解決) / `SceneLifetimeScope`(VContainerを使ったスコープ構築) — Samples 70
 
 ### 汎用ユーティリティ
-- `DelayDestroy` / `TimeScaler` / `OnBecameInvisibleDestroy` / `ProjectVersionViewer` / `SerializableKeyPair` / `CustomBounds` / `PlaySEOnSliderChanged` など、単機能の小物コンポーネント群 — Samples 90
+- `MonoBehaviourLifecycleEvents`(Awake/Start/OnEnable/OnDisable/OnDestroy/OnBecameVisible/OnBecameInvisibleをUnityEventとしてInspectorから配線)
+- `DelayDestroy` / `TimeScaler` / `OnBecameInvisibleDestroy` / `ProjectVersionViewer` / `SerializableKeyPair` / `CustomBounds` / `PlaySEOnSliderChanged` / `RigidbodyImpact` / `DontDestroyOnLoad` / `TransformExtensions` / `VectorUtils` / `UniTaskUtils` など、単機能の小物コンポーネント群 — Samples 90
+- `DebugMethodAttribute` / `ReadOnlyAttribute`(Inspector拡張属性)
+
+### エディタ拡張(Editor)
+- `DebugMethod`系: `[DebugMethod]` 属性を付けたメソッドをInspectorからボタン実行できるようにする機能一式
+- `SceneReferenceDrawer` / `FlagsParameterDrawer` / `ReadOnlyDrawer`(カスタムプロパティドロワー)
+- `SceneOpenWindow` / `FolderPainter` / `BuildSettingOptimizer` / `Separator`系(エディタ作業効率化ツール)
 
 ## 関連プロジェクト
 

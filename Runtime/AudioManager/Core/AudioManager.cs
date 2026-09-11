@@ -70,6 +70,13 @@ namespace MyUtils.AudioManager.Core
         public void StopAll()
             => _audioPlayers.ForEach(p => p.Stop());
 
+        public async UniTask StopAllFadeOutAsync(float duration = 1)
+        {
+            var players = GetPlayingAudioPlayers();
+            await UniTask.WhenAll(players.Select(p => FadeOutAsync(p, duration)));
+            StopAll();
+        }
+
         protected void CreateAudioPlayer(string name)
         {
             var go = new GameObject(name);
