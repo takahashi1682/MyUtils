@@ -45,7 +45,7 @@ namespace MyUtils
             if (enumType != null)
             {
                 var headerRect = new Rect(position.x, y, position.width, EditorGUIUtility.singleLineHeight);
-                EditorGUI.LabelField(headerRect, "Current Flags", EditorStyles.boldLabel);
+                EditorGUI.LabelField(headerRect, label.text, EditorStyles.boldLabel);
                 y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
                 var names = Enum.GetNames(enumType);
