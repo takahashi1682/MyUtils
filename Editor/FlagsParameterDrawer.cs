@@ -34,6 +34,10 @@ namespace MyUtils
         {
             EditorGUI.BeginProperty(position, label, property);
 
+            // labelはGUIContent(参照型)のため、下のPropertyField内で書き換えられることがある。
+            // ヘッダーラベル用に、書き換えの影響を受けないdisplayNameを先に控えておく。
+            string displayName = property.displayName;
+
             var currentProp = property.FindPropertyRelative("_current");
             float currentHeight = EditorGUI.GetPropertyHeight(currentProp, true);
             var currentRect = new Rect(position.x, position.y, position.width, currentHeight);
@@ -45,7 +49,7 @@ namespace MyUtils
             if (enumType != null)
             {
                 var headerRect = new Rect(position.x, y, position.width, EditorGUIUtility.singleLineHeight);
-                EditorGUI.LabelField(headerRect, label.text, EditorStyles.boldLabel);
+                EditorGUI.LabelField(headerRect, displayName, EditorStyles.boldLabel);
                 y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
                 var names = Enum.GetNames(enumType);
