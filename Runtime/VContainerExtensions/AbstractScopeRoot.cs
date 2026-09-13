@@ -9,8 +9,9 @@ namespace MyUtils.VContainerExtensions
     /// <summary>
     /// スコープに属するコンポーネントであることを示すだけの空のマーカー。
     /// AbstractScopeRoot&lt;T&gt;がGetComponentsInChildrenで収集する対象を表す。
-    /// 実際の初期化処理は、必要なものだけ IScopeRegisterable / IScopeResolvable / IScopeInitiatable を
-    /// 個別に実装する(3つすべてを実装する必要はない)。
+    /// 登録(IScopeRegisterable)・開始(IScopeLaunchable)はどちらも任意で実装する。
+    /// 依存の解決はVContainer標準の[Inject]を使えばよく、IScopeMemberとして見つかった時点で
+    /// AbstractScopeRoot側が自動的にInjectするため、そのためだけに登録する必要はない。
     /// </summary>
     public interface IScopeMember
     {
@@ -26,23 +27,13 @@ namespace MyUtils.VContainerExtensions
 
     /// <summary>
     /// スコープツリー全体(自身の親子関係にあるすべてのスコープ)の登録がすべて完了した後、
-    /// 一度だけ呼び出される処理。他の場所で登録された依存先も安全にResolveできるタイミング。
-    /// ただし他のコンポーネントのOnResolveが完了している保証はないため、ここでは依存の取得のみを行い、
-    /// 購読の開始など実際の処理はIScopeInitiatable.OnInitiateで行う。
-    /// </summary>
-    public interface IScopeResolvable
-    {
-        void OnResolve(IObjectResolver resolver);
-    }
-
-    /// <summary>
-    /// スコープツリー全体のOnResolveがすべて完了した後、一度だけ呼び出される処理。
-    /// このタイミングでは他のすべてのコンポーネントが依存の解決を終えているため、
+    /// 一度だけ呼び出される処理。このタイミングでは他のすべてのコンポーネントが
+    /// (VContainer標準の[Inject]による)依存の解決を終えているため、
     /// 購読の開始など実際に処理を開始する内容はここで行う。
     /// </summary>
-    public interface IScopeStartable
+    public interface IScopeLaunchable
     {
-        void OnStart();
+        void OnLaunch();
     }
 
     /// <summary>
@@ -55,14 +46,14 @@ namespace MyUtils.VContainerExtensions
         /// <summary>
         /// ツリー最上位のルートとして呼び出すエントリーポイント(SceneLifetimeScopeや、
         /// PlayerなどのインスタンスをRuntimeで生成する側から使用)。
-        /// 自身の子孫すべての登録を終えたあと、ツリー全体で見つかったコンポーネントの
-        /// OnResolveをすべて呼び終えてから、OnInitiateをすべて呼び出す。
+        /// 自身の子孫すべての登録([Inject]による依存解決を含む)を終えたあと、
+        /// ツリー全体で見つかったコンポーネントのOnLaunchをすべて呼び出す。
         /// </summary>
         void Build(IObjectResolver resolver);
 
         /// <summary>
         /// 自身の子スコープを構築し、見つかったスコープメンバーと、それぞれが属するresolverの組を
-        /// すべてcollectorに積み上げる。ここではOnResolve/OnInitiateを呼び出さない
+        /// すべてcollectorに積み上げる。ここではOnLaunchを呼び出さない
         /// (ツリー全体の登録が終わった最上位ルートだけがまとめて呼び出す)。
         /// </summary>
         void ResolveChildren(
@@ -70,7 +61,7 @@ namespace MyUtils.VContainerExtensions
             List<(object Target, IObjectResolver Resolver)> collector);
     }
 
-    public abstract class AbstractScopeRoot<T> : MonoBehaviour, IScopeRoot, IScopeResolvable, IScopeStartable
+    public abstract class AbstractScopeRoot<T> : MonoBehaviour, IScopeRoot
         where T : IScopeMember
     {
         [ReadOnly, SerializeField] private bool _isBuilt;
@@ -93,12 +84,6 @@ namespace MyUtils.VContainerExtensions
         /// <inheritdoc/>
         public virtual void OnRegister(IContainerBuilder builder) { }
 
-        /// <inheritdoc/>
-        public virtual void OnResolve(IObjectResolver resolver) { }
-
-        /// <inheritdoc/>
-        public virtual void OnStart() { }
-
         /// <summary>
         /// このスコープルートが構築する子コンテナ自体への登録処理。
         /// <see cref="OnRegister"/>が親コンテナへの自己登録であるのに対し、
@@ -116,25 +101,6 @@ namespace MyUtils.VContainerExtensions
             return _includeDisableComponent ?
                 components :
                 components.Where(c => c is not Behaviour behaviour || behaviour.enabled);
-        }
-
-        /// <summary>
-        /// IScopeRegisterable/IScopeResolvable/IScopeInitiatableのどれも実装していないスキャン対象は、
-        /// マーカー(T)だけ実装して中身を実装し忘れた凡ミスの可能性が高いため警告する。
-        /// </summary>
-        private static void WarnIfNoPhaseImplemented(IEnumerable<T> targets)
-        {
-            foreach (var target in targets)
-            {
-                if (target is IScopeRegisterable or IScopeResolvable or IScopeStartable) continue;
-
-                var unityObject = target as UnityEngine.Object;
-                Debug.LogWarning(
-                    $"{unityObject?.name ?? target.GetType().Name}: " +
-                    $"{typeof(T).Name}を実装していますが、IScopeRegisterable/IScopeResolvable/IScopeInitiatableの" +
-                    "いずれも実装していないため何も呼び出されません。実装し忘れではありませんか?",
-                    unityObject);
-            }
         }
 
         /// <summary>
@@ -174,9 +140,7 @@ namespace MyUtils.VContainerExtensions
                 if (scanRoot == null) continue;
                 targets.AddRange(FilterDisabledComponents(scanRoot.GetComponentsInChildren<T>(_includeInactive)));
             }
-
-            WarnIfNoPhaseImplemented(targets);
-
+            
             Container = resolver.CreateScope(newBuilder =>
             {
                 ConfigureScope(newBuilder);
@@ -189,6 +153,14 @@ namespace MyUtils.VContainerExtensions
                     }
                 }
             });
+
+            // IScopeMemberとして見つかった全員に対して、登録([IScopeRegisterable])の有無に関わらず
+            // [Inject]による依存解決を行う。IScopeRegisterable実装済みの対象は、RegisterComponentの
+            // 強制Resolveで既に注入済みだが、Injectは何度呼んでも副作用がないため区別せず一律で呼ぶ。
+            foreach (var target in targets)
+            {
+                SafeInvoke(target, () => Container.Inject(target));
+            }
 
             collector.Add((this, Container));
 
@@ -211,21 +183,13 @@ namespace MyUtils.VContainerExtensions
             var collector = new List<(object Target, IObjectResolver Resolver)>();
             ResolveChildren(resolver, collector);
 
-            // ツリー全体の登録が終わったコンポーネントに対して、まずOnResolveをすべて呼び終える。
-            foreach (var (target, targetResolver) in collector)
-            {
-                if (target is IScopeResolvable resolvable)
-                {
-                    SafeInvoke(target, () => resolvable.OnResolve(targetResolver));
-                }
-            }
-
-            // 他のすべてのコンポーネントが依存解決を終えた後に、OnInitiateをすべて呼び出す。
+            // ツリー全体の登録・[Inject]による依存解決が終わったコンポーネントに対して、
+            // OnLaunchをすべて呼び出す。
             foreach (var (target, _) in collector)
             {
-                if (target is IScopeStartable initiatable)
+                if (target is IScopeLaunchable startable)
                 {
-                    SafeInvoke(target, initiatable.OnStart);
+                    SafeInvoke(target, startable.OnLaunch);
                 }
             }
         }
