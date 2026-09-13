@@ -8,7 +8,7 @@ namespace MyUtils.VContainerExtensions
     /// <summary>
     /// シーンのエントリーポイントとなるLifetimeScope。
     /// VContainerのルートコンテナのConfigureを、<see cref="IScopeRoot"/>ツリー全体の
-    /// 登録・構築(<see cref="IScopeRoot.OnRegister"/>/<see cref="IScopeRoot.Build"/>)に委譲する。
+    /// 登録・構築(<see cref="IScopeRegisterable.OnRegister"/>/<see cref="IScopeRoot.Build"/>)に委譲する。
     /// 具体的なスコープ構成(Game/Playerなど)はSceneScopeRootに差し込むコンポーネント側が持つため、
     /// このクラス自身は型引数を意識しない。
     /// </summary>
