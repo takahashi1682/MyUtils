@@ -1,22 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using VContainer;
 
 namespace MyUtils.VContainerExtensions
 {
-    /// <summary>
-    /// スコープに属するコンポーネントであることを示すだけの空のマーカー。
-    /// AbstractScopeRoot&lt;T&gt;がGetComponentsInChildrenで収集する対象を表す。
-    /// 登録(IScopeRegisterable)・開始(IScopeLaunchable)はどちらも任意で実装する。
-    /// 依存の解決はVContainer標準の[Inject]を使えばよく、IScopeMemberとして見つかった時点で
-    /// AbstractScopeRoot側が自動的にInjectするため、そのためだけに登録する必要はない。
-    /// </summary>
-    public interface IScopeMember
-    {
-    }
-
     /// <summary>
     /// 依存性注入の登録時に呼び出される初期化処理。
     /// </summary>
@@ -37,32 +25,12 @@ namespace MyUtils.VContainerExtensions
     }
 
     /// <summary>
-    /// AbstractScopeRoot&lt;T&gt;の型引数に依存しないインターフェース。
-    /// 型引数Tが異なる入れ子のスコープルート同士が、お互いの型を知らなくても再帰的に連携できるようにする。
-    /// SceneLifetimeScopeのように型引数を意識したくない側からは、このインターフェースを経由して起動する。
+    /// GameObjectの親子関係だけを手がかりに、配下のIScopeRegisterable / IScopeLaunchableを実装した
+    /// コンポーネントを収集してスコープを構築する。マーカーや型引数は不要。
+    /// 配下に別のAbstractScopeRootがある場合、そのGameObject以下はそちらの管轄として再帰的に任せる。
+    /// 収集した対象には[Inject]による依存解決が自動で行われる。
     /// </summary>
-    public interface IScopeRoot : IScopeRegisterable
-    {
-        /// <summary>
-        /// ツリー最上位のルートとして呼び出すエントリーポイント(SceneLifetimeScopeや、
-        /// PlayerなどのインスタンスをRuntimeで生成する側から使用)。
-        /// 自身の子孫すべての登録([Inject]による依存解決を含む)を終えたあと、
-        /// ツリー全体で見つかったコンポーネントのOnLaunchをすべて呼び出す。
-        /// </summary>
-        void Build(IObjectResolver resolver);
-
-        /// <summary>
-        /// 自身の子スコープを構築し、見つかったスコープメンバーと、それぞれが属するresolverの組を
-        /// すべてcollectorに積み上げる。ここではOnLaunchを呼び出さない
-        /// (ツリー全体の登録が終わった最上位ルートだけがまとめて呼び出す)。
-        /// </summary>
-        void ResolveChildren(
-            IObjectResolver resolver,
-            List<(object Target, IObjectResolver Resolver)> collector);
-    }
-
-    public abstract class AbstractScopeRoot<T> : MonoBehaviour, IScopeRoot
-        where T : IScopeMember
+    public abstract class AbstractScopeRoot : MonoBehaviour, IScopeRegisterable
     {
         [ReadOnly, SerializeField] private bool _isBuilt;
 
@@ -72,7 +40,7 @@ namespace MyUtils.VContainerExtensions
         [Tooltip("自身のコンポーネントが無効化されている場合も検索対象に含めるかどうか")]
         [SerializeField] private bool _includeDisableComponent;
 
-        [Tooltip("Tの検索対象に追加するGameObject(自身の子孫は常に検索対象に含まれます)")]
+        [Tooltip("検索対象に追加するGameObject(自身の子孫は常に検索対象に含まれます)")]
         [SerializeField] private List<GameObject> _additionalScanRoots = new();
 
         /// <summary>
@@ -87,20 +55,43 @@ namespace MyUtils.VContainerExtensions
         /// <summary>
         /// このスコープルートが構築する子コンテナ自体への登録処理。
         /// <see cref="OnRegister"/>が親コンテナへの自己登録であるのに対し、
-        /// こちらは配下のTすべてに共有される依存(このスコープ固有のシングルトンなど)を登録する。
+        /// こちらは配下すべてに共有される依存(このスコープ固有のシングルトンなど)を登録する。
         /// </summary>
         /// <param name="builder">構築中の子コンテナのbuilder</param>
         protected virtual void ConfigureScope(IContainerBuilder builder) { }
 
         /// <summary>
-        /// _includeDisableComponentがfalseの場合、Behaviour(MonoBehaviourなど)で
-        /// enabled=falseになっているものを除外する。Behaviourでない(enabledを持たない)Tはそのまま含める。
+        /// rootから親子関係を辿り、スコープの対象となるコンポーネントをtargetsに積む。
+        /// 別のAbstractScopeRootに到達したら、そのGameObject以下には降りずにそのルートだけを対象とする。
         /// </summary>
-        private IEnumerable<T> FilterDisabledComponents(IEnumerable<T> components)
+        private void CollectTargets(Transform root, List<object> targets)
         {
-            return _includeDisableComponent ?
-                components :
-                components.Where(c => c is not Behaviour behaviour || behaviour.enabled);
+            var components = new List<MonoBehaviour>();
+            root.GetComponents(components);
+
+            foreach (var component in components)
+            {
+                if (component == null || ReferenceEquals(component, this)) continue;
+                if (!_includeDisableComponent && !component.enabled) continue;
+
+                if (component is AbstractScopeRoot)
+                {
+                    targets.Add(component);
+                    // 入れ子のルートは自身の配下を管理するので、ここでは降りない
+                    return;
+                }
+
+                if (component is IScopeRegisterable || component is IScopeLaunchable)
+                {
+                    targets.Add(component);
+                }
+            }
+
+            foreach (Transform child in root)
+            {
+                if (!_includeInactive && !child.gameObject.activeSelf) continue;
+                CollectTargets(child, targets);
+            }
         }
 
         /// <summary>
@@ -120,7 +111,11 @@ namespace MyUtils.VContainerExtensions
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// 自身の子スコープを構築し、見つかったスコープメンバーと、それぞれが属するresolverの組を
+        /// すべてcollectorに積み上げる。ここではOnLaunchを呼び出さない
+        /// (ツリー全体の登録が終わった最上位ルートだけがまとめて呼び出す)。
+        /// </summary>
         public void ResolveChildren(
             IObjectResolver resolver,
             List<(object Target, IObjectResolver Resolver)> collector)
@@ -133,14 +128,15 @@ namespace MyUtils.VContainerExtensions
 
             _isBuilt = true;
 
-            var targets = new List<T>(FilterDisabledComponents(GetComponentsInChildren<T>(_includeInactive)));
+            var targets = new List<object>();
+            CollectTargets(transform, targets);
 
             foreach (var scanRoot in _additionalScanRoots)
             {
                 if (scanRoot == null) continue;
-                targets.AddRange(FilterDisabledComponents(scanRoot.GetComponentsInChildren<T>(_includeInactive)));
+                CollectTargets(scanRoot.transform, targets);
             }
-            
+
             Container = resolver.CreateScope(newBuilder =>
             {
                 ConfigureScope(newBuilder);
@@ -154,7 +150,7 @@ namespace MyUtils.VContainerExtensions
                 }
             });
 
-            // IScopeMemberとして見つかった全員に対して、登録([IScopeRegisterable])の有無に関わらず
+            // 収集した全員に対して、登録([IScopeRegisterable])の有無に関わらず
             // [Inject]による依存解決を行う。IScopeRegisterable実装済みの対象は、RegisterComponentの
             // 強制Resolveで既に注入済みだが、Injectは何度呼んでも副作用がないため区別せず一律で呼ぶ。
             foreach (var target in targets)
@@ -166,7 +162,7 @@ namespace MyUtils.VContainerExtensions
 
             foreach (var target in targets)
             {
-                if (target is IScopeRoot nestedRoot)
+                if (target is AbstractScopeRoot nestedRoot)
                 {
                     nestedRoot.ResolveChildren(Container, collector);
                 }
@@ -177,7 +173,12 @@ namespace MyUtils.VContainerExtensions
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// ツリー最上位のルートとして呼び出すエントリーポイント(SceneLifetimeScopeや、
+        /// PlayerなどのインスタンスをRuntimeで生成する側から使用)。
+        /// 自身の子孫すべての登録([Inject]による依存解決を含む)を終えたあと、
+        /// ツリー全体で見つかったコンポーネントのOnLaunchをすべて呼び出す。
+        /// </summary>
         public void Build(IObjectResolver resolver)
         {
             var collector = new List<(object Target, IObjectResolver Resolver)>();

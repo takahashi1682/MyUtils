@@ -7,22 +7,21 @@ namespace MyUtils.VContainerExtensions
 {
     /// <summary>
     /// シーンのエントリーポイントとなるLifetimeScope。
-    /// VContainerのルートコンテナのConfigureを、<see cref="IScopeRoot"/>ツリー全体の
-    /// 登録・構築(<see cref="IScopeRegisterable.OnRegister"/>/<see cref="IScopeRoot.Build"/>)に委譲する。
-    /// 具体的なスコープ構成(Game/Playerなど)はSceneScopeRootに差し込むコンポーネント側が持つため、
-    /// このクラス自身は型引数を意識しない。
+    /// VContainerのルートコンテナのConfigureを、<see cref="AbstractScopeRoot"/>ツリー全体の
+    /// 登録・構築(<see cref="AbstractScopeRoot.OnRegister"/>/<see cref="AbstractScopeRoot.Build"/>)に委譲する。
+    /// 具体的なスコープ構成(Game/Playerなど)はSceneScopeRootに差し込むコンポーネント側が持つ。
     /// </summary>
     public class SceneLifetimeScope : LifetimeScope
     {
-        [Tooltip("シーンのルートとなるIScopeRoot実装(例: GameScopeRoot)")]
-        public SerializableInterface<IScopeRoot> SceneScopeRoot;
+        [Tooltip("シーンのルートとなるAbstractScopeRoot実装(例: GameScopeRoot)")]
+        public AbstractScopeRoot SceneScopeRoot;
 
         protected override void Configure(IContainerBuilder builder)
         {
-            SceneScopeRoot.Value.OnRegister(builder);
+            SceneScopeRoot.OnRegister(builder);
 
-            // ルートコンテナの構築(ビルド)完了後、ツリー全体の子スコープ構築とOnResolveをまとめて行う。
-            builder.RegisterBuildCallback(resolver => SceneScopeRoot.Value.Build(resolver));
+            // ルートコンテナの構築(ビルド)完了後、ツリー全体の子スコープ構築とOnLaunchをまとめて行う。
+            builder.RegisterBuildCallback(resolver => SceneScopeRoot.Build(resolver));
         }
     }
 }
