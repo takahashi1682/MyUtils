@@ -4,16 +4,17 @@ using UnityEngine.UI;
 
 namespace MyUtils.UI
 {
-    public class Gauge : AbstractTargetBehaviour<RectTransform>
+    /// <summary>
+    /// 割合(0〜1)に応じてTargetの位置を動かすゲージ。UnityのSliderと同様の使い方ができる。
+    /// サブゲージ(遅れて追従する表現)が必要な場合は、別途 <see cref="TrailingSubGauge"/> を組み合わせる。
+    /// </summary>
+    public class CustomGauge : AbstractTargetBehaviour<RectTransform>
     {
-        [SerializeField] protected RectTransform _subTarget;
-        [SerializeField] protected float _subTargetSpeed = 100f;
         [SerializeField] protected Slider.Direction _direction = Slider.Direction.LeftToRight;
         [SerializeField] protected int _offset;
         [SerializeField, Range(0f, 1f)] protected float _value = 1f;
 
         protected Vector3 _startPosition;
-        protected float? _previousRate;
         protected bool _isStarted;
 
         /// <summary>
@@ -35,30 +36,26 @@ namespace MyUtils.UI
         protected override void Start()
         {
             base.Start();
-            _startPosition = _subTarget.localPosition;
+            _startPosition = Target.localPosition;
             _isStarted = true;
             ApplyValue(_value);
         }
 
-        protected virtual void Update()
+        /// <summary>
+        /// Inspectorから_valueを編集した際に反映させる(Unity標準のSlider.OnValidateと同様の挙動)。
+        /// Start前はTarget等が未初期化のため何もしない。
+        /// </summary>
+        protected virtual void OnValidate()
         {
-            if (Target.localPosition == _subTarget.localPosition) return;
-
-            _subTarget.localPosition = Vector3.MoveTowards(
-                _subTarget.localPosition, Target.localPosition, Time.deltaTime * _subTargetSpeed);
+            if (_isStarted)
+            {
+                ApplyValue(_value);
+            }
         }
 
         protected virtual void ApplyValue(float rate)
         {
             Target.localPosition = CalculatePosition(rate);
-
-            // 初回、または回復(rateが増加)した場合は、subゲージも瞬時に追従させる。
-            // 減少(ダメージ)した場合は、Update側のMoveTowardsでゆっくり追いつかせる。
-            if (_previousRate == null || rate > _previousRate)
-            {
-                _subTarget.localPosition = Target.localPosition;
-            }
-            _previousRate = rate;
         }
 
         /// <summary>
