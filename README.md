@@ -169,7 +169,7 @@ MyUtils/
 - `SceneChangeDetector`系: `AbstractSceneChangeDetector` / `CurrentSceneTransitionActivator` / `CurrentSceneTransitionAnimationPlayer` / `CurrentSceneTransitionUISelecter` — Samples 62
 
 ### アーキテクチャ(DI)
-- `VContainerExtensions`: `IScopeRegisterable` / `IScopeLaunchable` / `AbstractScopeRoot`(親子関係だけでIScopeRegisterable/IScopeLaunchableを自動収集・登録[Register]・開始[Launch]の2フェーズ。依存解決はVContainer標準の`[Inject]`に委譲) / `SceneLifetimeScope`(VContainerを使ったスコープ構築) — Samples 70
+- `VContainerExtensions`: `IScopeRegisterable` / `IScopeLaunchable` / `AbstractScopeRoot`(親子関係だけでIScopeRegisterable/IScopeLaunchableを自動収集・登録[Register]・開始[Launch]の2フェーズ。依存解決はVContainer標準の`[Inject]`に委譲。自身と子孫(`Additional Scan Roots`配下を含む)の全MonoBehaviourに、インターフェース未実装でも`[Inject]`で注入) / `SceneLifetimeScope`(VContainerを使ったスコープ構築) — Samples 70
 
 ### 汎用ユーティリティ
 - `MonoBehaviourLifecycleEvents`(Awake/Start/OnEnable/OnDisable/OnDestroy/OnBecameVisible/OnBecameInvisibleをUnityEventとしてInspectorから配線)
