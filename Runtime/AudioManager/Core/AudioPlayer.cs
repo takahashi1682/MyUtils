@@ -29,6 +29,9 @@ namespace MyUtils.AudioManager.Core
             AudioSource.outputAudioMixerGroup = _manager.MixerGroup;
             AudioSource.playOnAwake = false;
 
+            // AddComponent直後はisPlayingが一瞬trueになることがあるため、Stopで明示的にリセットする
+            AudioSource.Stop();
+
             // 音量の更新
             VolumeRate.Subscribe(_ => UpdateVolume()).AddTo(this);
             _manager.VolumeRate.Subscribe(_ => UpdateVolume()).AddTo(this);
