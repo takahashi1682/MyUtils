@@ -40,6 +40,11 @@ namespace MyUtils.Detector
         private readonly ReactiveProperty<bool> _isHit = new();
         public ReadOnlyReactiveProperty<bool> IsHit => _isHit;
 
+        /// <summary>
+        /// _rayPositionの向きに追従したワールド空間のRay方向
+        /// </summary>
+        private Vector3 WorldRayDirection => _rayPosition.TransformDirection(_rayDirection);
+
         protected virtual void Awake()
         {
             _hitObject.AddTo(this);
@@ -55,7 +60,7 @@ namespace MyUtils.Detector
                 {
                     Physics.Raycast(
                         _rayPosition.position,
-                        _rayDirection,
+                        WorldRayDirection,
                         out RaycastHit hitInfo,
                         _maxRayDistance,
                         _layerMask
@@ -79,7 +84,7 @@ namespace MyUtils.Detector
             if (!_isShowGizmos) return;
 
             Vector3 from = _rayPosition.position;
-            Vector3 direction = _rayDirection;
+            Vector3 direction = WorldRayDirection;
             if (Application.isPlaying)
             {
                 Debug.DrawRay(from, direction * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
