@@ -16,6 +16,8 @@ namespace MyUtils.TalkUtils
     /// </summary>
     public class TalkManager : AbstractActionInputTrigger
     {
+        [SerializeField] protected TextAsset _defaultTalkCsv;
+
         [Header("スキップ設定")]
         [SerializeField] protected bool _clickSkip = true;
 
@@ -43,6 +45,11 @@ namespace MyUtils.TalkUtils
             OnLineStart.AddTo(this);
             OnLineEnd.AddTo(this);
             OnTalkEnd.AddTo(this);
+
+            if (_defaultTalkCsv != null)
+            {
+                LoadCsv(_defaultTalkCsv);
+            }
         }
 
         /// <summary>
