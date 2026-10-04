@@ -53,11 +53,13 @@ namespace MyUtils.TalkUtils
         }
 
         /// <summary>
-        /// CSVを読み込み、キーごとの会話データとして保持する(以前の内容は置き換わる)
+        /// CSVを読み込み、キーごとの会話データとして保持する(以前の内容は置き換わる)。
+        /// 1行目はヘッダとして読み飛ばし、2行目からをセリフとして扱う
         /// </summary>
         public void LoadCsv(TextAsset textAsset)
         {
-            _talkData = new TalkData(CsvUtils<TalkLineCsv>.Parse(textAsset));
+            const int headerLineCount = 1;
+            _talkData = new TalkData(CsvUtils<TalkLineCsv>.Parse(textAsset, linesToSkip: headerLineCount));
         }
 
         /// <summary>
