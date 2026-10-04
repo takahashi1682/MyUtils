@@ -154,7 +154,7 @@ MyUtils/
 ### ゲームシステム
 - `Parameter`系: `AbstractIntParameter` / `AbstractFloatParameter` / `AbstractLongParameter` / `FlagsParameterBase` / `ParameterManager`、および `Parameter.Basic` の `Health` / `Level` / `Exp` — Samples 40
 - `BasicTimer`(`ETimerType`によるカウントダウン/カウントアップ、`IBasicTimerObservable` / `IBasicTimerHandler`) — Samples 41
-- `TalkUtils`: `TalkManager` / `LineViewer` / CSVベースの会話データ管理 — Samples 42
+- `TalkUtils`: `TalkManager`(会話の進行。`AbstractActionInputTrigger`派生で、セリフ送りの入力を InputActionReference で設定、未設定なら左クリック) / `TalkLineViewer`(セリフ表示) / `TalkLineVoice`(ボイス再生) / `TalkData`・`TalkLine`・`TalkLineCsv`・`ETalkEmotion`(CSVベースの会話データ) — Samples 42
 - `AudioManager`(`BGMManager` / `SEManager` / `VoiceManager` と各 `Player`)、`AudioMixerManager`(`EAudioMixerParam`) — Samples 43
 - `BGMController`: `BGMControllerSetting` / `EAudioPlayMode`(シーン遷移に応じたBGMの自動再生・停止・フェード・クロスフェード切り替え) — Samples 44
 

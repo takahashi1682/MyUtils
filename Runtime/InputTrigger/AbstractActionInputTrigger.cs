@@ -10,6 +10,9 @@ namespace MyUtils.InputTrigger
         [SerializeField] private InputActionReference _inputActionReference;
         private InputAction _inputAction;
 
+        /// <summary>InputActionReferenceが設定されているか</summary>
+        protected bool HasInputAction => _inputAction != null;
+
         protected virtual void Awake()
         {
             if (_inputActionReference != null)

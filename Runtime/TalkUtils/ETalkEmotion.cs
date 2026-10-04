@@ -1,6 +1,6 @@
 namespace MyUtils.TalkUtils
 {
-    public enum EEmotions
+    public enum ETalkEmotion
     {
         Default, // 通常
         Anger, // 怒り

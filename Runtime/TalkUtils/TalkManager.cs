@@ -2,59 +2,75 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using MyUtils.Csv;
+using MyUtils.InputTrigger;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
-using MyUtils.Abstract;
 
 namespace MyUtils.TalkUtils
 {
     /// <summary>
-    ///  会話管理
+    /// 会話の進行管理。表示や音声は購読側(<see cref="TalkLineViewer"/> / <see cref="TalkLineVoice"/>)が担当する。
+    /// セリフ送りの入力は InputActionReference で設定する(未設定なら左クリック)。
     /// </summary>
-    public class TalkManager : AbstractSingletonBehaviour<TalkManager>
+    public class TalkManager : AbstractActionInputTrigger
     {
-        [Header("スキップ可能設定")]
+        [Header("スキップ設定")]
         [SerializeField] protected bool _clickSkip = true;
 
-        [Header("自動スクロール設定")]
+        [Header("自動送り設定")]
         public float OneCharInterval = 0.04f;
         [SerializeField] protected float _nextLineInterval = 0.8f;
         [SerializeField] protected bool _autoEnd = true;
 
-        [Header("表示設定")]
         public Subject<Unit> TalkStart { get; } = new();
-        public Subject<LineData> LineStart { get; } = new();
-        public Subject<LineData> LineEnd { get; } = new();
+        public Subject<TalkLine> LineStart { get; } = new();
+        public Subject<TalkLine> LineEnd { get; } = new();
         public Subject<Unit> TalkEnd { get; } = new();
-        protected ButtonControl LeftMouseButton;
-        protected CancellationToken DestroyCancellationToken;
+
+        // LoadCsvで読み込んだ会話データ
+        private TalkData _talkData;
+
+        // セリフ送りの入力があったときに完了する(セリフ待機中のみ有効)
+        private UniTaskCompletionSource _skipSignal;
+
+        // 追加直後は、入力をすぐ受け付けるようにする
+        private void Reset()
+        {
+            FirstDelaySeconds = 0f;
+        }
 
         protected override void Awake()
         {
+            base.Awake();
+
             TalkStart.AddTo(this);
             LineStart.AddTo(this);
             LineEnd.AddTo(this);
             TalkEnd.AddTo(this);
-
-            DestroyCancellationToken = destroyCancellationToken;
-            LeftMouseButton = Mouse.current.leftButton;
-            
-            base.Awake();
         }
 
         /// <summary>
-        /// 会話を処理する機能
+        /// CSVを読み込み、キーごとの会話データとして保持する(以前の内容は置き換わる)
         /// </summary>
-        /// <param name="talk"></param>
-        public virtual async UniTask TalkAsync(List<LineData> talk)
+        public void LoadCsv(TextAsset textAsset)
+        {
+            _talkData = new TalkData(CsvUtils<TalkLineCsv>.Parse(textAsset));
+        }
+
+        /// <summary>
+        /// 会話(複数のセリフ)を最初から最後まで進める
+        /// </summary>
+        public virtual async UniTask TalkAsync(IReadOnlyList<TalkLine> talk)
         {
             TalkStart.OnNext(Unit.Default);
 
             foreach (var line in talk)
             {
                 await LineAsync(line);
+
+                // 同じ入力で次のセリフまで飛ばないように1フレーム待つ
                 await UniTask.Yield();
             }
 
@@ -62,35 +78,89 @@ namespace MyUtils.TalkUtils
         }
 
         /// <summary>
-        ///  1セリフを処理する機能
+        /// LoadCsvで読み込んだ会話のうち、指定したキーの会話を進める。キーがなければ警告を出して何もしない
         /// </summary>
-        /// <param name="lineData"></param>
-        public virtual async UniTask LineAsync(LineData lineData)
+        public virtual async UniTask TalkAsync(string key)
         {
-            LineStart.OnNext(lineData);
+            if (_talkData == null)
+            {
+                Debug.LogWarning("会話データが未読み込みです。先にLoadCsvを呼んでください");
+                return;
+            }
+
+            if (!_talkData.TryGetValue(key, out var talk))
+            {
+                Debug.LogWarning($"TalkDataに {key} の会話データがありません");
+                return;
+            }
+
+            await TalkAsync(talk);
+        }
+
+        /// <summary>
+        /// 1セリフを進める。セリフ送りの入力または自動送りで終了する
+        /// </summary>
+        public virtual async UniTask LineAsync(TalkLine talkLine)
+        {
+            LineStart.OnNext(talkLine);
+
+            // 待ち終わった側の待機を止めるため、リンクしたトークンを使う
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+            _skipSignal = new UniTaskCompletionSource();
+            var skip = _skipSignal.Task.AttachExternalCancellation(cts.Token);
+
             if (_autoEnd)
             {
-                // 文字数に応じて自動で次のセリフへ
-                float delay = lineData.Lines.Length * OneCharInterval + _nextLineInterval;
-
-                // ボイスの長さも考慮
-                if (lineData.Voice != null)
-                {
-                    delay = Mathf.Max(delay, lineData.Voice.length + _nextLineInterval);
-                }
-
-                await UniTask.WhenAny(
-                    UniTask.WaitUntil(() => _clickSkip && LeftMouseButton.wasPressedThisFrame,
-                        cancellationToken: DestroyCancellationToken),
-                    UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: DestroyCancellationToken));
+                var autoEnd = UniTask.Delay(TimeSpan.FromSeconds(GetAutoEndDelay(talkLine)),
+                    cancellationToken: cts.Token);
+                await UniTask.WhenAny(skip, autoEnd);
             }
             else
             {
-                await UniTask.WaitUntil(() => _clickSkip && LeftMouseButton.wasPressedThisFrame,
-                    cancellationToken: DestroyCancellationToken);
+                await skip;
             }
 
-            LineEnd.OnNext(lineData);
+            cts.Cancel();
+            _skipSignal = null;
+            LineEnd.OnNext(talkLine);
+        }
+
+        /// <summary>
+        /// セリフ送りの入力元。InputActionReference未設定なら左クリックを使う
+        /// </summary>
+        protected override Observable<Unit> CreateInputObservable()
+        {
+            if (HasInputAction) return base.CreateInputObservable();
+
+            return Observable.EveryUpdate(destroyCancellationToken)
+                .Where(_ => Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                .Select(_ => Unit.Default);
+        }
+
+        /// <summary>
+        /// セリフ送りの入力があったとき、待機中のセリフを終わらせる
+        /// </summary>
+        protected override UniTask OnPressed(CancellationToken ct)
+        {
+            if (_clickSkip)
+            {
+                _skipSignal?.TrySetResult();
+            }
+
+            return UniTask.CompletedTask;
+        }
+
+        // 文字数に応じた自動送りまでの時間(ボイスがあればその長さも考慮する)
+        private float GetAutoEndDelay(TalkLine talkLine)
+        {
+            float delay = talkLine.Text.Length * OneCharInterval + _nextLineInterval;
+
+            if (talkLine.Voice != null)
+            {
+                delay = Mathf.Max(delay, talkLine.Voice.length + _nextLineInterval);
+            }
+
+            return delay;
         }
     }
 }
