@@ -16,7 +16,7 @@ namespace MyUtils.TalkUtils
         private void Awake()
         {
             // セリフの開始でボイスを再生
-            _talkManager.LineStart.Subscribe(line =>
+            _talkManager.OnLineStart.Subscribe(line =>
             {
                 if (line.Voice)
                 {
@@ -25,7 +25,7 @@ namespace MyUtils.TalkUtils
             }).AddTo(this);
 
             // セリフの終了でボイスを停止
-            _talkManager.LineEnd.Subscribe(_ =>
+            _talkManager.OnLineEnd.Subscribe(_ =>
             {
                 _audioPlayer?.Stop();
                 _audioPlayer = null;

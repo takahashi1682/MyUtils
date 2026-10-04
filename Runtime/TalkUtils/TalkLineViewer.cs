@@ -26,12 +26,12 @@ namespace MyUtils.TalkUtils
 
         private void Awake()
         {
-            _talkManager.TalkStart.Subscribe(_ => _talkWindow.SetActive(true)).AddTo(this);
-            _talkManager.TalkEnd.Subscribe(_ => _talkWindow.SetActive(false)).AddTo(this);
+            _talkManager.OnTalkStart.Subscribe(_ => _talkWindow.SetActive(true)).AddTo(this);
+            _talkManager.OnTalkEnd.Subscribe(_ => _talkWindow.SetActive(false)).AddTo(this);
 
             // セリフの開始で表示し、終了で表示処理を止める
-            _talkManager.LineStart.Subscribe(line => ShowLineAsync(line).Forget()).AddTo(this);
-            _talkManager.LineEnd.Subscribe(_ => CancelLine()).AddTo(this);
+            _talkManager.OnLineStart.Subscribe(line => ShowLineAsync(line).Forget()).AddTo(this);
+            _talkManager.OnLineEnd.Subscribe(_ => CancelLine()).AddTo(this);
         }
 
         private void OnDestroy()

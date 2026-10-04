@@ -24,10 +24,10 @@ namespace MyUtils.TalkUtils
         [SerializeField] protected float _nextLineInterval = 0.8f;
         [SerializeField] protected bool _autoEnd = true;
 
-        public Subject<Unit> TalkStart { get; } = new();
-        public Subject<TalkLine> LineStart { get; } = new();
-        public Subject<TalkLine> LineEnd { get; } = new();
-        public Subject<Unit> TalkEnd { get; } = new();
+        public Subject<Unit> OnTalkStart { get; } = new();
+        public Subject<TalkLine> OnLineStart { get; } = new();
+        public Subject<TalkLine> OnLineEnd { get; } = new();
+        public Subject<Unit> OnTalkEnd { get; } = new();
 
         // LoadCsvで読み込んだ会話データ
         private TalkData _talkData;
@@ -35,20 +35,14 @@ namespace MyUtils.TalkUtils
         // セリフ送りの入力があったときに完了する(セリフ待機中のみ有効)
         private UniTaskCompletionSource _skipSignal;
 
-        // 追加直後は、入力をすぐ受け付けるようにする
-        private void Reset()
-        {
-            FirstDelaySeconds = 0f;
-        }
-
         protected override void Awake()
         {
             base.Awake();
 
-            TalkStart.AddTo(this);
-            LineStart.AddTo(this);
-            LineEnd.AddTo(this);
-            TalkEnd.AddTo(this);
+            OnTalkStart.AddTo(this);
+            OnLineStart.AddTo(this);
+            OnLineEnd.AddTo(this);
+            OnTalkEnd.AddTo(this);
         }
 
         /// <summary>
@@ -64,7 +58,7 @@ namespace MyUtils.TalkUtils
         /// </summary>
         public virtual async UniTask TalkAsync(IReadOnlyList<TalkLine> talk)
         {
-            TalkStart.OnNext(Unit.Default);
+            OnTalkStart.OnNext(Unit.Default);
 
             foreach (var line in talk)
             {
@@ -74,7 +68,7 @@ namespace MyUtils.TalkUtils
                 await UniTask.Yield();
             }
 
-            TalkEnd.OnNext(Unit.Default);
+            OnTalkEnd.OnNext(Unit.Default);
         }
 
         /// <summary>
@@ -102,7 +96,7 @@ namespace MyUtils.TalkUtils
         /// </summary>
         public virtual async UniTask LineAsync(TalkLine talkLine)
         {
-            LineStart.OnNext(talkLine);
+            OnLineStart.OnNext(talkLine);
 
             // 待ち終わった側の待機を止めるため、リンクしたトークンを使う
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
@@ -122,7 +116,7 @@ namespace MyUtils.TalkUtils
 
             cts.Cancel();
             _skipSignal = null;
-            LineEnd.OnNext(talkLine);
+            OnLineEnd.OnNext(talkLine);
         }
 
         /// <summary>
