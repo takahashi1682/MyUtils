@@ -11,7 +11,7 @@ namespace MyUtils.Csv
             var result = new List<T>();
             var reader = new StringReader(csvFile.text);
 
-            // 最初の2行を無視する
+            // 先頭の linesToSkip 行(ヘッダなど)を無視する
             for (int i = 0; i < linesToSkip; i++)
             {
                 if (reader.Peek() != -1) { reader.ReadLine(); }
@@ -21,6 +21,9 @@ namespace MyUtils.Csv
             while (reader.Peek() != -1)
             {
                 string line = reader.ReadLine();
+
+                // 空行(空白のみの行を含む)はスキップする
+                if (string.IsNullOrWhiteSpace(line)) continue;
 
                 var data = new T();
                 data.SetParameter(line?.Split(delimiter));
