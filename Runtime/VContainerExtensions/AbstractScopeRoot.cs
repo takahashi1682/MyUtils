@@ -12,13 +12,10 @@ namespace MyUtils.VContainerExtensions
         void OnRegister(IContainerBuilder builder);
     }
 
-    /// <summary>全員の登録と[Inject]が終わった後に一度だけ呼ばれる開始処理。</summary>
-    public interface IScopeLaunchable
-    {
-        void OnLaunch();
-    }
-
-    /// <summary>自身と子孫のMonoBehaviourを集めてスコープを作り、[Inject]・OnRegister・OnLaunchを行う。</summary>
+    /// <summary>
+    /// 自身と子孫のMonoBehaviourを集めてスコープを作り、OnRegisterと[Inject]を行う。
+    /// 構築はどのAwakeよりも先に終わるので、注入されたメンバーはAwake以降で使える。
+    /// </summary>
     public abstract class AbstractScopeRoot : MonoBehaviour, IScopeRegisterable
     {
         [ReadOnly, SerializeField] private bool _isBuilt;
@@ -76,8 +73,8 @@ namespace MyUtils.VContainerExtensions
             }
         }
 
-        // 子スコープを作って全員に注入し、OnLaunchの対象をlaunchTargetsに積む(呼び出しはBuildがまとめて行う)。
-        private void ResolveChildren(IObjectResolver resolver, List<MonoBehaviour> launchTargets)
+        // 子スコープを作って全員に注入する。入れ子のルートは、そのルートが続きを担当する。
+        private void ResolveChildren(IObjectResolver resolver)
         {
             if (_isBuilt)
             {
@@ -109,32 +106,17 @@ namespace MyUtils.VContainerExtensions
                 SafeInvoke(member, () => Container.Inject(member));
             }
 
-            launchTargets.Add(this);
-            foreach (var member in members)
+            foreach (var nestedRoot in members.OfType<AbstractScopeRoot>())
             {
-                if (member is AbstractScopeRoot nestedRoot)
-                {
-                    nestedRoot.ResolveChildren(Container, launchTargets);
-                }
-                else
-                {
-                    launchTargets.Add(member);
-                }
+                nestedRoot.ResolveChildren(Container);
             }
         }
 
-        /// <summary>最上位のルートとして呼ぶ入口。ツリー全体の注入と登録が済んだ後にOnLaunchを呼ぶ。</summary>
+        /// <summary>最上位のルートとして呼ぶ入口。ツリー全体の登録と注入を行う。</summary>
         public void Build(IObjectResolver resolver)
         {
             SafeInvoke(this, () => resolver.Inject(this));
-
-            var launchTargets = new List<MonoBehaviour>();
-            ResolveChildren(resolver, launchTargets);
-
-            foreach (var launchable in launchTargets.OfType<IScopeLaunchable>())
-            {
-                SafeInvoke(launchable, launchable.OnLaunch);
-            }
+            ResolveChildren(resolver);
         }
     }
 }

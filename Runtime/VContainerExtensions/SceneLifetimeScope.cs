@@ -20,7 +20,7 @@ namespace MyUtils.VContainerExtensions
         {
             SceneScopeRoot.OnRegister(builder);
 
-            // ルートコンテナの構築(ビルド)完了後、ツリー全体の子スコープ構築とOnLaunchをまとめて行う。
+            // ルートコンテナの構築(ビルド)完了後、ツリー全体の子スコープ構築と注入をまとめて行う。
             builder.RegisterBuildCallback(resolver => SceneScopeRoot.Build(resolver));
         }
     }
