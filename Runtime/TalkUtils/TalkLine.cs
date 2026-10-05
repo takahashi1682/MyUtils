@@ -17,15 +17,20 @@ namespace MyUtils.TalkUtils
 
         [field: SerializeField] public ETalkEmotion TalkEmotion { get; private set; }
 
-        /// <summary>ボイス(なければnull)</summary>
-        [field: SerializeField] public AudioClip Voice { get; private set; }
+        /// <summary>ボイスのアドレス(Addressablesのアドレスなど。なければ空)</summary>
+        [field: SerializeField] public string VoiceAddress { get; private set; }
 
-        public TalkLine(string speaker, string text, ETalkEmotion talkEmotion, AudioClip voice)
+        /// <summary>ボイス(未読み込み・なければnull)。アドレスからの読み込みは <see cref="TalkManager"/> が行う</summary>
+        [field: SerializeField] public AudioClip Voice { get; internal set; }
+
+        public TalkLine(string speaker, string text, ETalkEmotion talkEmotion, AudioClip voice = null,
+            string voiceAddress = null)
         {
             Speaker = speaker;
             Text = text;
             TalkEmotion = talkEmotion;
             Voice = voice;
+            VoiceAddress = voiceAddress;
         }
     }
 }

@@ -20,7 +20,8 @@ namespace MyUtils.TalkUtils
                     this[csvLine.Key] = lines;
                 }
 
-                lines.Add(new TalkLine(csvLine.Speaker, csvLine.Text, csvLine.TalkEmotion, csvLine.Voice));
+                lines.Add(new TalkLine(csvLine.Speaker, csvLine.Text, csvLine.TalkEmotion,
+                    voiceAddress: csvLine.VoiceAddress));
             }
         }
     }

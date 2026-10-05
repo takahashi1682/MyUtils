@@ -6,7 +6,9 @@ using MyUtils.Csv;
 using MyUtils.InputTrigger;
 using R3;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace MyUtils.TalkUtils
 {
@@ -36,6 +38,9 @@ namespace MyUtils.TalkUtils
 
         // セリフ送りの入力があったときに完了する(セリフ待機中のみ有効)
         private UniTaskCompletionSource _skipSignal;
+
+        // 読み込み済みのボイス(アドレスごと。解放はしない)
+        private readonly Dictionary<string, AudioClip> _voiceCache = new();
 
         protected override void Awake()
         {
@@ -67,6 +72,9 @@ namespace MyUtils.TalkUtils
         /// </summary>
         public virtual async UniTask TalkAsync(IReadOnlyList<TalkLine> talk)
         {
+            // ボイスは会話の開始前にまとめて読み込む
+            await LoadVoicesAsync(talk);
+
             OnTalkStart.OnNext(Unit.Default);
 
             foreach (var line in talk)
@@ -78,6 +86,60 @@ namespace MyUtils.TalkUtils
             }
 
             OnTalkEnd.OnNext(Unit.Default);
+        }
+
+        /// <summary>
+        /// ボイスのアドレスが設定されたセリフのボイスを Addressables から読み込む
+        /// </summary>
+        protected virtual async UniTask LoadVoicesAsync(IReadOnlyList<TalkLine> talk)
+        {
+            foreach (var line in talk)
+            {
+                if (line.Voice != null || string.IsNullOrEmpty(line.VoiceAddress)) continue;
+
+                line.Voice = await LoadVoiceAsync(line.VoiceAddress);
+            }
+        }
+
+        /// <summary>
+        /// アドレスのボイスを読み込む。同じアドレスは再読み込みしない。見つからなければ警告を出してnullを返す
+        /// </summary>
+        protected virtual async UniTask<AudioClip> LoadVoiceAsync(string address)
+        {
+            if (_voiceCache.TryGetValue(address, out var cached)) return cached;
+
+            // 存在しないアドレスは例外にせず、ボイスなしとして扱う
+            if (!await ExistsAddressAsync(address))
+            {
+                Debug.LogWarning($"[TalkManager] ボイス '{address}' が見つかりません");
+                return null;
+            }
+
+            var handle = Addressables.LoadAssetAsync<AudioClip>(address);
+            var clip = await handle.Task.AsUniTask().AttachExternalCancellation(destroyCancellationToken);
+
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                Debug.LogWarning($"[TalkManager] ボイス '{address}' の読み込みに失敗しました");
+                return null;
+            }
+
+            _voiceCache[address] = clip;
+            return clip;
+        }
+
+        private async UniTask<bool> ExistsAddressAsync(string address)
+        {
+            var handle = Addressables.LoadResourceLocationsAsync(address, typeof(AudioClip));
+            try
+            {
+                var locations = await handle.Task.AsUniTask().AttachExternalCancellation(destroyCancellationToken);
+                return locations.Count > 0;
+            }
+            finally
+            {
+                Addressables.Release(handle);
+            }
         }
 
         /// <summary>
