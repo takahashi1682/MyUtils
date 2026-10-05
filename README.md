@@ -162,7 +162,7 @@ MyUtils/
 - `DataStore`系: `AbstractDataStore` / `AbstractDataAsset` / `AbstractDataStoreSingleton`(JSONセーブデータ管理) — Samples 50 / 51
 - `HTTPUtils`(`HTTPRequestUtils` / `HTTPConfig`)、`JsonUtils`(`AESEncryption` / `EncryptedJsonFileHandler` / `PersistentDataTextFileHandler`) — Samples 52
 - `Csv`: `CsvUtils` / `AbstractCsvData`
-- `NfcUtils`: `NfcWatcher`(NFCタグの見張り。`CheckCard()` を一定間隔で呼ぶと、置かれた/外された/エラーを `OnCardRead` / `OnNoCard` / `OnError` で通知、`Write` で書き込み) / `NfcReader`(リーダーへの接続とテキストの読み書き)。Windows + PC/SCリーダー(PaSoRi RC-S380 など)専用で、NTAG213/215/216 などの Type 2 タグのNDEFテキストに対応。Editor/Windowsスタンドアロンのみコンパイルされる別アセンブリ `MyUtils.NfcUtils` — Samples 80
+- `NfcUtils`: `NfcWatcher`(NFCタグの見張り。`CheckCard()` を一定間隔で呼ぶと、置かれた/外された/エラーを `OnCardRead` / `OnNoCard` / `OnError` で通知、`Write` で書き込み) / `NfcReader`(リーダーへの接続とテキストの読み書き。パスワードを指定すると `NfcCrypto` でAES暗号化して書き、読むときも同じパスワードが必要)。Windows + PC/SCリーダー(PaSoRi RC-S380 など)専用で、NTAG213/215/216 などの Type 2 タグのNDEFテキストに対応。Editor/Windowsスタンドアロンのみコンパイルされる別アセンブリ `MyUtils.NfcUtils` — Samples 80
 
 ### シーン管理
 - `SceneLoader`系: `SceneLoaderButton` / `SceneLoaderInputTrigger` / `SceneUnloadButton` / `SceneUnloadInputTrigger` / `SceneLoaderUtils` — Samples 60

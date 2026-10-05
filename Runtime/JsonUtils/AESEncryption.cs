@@ -15,6 +15,12 @@ namespace MyUtils.JsonUtils
         /// <param name="key"></param>
         /// <returns></returns>
         public static string Encrypt(object plainText, byte[] iv, string key)
+            => Encrypt(plainText, iv, Encoding.UTF8.GetBytes(key));
+
+        /// <summary>
+        /// 平文をAESで暗号化(鍵をbyte配列で指定する。16バイト)
+        /// </summary>
+        public static string Encrypt(object plainText, byte[] iv, byte[] key)
         {
             using var aes = CreateAesCipher(iv, key);
             using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
@@ -36,6 +42,12 @@ namespace MyUtils.JsonUtils
         /// <param name="key"></param>
         /// <returns></returns>
         public static string Decrypt(string cipherText, byte[] iv, string key)
+            => Decrypt(cipherText, iv, Encoding.UTF8.GetBytes(key));
+
+        /// <summary>
+        /// AESで暗号化されたBase64文字列を復号(鍵をbyte配列で指定する。16バイト)
+        /// </summary>
+        public static string Decrypt(string cipherText, byte[] iv, byte[] key)
         {
             using var aes = CreateAesCipher(iv, key);
             using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
@@ -90,7 +102,7 @@ namespace MyUtils.JsonUtils
         /// <param name="iv"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        private static RijndaelManaged CreateAesCipher(byte[] iv, string key)
+        private static RijndaelManaged CreateAesCipher(byte[] iv, byte[] key)
         {
             return new RijndaelManaged
             {
@@ -99,7 +111,7 @@ namespace MyUtils.JsonUtils
                 Mode = CipherMode.CBC,
                 Padding = PaddingMode.PKCS7,
                 IV = iv,
-                Key = Encoding.UTF8.GetBytes(key)
+                Key = key
             };
         }
     }

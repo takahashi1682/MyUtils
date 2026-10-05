@@ -1,7 +1,9 @@
 {
     "name": "MyUtils.NfcUtils",
     "rootNamespace": "MyUtils.NfcUtils",
-    "references": [],
+    "references": [
+        "MyUtils.Runtime"
+    ],
     "includePlatforms": [
         "Editor",
         "WindowsStandalone32",

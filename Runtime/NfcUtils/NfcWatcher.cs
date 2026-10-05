@@ -26,6 +26,12 @@ namespace MyUtils.NfcUtils
         // タグが置かれているか(null は、まだ調べていない)
         private bool? _hasCard;
 
+        /// <summary>
+        /// 読み書きに使うパスワード。空なら暗号化しない。
+        /// 暗号化されたタグはパスワードが合うまで読み込めないので、タグを置いたまま変更すれば、合った時点で自動で読み込まれる
+        /// </summary>
+        public string Password { get; set; }
+
         /// <summary>タグが置かれたときに、タグに書かれている文字を通知する</summary>
         public Observable<string> OnCardRead => _onCardRead;
 
@@ -47,7 +53,7 @@ namespace MyUtils.NfcUtils
             {
                 if (_reader == null) throw new NfcException("リーダーに接続されていません");
 
-                _reader.WriteText(text);
+                _reader.WriteText(text, Password);
                 _onWritten.OnNext(text);
             }
             catch (Exception e)
@@ -81,7 +87,7 @@ namespace MyUtils.NfcUtils
                 _hasCard = hasCard;
                 if (hasCard)
                 {
-                    _onCardRead.OnNext(_reader.ReadText());
+                    _onCardRead.OnNext(_reader.ReadText(Password));
                 }
                 else
                 {
@@ -90,7 +96,7 @@ namespace MyUtils.NfcUtils
             }
             catch (Exception e)
             {
-                // 失敗したら、次の確認でリーダーに接続し直す
+                // 失敗したら(パスワードが違う場合も)、次の確認でもう一度やり直す
                 _reader?.Dispose();
                 _reader = null;
                 _hasCard = null;

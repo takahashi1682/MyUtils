@@ -9,8 +9,8 @@ namespace MyUtils.NfcUtils
     ///
     /// 例:
     ///     using var reader = new NfcReader();
-    ///     reader.WriteText("こんにちは");
-    ///     string text = reader.ReadText();
+    ///     reader.WriteText("こんにちは", "pass");   // パスワードを付けると、暗号化して書き込む
+    ///     string text = reader.ReadText("pass");
     ///
     /// うまくいかないときは、<see cref="NfcException"/> が発生する(メッセージを画面に表示できる)。
     /// 中身の仕組み(PC/SCやNDEF)は Core フォルダにあるが、使うだけなら読まなくてよい
@@ -53,8 +53,12 @@ namespace MyUtils.NfcUtils
         /// <summary>
         /// リーダーに置かれたタグにテキストを書き込む(前の内容は消える)
         /// </summary>
-        public void WriteText(string text)
+        /// <param name="text">書き込む文字</param>
+        /// <param name="password">指定すると、この文字をパスワードで暗号化して書く(読むときに同じパスワードが必要)。空なら暗号化しない</param>
+        public void WriteText(string text, string password = null)
         {
+            if (!string.IsNullOrEmpty(password)) text = NfcCrypto.Encrypt(text, password);
+
             using var card = Connect();
             new Type2Tag(card).WriteNdefMessage(NdefText.Encode(text, "ja"));
         }
@@ -62,7 +66,8 @@ namespace MyUtils.NfcUtils
         /// <summary>
         /// リーダーに置かれたタグのテキストを読み込む。何も書かれていなければ空の文字列
         /// </summary>
-        public string ReadText()
+        /// <param name="password">暗号化されて書かれている場合に必要なパスワード(違えば NfcException)</param>
+        public string ReadText(string password = null)
         {
             using var card = Connect();
             var message = new Type2Tag(card).ReadNdefMessage();
@@ -73,7 +78,10 @@ namespace MyUtils.NfcUtils
                 throw new NfcException("テキスト以外のデータが書かれています");
             }
 
-            return text;
+            if (!NfcCrypto.IsEncrypted(text)) return text;
+
+            if (string.IsNullOrEmpty(password)) throw new NfcException("パスワードが必要です");
+            return NfcCrypto.Decrypt(text, password);
         }
 
         public void Dispose()
