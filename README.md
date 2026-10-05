@@ -154,7 +154,7 @@ MyUtils/
 ### ゲームシステム
 - `Parameter`系: `AbstractIntParameter` / `AbstractFloatParameter` / `AbstractLongParameter` / `FlagsParameterBase` / `ParameterManager`、および `Parameter.Basic` の `Health` / `Level` / `Exp` — Samples 40
 - `BasicTimer`(`ETimerType`によるカウントダウン/カウントアップ、`IBasicTimerObservable` / `IBasicTimerHandler`) — Samples 41
-- `TalkUtils`: `TalkManager`(会話の進行。`AbstractActionInputTrigger`派生で、セリフ送りの入力を InputActionReference で設定、未設定なら左クリック) / `TalkLineViewer`(セリフ表示) / `TalkLineVoice`(ボイス再生) / `TalkData`・`TalkLine`・`TalkLineCsv`・`ETalkEmotion`(CSVベースの会話データ。列は `key,name,lines[,emotion][,voice]`、`voice` はボイスのアドレス) — `voice` のアドレスは Addressables(必須依存)から会話の開始前に読み込み、キャッシュする(解放はしない) — Samples 42
+- `TalkUtils`: `TalkManager`(会話の進行。`Talk(key)` で開始し、会話中に重ねて呼ばれたときの動作を `ETalkOverlapMode`(Drop=無視 / Sequential=順番待ち / Switch=中断して切り替え)で選べる。`AbstractActionInputTrigger`派生で、セリフ送りの入力を InputActionReference で設定、未設定なら左クリック) / `TalkLineViewer`(セリフ表示) / `TalkLineVoice`(ボイス再生) / `TalkData`・`TalkLine`・`TalkLineCsv`・`ETalkEmotion`(CSVベースの会話データ。列は `key,name,lines[,emotion][,voice]`、`voice` はボイスのアドレス) — `voice` のアドレスは Addressables(必須依存)から会話の開始前に読み込み、キャッシュする(解放はしない) — Samples 42
 - `AudioManager`(`BGMManager` / `SEManager` / `VoiceManager` と各 `Player`)、`AudioMixerManager`(`EAudioMixerParam`) — Samples 43
 - `BGMController`: `BGMControllerSetting` / `EAudioPlayMode`(シーン遷移に応じたBGMの自動再生・停止・フェード・クロスフェード切り替え) — Samples 44
 

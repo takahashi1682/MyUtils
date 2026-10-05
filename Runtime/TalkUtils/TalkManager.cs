@@ -15,10 +15,14 @@ namespace MyUtils.TalkUtils
     /// <summary>
     /// 会話の進行管理。表示や音声は購読側(<see cref="TalkLineViewer"/> / <see cref="TalkLineVoice"/>)が担当する。
     /// セリフ送りの入力は InputActionReference で設定する(未設定なら左クリック)。
+    /// 会話の呼び出しは <see cref="Talk(string)"/> で行い、重なった場合の動作は <see cref="ETalkOverlapMode"/> で選ぶ。
     /// </summary>
     public class TalkManager : AbstractActionInputTrigger
     {
         [SerializeField] protected TextAsset _defaultTalkCsv;
+
+        [Header("会話の呼び出しが重なったときの動作")]
+        [SerializeField] protected ETalkOverlapMode _overlapMode = ETalkOverlapMode.Drop;
 
         [Header("スキップ設定")]
         [SerializeField] protected bool _clickSkip = true;
@@ -33,14 +37,22 @@ namespace MyUtils.TalkUtils
         public Subject<TalkLine> OnLineEnd { get; } = new();
         public Subject<Unit> OnTalkEnd { get; } = new();
 
+        /// <summary>会話中かどうか(順番待ちの会話は含まない)</summary>
+        public bool IsTalking => _activeTalkCount > 0;
+
         // LoadCsvで読み込んだ会話データ
         private TalkData _talkData;
+
+        // 会話の呼び出し。SubscribeAwait で重なったときの動作を制御する
+        private readonly Subject<IReadOnlyList<TalkLine>> _talkRequests = new();
 
         // セリフ送りの入力があったときに完了する(セリフ待機中のみ有効)
         private UniTaskCompletionSource _skipSignal;
 
         // 読み込み済みのボイス(アドレスごと。解放はしない)
         private readonly Dictionary<string, AudioClip> _voiceCache = new();
+
+        private int _activeTalkCount;
 
         protected override void Awake()
         {
@@ -50,6 +62,22 @@ namespace MyUtils.TalkUtils
             OnLineStart.AddTo(this);
             OnLineEnd.AddTo(this);
             OnTalkEnd.AddTo(this);
+            _talkRequests.AddTo(this);
+
+            // 重なった呼び出しの扱いはここで決まる(実行中に変更しても反映されない)
+            _talkRequests
+                .SubscribeAwait(async (talk, ct) =>
+                {
+                    try
+                    {
+                        await RunTalkAsync(talk, ct);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Switchによる中断やオブジェクト破棄。正常な終了として扱う
+                    }
+                }, ToAwaitOperation(_overlapMode))
+                .AddTo(this);
 
             if (_defaultTalkCsv != null)
             {
@@ -68,84 +96,17 @@ namespace MyUtils.TalkUtils
         }
 
         /// <summary>
-        /// 会話(複数のセリフ)を最初から最後まで進める
+        /// 会話(複数のセリフ)を開始する。会話中に呼ばれた場合は <see cref="ETalkOverlapMode"/> に従う
         /// </summary>
-        public virtual async UniTask TalkAsync(IReadOnlyList<TalkLine> talk)
+        public void Talk(IReadOnlyList<TalkLine> talk)
         {
-            // ボイスは会話の開始前にまとめて読み込む
-            await LoadVoicesAsync(talk);
-
-            OnTalkStart.OnNext(Unit.Default);
-
-            foreach (var line in talk)
-            {
-                await LineAsync(line);
-
-                // 同じ入力で次のセリフまで飛ばないように1フレーム待つ
-                await UniTask.Yield();
-            }
-
-            OnTalkEnd.OnNext(Unit.Default);
+            _talkRequests.OnNext(talk);
         }
 
         /// <summary>
-        /// ボイスのアドレスが設定されたセリフのボイスを Addressables から読み込む
+        /// LoadCsvで読み込んだ会話のうち、指定したキーの会話を開始する。キーがなければ警告を出して何もしない
         /// </summary>
-        protected virtual async UniTask LoadVoicesAsync(IReadOnlyList<TalkLine> talk)
-        {
-            foreach (var line in talk)
-            {
-                if (line.Voice != null || string.IsNullOrEmpty(line.VoiceAddress)) continue;
-
-                line.Voice = await LoadVoiceAsync(line.VoiceAddress);
-            }
-        }
-
-        /// <summary>
-        /// アドレスのボイスを読み込む。同じアドレスは再読み込みしない。見つからなければ警告を出してnullを返す
-        /// </summary>
-        protected virtual async UniTask<AudioClip> LoadVoiceAsync(string address)
-        {
-            if (_voiceCache.TryGetValue(address, out var cached)) return cached;
-
-            // 存在しないアドレスは例外にせず、ボイスなしとして扱う
-            if (!await ExistsAddressAsync(address))
-            {
-                Debug.LogWarning($"[TalkManager] ボイス '{address}' が見つかりません");
-                return null;
-            }
-
-            var handle = Addressables.LoadAssetAsync<AudioClip>(address);
-            var clip = await handle.Task.AsUniTask().AttachExternalCancellation(destroyCancellationToken);
-
-            if (handle.Status != AsyncOperationStatus.Succeeded)
-            {
-                Debug.LogWarning($"[TalkManager] ボイス '{address}' の読み込みに失敗しました");
-                return null;
-            }
-
-            _voiceCache[address] = clip;
-            return clip;
-        }
-
-        private async UniTask<bool> ExistsAddressAsync(string address)
-        {
-            var handle = Addressables.LoadResourceLocationsAsync(address, typeof(AudioClip));
-            try
-            {
-                var locations = await handle.Task.AsUniTask().AttachExternalCancellation(destroyCancellationToken);
-                return locations.Count > 0;
-            }
-            finally
-            {
-                Addressables.Release(handle);
-            }
-        }
-
-        /// <summary>
-        /// LoadCsvで読み込んだ会話のうち、指定したキーの会話を進める。キーがなければ警告を出して何もしない
-        /// </summary>
-        public virtual async UniTask TalkAsync(string key)
+        public void Talk(string key)
         {
             if (_talkData == null)
             {
@@ -159,35 +120,144 @@ namespace MyUtils.TalkUtils
                 return;
             }
 
-            await TalkAsync(talk);
+            Talk(talk);
+        }
+
+        /// <summary>
+        /// 会話を最初から最後まで進める
+        /// </summary>
+        protected virtual async UniTask RunTalkAsync(IReadOnlyList<TalkLine> talk, CancellationToken ct)
+        {
+            _activeTalkCount++;
+            try
+            {
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct, destroyCancellationToken);
+
+                // ボイスは会話の開始前にまとめて読み込む
+                await LoadVoicesAsync(talk, cts.Token);
+
+                OnTalkStart.OnNext(Unit.Default);
+                try
+                {
+                    foreach (var line in talk)
+                    {
+                        await LineAsync(line, cts.Token);
+
+                        // 同じ入力で次のセリフまで飛ばないように1フレーム待つ
+                        await UniTask.Yield(cts.Token);
+                    }
+                }
+                finally
+                {
+                    // 中断されたときも終了を通知する(破棄中は通知しない)
+                    if (!destroyCancellationToken.IsCancellationRequested)
+                    {
+                        OnTalkEnd.OnNext(Unit.Default);
+                    }
+                }
+            }
+            finally
+            {
+                _activeTalkCount--;
+            }
         }
 
         /// <summary>
         /// 1セリフを進める。セリフ送りの入力または自動送りで終了する
         /// </summary>
-        public virtual async UniTask LineAsync(TalkLine talkLine)
+        public virtual async UniTask LineAsync(TalkLine talkLine, CancellationToken ct = default)
         {
             OnLineStart.OnNext(talkLine);
 
             // 待ち終わった側の待機を止めるため、リンクしたトークンを使う
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
-            _skipSignal = new UniTaskCompletionSource();
-            var skip = _skipSignal.Task.AttachExternalCancellation(cts.Token);
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct, destroyCancellationToken);
+            var signal = new UniTaskCompletionSource();
+            _skipSignal = signal;
 
-            if (_autoEnd)
+            try
             {
-                var autoEnd = UniTask.Delay(TimeSpan.FromSeconds(GetAutoEndDelay(talkLine)),
-                    cancellationToken: cts.Token);
-                await UniTask.WhenAny(skip, autoEnd);
+                var skip = signal.Task.AttachExternalCancellation(cts.Token);
+
+                if (_autoEnd)
+                {
+                    var autoEnd = UniTask.Delay(TimeSpan.FromSeconds(GetAutoEndDelay(talkLine)),
+                        cancellationToken: cts.Token);
+                    await UniTask.WhenAny(skip, autoEnd);
+                }
+                else
+                {
+                    await skip;
+                }
             }
-            else
+            finally
             {
-                await skip;
+                cts.Cancel();
+
+                // Switchで次のセリフが先に始まっていたら、そちらの待機は消さない
+                if (_skipSignal == signal)
+                {
+                    _skipSignal = null;
+                }
+
+                if (!destroyCancellationToken.IsCancellationRequested)
+                {
+                    OnLineEnd.OnNext(talkLine);
+                }
+            }
+        }
+
+        /// <summary>
+        /// ボイスのアドレスが設定されたセリフのボイスを Addressables から読み込む
+        /// </summary>
+        protected virtual async UniTask LoadVoicesAsync(IReadOnlyList<TalkLine> talk, CancellationToken ct)
+        {
+            foreach (var line in talk)
+            {
+                if (line.Voice != null || string.IsNullOrEmpty(line.VoiceAddress)) continue;
+
+                line.Voice = await LoadVoiceAsync(line.VoiceAddress, ct);
+            }
+        }
+
+        /// <summary>
+        /// アドレスのボイスを読み込む。同じアドレスは再読み込みしない。見つからなければ警告を出してnullを返す
+        /// </summary>
+        protected virtual async UniTask<AudioClip> LoadVoiceAsync(string address, CancellationToken ct)
+        {
+            if (_voiceCache.TryGetValue(address, out var cached)) return cached;
+
+            // 存在しないアドレスは例外にせず、ボイスなしとして扱う
+            if (!await ExistsAddressAsync(address, ct))
+            {
+                Debug.LogWarning($"[TalkManager] ボイス '{address}' が見つかりません");
+                return null;
             }
 
-            cts.Cancel();
-            _skipSignal = null;
-            OnLineEnd.OnNext(talkLine);
+            var handle = Addressables.LoadAssetAsync<AudioClip>(address);
+            var clip = await handle.Task.AsUniTask().AttachExternalCancellation(ct);
+
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                Debug.LogWarning($"[TalkManager] ボイス '{address}' の読み込みに失敗しました");
+                return null;
+            }
+
+            _voiceCache[address] = clip;
+            return clip;
+        }
+
+        private static async UniTask<bool> ExistsAddressAsync(string address, CancellationToken ct)
+        {
+            var handle = Addressables.LoadResourceLocationsAsync(address, typeof(AudioClip));
+            try
+            {
+                var locations = await handle.Task.AsUniTask().AttachExternalCancellation(ct);
+                return locations.Count > 0;
+            }
+            finally
+            {
+                Addressables.Release(handle);
+            }
         }
 
         /// <summary>
@@ -226,6 +296,16 @@ namespace MyUtils.TalkUtils
             }
 
             return delay;
+        }
+
+        private static AwaitOperation ToAwaitOperation(ETalkOverlapMode mode)
+        {
+            return mode switch
+            {
+                ETalkOverlapMode.Sequential => AwaitOperation.Sequential,
+                ETalkOverlapMode.Switch => AwaitOperation.Switch,
+                _ => AwaitOperation.Drop
+            };
         }
     }
 }
