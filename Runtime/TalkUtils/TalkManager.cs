@@ -232,6 +232,11 @@ namespace MyUtils.TalkUtils
         }
 
         /// <summary>
+        /// 押したときだけセリフを送る(PassThroughのアクションは離したときもperformedが呼ばれるため)
+        /// </summary>
+        protected override bool IsValidInput(InputAction.CallbackContext context) => context.ReadValueAsButton();
+
+        /// <summary>
         /// セリフ送りの入力があったとき、待機中のセリフを終わらせる
         /// </summary>
         protected override UniTask OnPressed(CancellationToken ct)

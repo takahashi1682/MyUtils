@@ -27,8 +27,13 @@ namespace MyUtils.InputTrigger
                 h => _inputAction.performed += h,
                 h => _inputAction.performed -= h,
                 destroyCancellationToken
-            ).Select(_ => Unit.Default);
+            ).Where(IsValidInput).Select(_ => Unit.Default);
         }
+
+        /// <summary>
+        /// performedのうち、入力として扱うものを判定する(既定はすべて)
+        /// </summary>
+        protected virtual bool IsValidInput(InputAction.CallbackContext context) => true;
 
         protected virtual void OnEnable() => _inputAction?.Enable();
         protected virtual void OnDisable() => _inputAction?.Disable();
