@@ -38,6 +38,9 @@ namespace MyUtils.VContainerExtensions
         /// <summary>このスコープ内で共有する依存の登録処理。</summary>
         protected virtual void ConfigureScope(IContainerBuilder builder) { }
 
+        /// <summary>子孫以外に対象に加えるGameObject(既定はInspectorで設定したもの)。</summary>
+        protected virtual IEnumerable<GameObject> AdditionalScanRoots => _additionalScanRoots;
+
         // 別のAbstractScopeRootに当たったら、そのルートだけを加えて、その先には降りない。
         private void Collect(Transform root, List<MonoBehaviour> members)
         {
@@ -86,7 +89,7 @@ namespace MyUtils.VContainerExtensions
 
             var members = new List<MonoBehaviour>();
             Collect(transform, members);
-            foreach (var scanRoot in _additionalScanRoots)
+            foreach (var scanRoot in AdditionalScanRoots)
             {
                 if (scanRoot != null) Collect(scanRoot.transform, members);
             }
