@@ -18,6 +18,16 @@ namespace MyUtils.VContainerExtensions
         [Tooltip("シーンのルートとなるAbstractScopeRoot実装(例: GameScopeRoot)")]
         public AbstractScopeRoot SceneScopeRoot;
 
+        protected override void Awake()
+        {
+            // 親にRootLifetimeScopeを指定していても、ルートが未生成だとVContainerはこのスコープの構築を後回しにする
+            // (ルートはシーン読み込み完了後に作られる)。その場合、他のコンポーネントのAwakeには注入が間に合わない。
+            // そのため、先にルートを作っておき、このAwakeの中で構築を終わらせる。
+            VContainerSettings.Instance?.GetOrCreateRootLifetimeScopeInstance();
+
+            base.Awake();
+        }
+
         protected override void Configure(IContainerBuilder builder)
         {
             SceneScopeRoot.OnRegister(builder);
