@@ -11,6 +11,8 @@ namespace MyUtils.VContainerExtensions
     /// 登録・構築(<see cref="AbstractScopeRoot.OnRegister"/>/<see cref="AbstractScopeRoot.Build"/>)に委譲する。
     /// 具体的なスコープ構成(Game/Playerなど)はSceneScopeRootに差し込むコンポーネント側が持つ。
     /// </summary>
+    // LifetimeScopeの実行順(-5000)が派生クラスに引き継がれることに頼らず、明示してどのAwakeよりも先に構築する
+    [DefaultExecutionOrder(-5000)]
     public class SceneLifetimeScope : LifetimeScope
     {
         [Tooltip("シーンのルートとなるAbstractScopeRoot実装(例: GameScopeRoot)")]
