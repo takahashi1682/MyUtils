@@ -20,7 +20,7 @@ namespace MyUtils.TweenUtils
     {
         public float Duration = 0.5f;
         public float Delay;
-        public Ease Ease = Ease.InOutQuad;
+        public Ease Ease = Ease.OutQuad;
         public int Loops = -1;
         public LoopType LoopType = LoopType.Yoyo;
         public LinkBehaviour LinkBehaviour = LinkBehaviour.PauseOnDisable;

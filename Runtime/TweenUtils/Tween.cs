@@ -14,7 +14,7 @@ namespace MyUtils.TweenUtils
         private readonly Action<float, float> _onProgress; // (easedT, rawT)
 
         private float _delay;
-        private Ease _ease = Ease.Linear;
+        private Ease _ease = Ease.OutQuad;
         private int _loops = 1;
         private LoopType _loopType = LoopType.Restart;
         private bool _inverted;
