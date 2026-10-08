@@ -31,9 +31,10 @@ namespace MyUtils.InputTrigger
         }
 
         /// <summary>
-        /// performedのうち、入力として扱うものを判定する(既定はすべて)
+        /// performedのうち、入力として扱うものを判定する。
+        /// 既定では押したときだけ(PassThroughのアクションは離したときもperformedが呼ばれるため)
         /// </summary>
-        protected virtual bool IsValidInput(InputAction.CallbackContext context) => true;
+        protected virtual bool IsValidInput(InputAction.CallbackContext context) => context.ReadValueAsButton();
 
         protected virtual void OnEnable() => _inputAction?.Enable();
         protected virtual void OnDisable() => _inputAction?.Disable();
