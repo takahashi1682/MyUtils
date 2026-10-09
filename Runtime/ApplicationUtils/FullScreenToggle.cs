@@ -7,7 +7,13 @@ namespace MyUtils.ApplicationUtils
 {
     public class FullScreenToggle : AbstractTargetBehaviour<Toggle>
     {
-        private readonly ReactiveProperty<bool> _isFullScreen = new(Screen.fullScreen);
+        // Screen.fullScreenはコンストラクタ(フィールド初期化子)では呼べないため、Awakeで作る
+        private ReactiveProperty<bool> _isFullScreen;
+
+        private void Awake()
+        {
+            _isFullScreen = new ReactiveProperty<bool>(Screen.fullScreen);
+        }
 
         protected override void Start()
         {
