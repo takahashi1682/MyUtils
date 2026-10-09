@@ -141,7 +141,7 @@ MyUtils/
 - `AbstractList` / `AbstractListItem`(テンプレートInstantiateによる動的リスト) — Samples 26
 - `UIBinder`系: `FloatBinder` / `IntBinder` / `StringBinder` / `SliderBinder` / `FloatAnimatedBinder` / `GaugeBinder` / `MemoryGaugeBinder` / `RateToTextBinder` / `RateToGradientBinder` / `ViewSwitchBinder` 等の値⇔UIバインダー群 — Samples 27
 - `AudioMixerManager.UI`: `VolumeSliderBinder` / `VolumeInputFieldBinder`(AudioMixerパラメータのUIバインド) — Samples 43
-- `UI`: `UIViewToggler` / `UISwitchAnimationPlayer` / `UISelectedOnEnable` / `UICursorTrackingObject`
+- `UI`: `UISwitchAnimationPlayer` / `UISelectedOnEnable` / `UICursorTrackingObject`
 
 ### 演出・アニメーション
 - `OnSelectBehaviour`系: `ColorOnSelect` / `MoveOnSelect` / `ScaleOnSelect` / `PlaySEOnSelect`(選択時演出) — Samples 30
