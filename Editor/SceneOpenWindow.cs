@@ -31,16 +31,7 @@ namespace MyUtils
 
         private void OnGUI()
         {
-            // 軽量化：スタイル作成を1回だけに制限
-            if (_buttonStyle == null)
-            {
-                _buttonStyle = new GUIStyle(EditorStyles.miniButton)
-                {
-                    fixedHeight = 20f,
-                    alignment = TextAnchor.MiddleLeft,
-                    imagePosition = ImagePosition.ImageLeft
-                };
-            }
+            EnsureStyles();
 
             EditorGUILayout.LabelField("Filter by path:", EditorStyles.boldLabel);
             
@@ -74,6 +65,26 @@ namespace MyUtils
             }
 
             EditorGUILayout.EndScrollView();
+        }
+
+        // スタイルとアイコンは使い回すが、Playモードの切り替えやテーマ変更などで
+        // エディタのスキンのテクスチャが作り直されると背景画像が無効になるため、そのときは作り直す
+        private void EnsureStyles()
+        {
+            if (_buttonStyle == null || _buttonStyle.normal.background == null)
+            {
+                _buttonStyle = new GUIStyle(EditorStyles.miniButton)
+                {
+                    fixedHeight = 20f,
+                    alignment = TextAnchor.MiddleLeft,
+                    imagePosition = ImagePosition.ImageLeft
+                };
+            }
+
+            if (_sceneIcon == null || _sceneIcon.image == null)
+            {
+                _sceneIcon = EditorGUIUtility.IconContent("SceneAsset Icon");
+            }
         }
 
         private void RefreshSceneList()
