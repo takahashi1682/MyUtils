@@ -10,7 +10,8 @@ namespace MyUtils.UIBinder
     {
         [SerializeField] private float _duration = 1;
         private Coroutine _animationCoroutine;
-        private float _lastValue;
+        private float _displayValue;
+        private bool _hasValue;
 
         protected override void OnValueChanged(float value)
         {
@@ -18,12 +19,25 @@ namespace MyUtils.UIBinder
             if (_animationCoroutine != null)
             {
                 StopCoroutine(_animationCoroutine);
+                _animationCoroutine = null;
             }
 
-            // 新しいアニメーション開始
-            _animationCoroutine = StartCoroutine(AnimateValue(_lastValue, value, _duration));
+            // 最初の値は演出せずそのまま表示する(0から数え上げない)
+            if (!_hasValue)
+            {
+                _hasValue = true;
+                Show(value);
+                return;
+            }
 
-            _lastValue = value;
+            // 新しいアニメーション開始(途中なら表示中の値から再開する)
+            _animationCoroutine = StartCoroutine(AnimateValue(_displayValue, value, _duration));
+        }
+
+        private void Show(float value)
+        {
+            _displayValue = value;
+            Target.text = string.Format(_textFormat, value);
         }
 
         private IEnumerator AnimateValue(float startValue, float endValue, float duration)
@@ -34,13 +48,13 @@ namespace MyUtils.UIBinder
             {
                 elapsedTime += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsedTime / duration); // 0～1 の補間値
-                float currentValue = Mathf.Lerp(startValue, endValue, t);
-                Target.text = string.Format(_textFormat, currentValue);
+                Show(Mathf.Lerp(startValue, endValue, t));
                 yield return null;
             }
 
             // 最終値を確実に設定
-            Target.text = string.Format(_textFormat, endValue);
+            Show(endValue);
+            _animationCoroutine = null;
         }
     }
 }
