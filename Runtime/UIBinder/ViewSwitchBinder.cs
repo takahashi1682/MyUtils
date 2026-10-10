@@ -24,7 +24,9 @@ namespace MyUtils.UIBinder
 
         private void Start()
         {
-            ResolveProvider().IsFull
+            var provider = ResolveProvider();
+
+            provider.IsFull
                 .Where(_ => IsActiveWhenFull)
                 .Subscribe(x => gameObject.SetActive(x)
                 ).AddTo(this);
