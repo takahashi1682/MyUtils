@@ -30,6 +30,13 @@ namespace MyUtils.VContainerExtensions
 
         protected override void Configure(IContainerBuilder builder)
         {
+            // 登録するものがないシーンはSceneScopeRootを省略でき、autoInjectGameObjectsだけで動く。
+            if (SceneScopeRoot == null)
+            {
+                Debug.LogWarning($"{name}: SceneScopeRoot が未設定です。autoInjectGameObjects のみで動作します。", this);
+                return;
+            }
+
             SceneScopeRoot.OnRegister(builder);
 
             // ルートコンテナの構築(ビルド)完了後、ツリー全体の子スコープ構築と注入をまとめて行う。
