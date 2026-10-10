@@ -60,6 +60,14 @@ namespace MyUtils.Parameter
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
 
+        /// <summary>最小値・最大値・現在値を一括で設定する。現在値は Min〜Max に制限される。</summary>
+        public void Initialize(T min, T max, T current)
+        {
+            SetMinValue(min);
+            SetMaxValue(max);
+            SetClampValue(current);
+        }
+
         /// <summary>最小値を設定し、現在値を補正</summary>
         public override void SetMin(T min)
         {
