@@ -13,10 +13,13 @@ namespace MyUtils.UIBinder
     {
         [SerializeField] private SerializableInterface<IRateProvider> _inRate;
 
+        /// <summary>値の供給元。既定はInspectorで割り当てた参照。DIなどで差し替える場合はオーバーライドする。</summary>
+        protected virtual IRateProvider ResolveProvider() => _inRate.Value;
+
         protected override void Start()
         {
             base.Start();
-            _inRate.Value.CurrentRate
+            ResolveProvider().CurrentRate
                 .Subscribe(x => Target.Current.Value = Mathf.CeilToInt(x * Target.Max))
                 .AddTo(this);
         }

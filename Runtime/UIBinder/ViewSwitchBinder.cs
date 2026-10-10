@@ -19,14 +19,17 @@ namespace MyUtils.UIBinder
         public bool IsActiveWhenFull = true;
         public bool IsActiveWhenEmpty;
 
+        /// <summary>値の供給元。既定はInspectorで割り当てた参照。DIなどで差し替える場合はオーバーライドする。</summary>
+        protected virtual IViewSwitchProvider ResolveProvider() => _viewSwitcher.Value;
+
         private void Start()
         {
-            _viewSwitcher.Value.IsFull
+            ResolveProvider().IsFull
                 .Where(_ => IsActiveWhenFull)
                 .Subscribe(x => gameObject.SetActive(x)
                 ).AddTo(this);
 
-            _viewSwitcher.Value.IsEmpty
+            provider.IsEmpty
                 .Where(_ => IsActiveWhenEmpty)
                 .Subscribe(x => gameObject.SetActive(x)
                 ).AddTo(this);

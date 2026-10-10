@@ -20,10 +20,13 @@ namespace MyUtils.UIBinder
         [SerializeField] protected SerializableInterface<IValueProvider<T>> _inValue;
         [SerializeField] protected string _textFormat = "{0}"; // デフォルト書式
 
+        /// <summary>値の供給元。既定はInspectorで割り当てた参照。DIなどで差し替える場合はオーバーライドする。</summary>
+        protected virtual IValueProvider<T> ResolveProvider() => _inValue.Value;
+
         protected override void Start()
         {
             base.Start();
-            _inValue.Value.CurrentValue
+            ResolveProvider().CurrentValue
                 .Subscribe(OnValueChanged)
                 .AddTo(this);
         }

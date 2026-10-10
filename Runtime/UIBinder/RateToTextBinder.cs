@@ -14,10 +14,13 @@ namespace MyUtils.UIBinder
         [Header("Rateを0~100で分割して表示するメッセージ")]
         [SerializeField] private List<string> _messages;
 
+        /// <summary>値の供給元。既定はInspectorで割り当てた参照。DIなどで差し替える場合はオーバーライドする。</summary>
+        protected virtual IRateProvider ResolveProvider() => _inRate.Value;
+
         protected override void Start()
         {
             base.Start();
-            _inRate.Value.CurrentRate
+            ResolveProvider().CurrentRate
                 .Subscribe(UpdateText)
                 .AddTo(this);
         }
