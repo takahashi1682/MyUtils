@@ -12,7 +12,7 @@ namespace MyUtils
     /// </summary>
     public class FolderColorWindow : EditorWindow
     {
-        private const string MenuPath = "Assets/MyUtils/フォルダの色を設定...";
+        private const string MenuPath = "Assets/MyUtils/Set Folder Color...";
 
         private static readonly Color[] Presets =
         {
@@ -30,7 +30,7 @@ namespace MyUtils
         private static void Open()
         {
             var window = CreateInstance<FolderColorWindow>();
-            window.titleContent = new GUIContent("フォルダの色");
+            window.titleContent = new GUIContent("Folder Color");
             window._folderNames = GetSelectedFolderNames();
 
             // 設定済みならその色から、未設定なら既定の色から始める
@@ -65,7 +65,7 @@ namespace MyUtils
             EditorGUILayout.Space(2);
 
             EditorGUI.BeginChangeCheck();
-            var color = EditorGUILayout.ColorField(new GUIContent("色"), _color, true, false, false);
+            var color = EditorGUILayout.ColorField(new GUIContent("Color"), _color, true, false, false);
             if (EditorGUI.EndChangeCheck()) SetColor(color);
 
             EditorGUILayout.Space(4);
@@ -82,13 +82,13 @@ namespace MyUtils
             EditorGUILayout.Space(8);
             using (new EditorGUILayout.HorizontalScope())
             {
-                if (GUILayout.Button("色を解除"))
+                if (GUILayout.Button("Clear"))
                 {
                     foreach (var folderName in _folderNames) FolderPainterSettings.instance.Remove(folderName);
                     Close();
                 }
 
-                if (GUILayout.Button("閉じる")) Close();
+                if (GUILayout.Button("Close")) Close();
             }
         }
 

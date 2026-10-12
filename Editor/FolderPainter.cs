@@ -8,7 +8,7 @@ namespace MyUtils
     public class FolderPainter
     {
         // フォルダ名と色の対応ルールは FolderPainterSettings(ProjectSettings)に保存される。
-        // Projectウィンドウでフォルダを右クリック > MyUtils > フォルダの色を設定... で変更できる。
+        // Projectウィンドウでフォルダを右クリック > MyUtils > Set Folder Color... で変更できる。
 
         static FolderPainter()
         {
