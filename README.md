@@ -181,6 +181,7 @@ MyUtils/
 - `DebugMethod`系: `[DebugMethod]` 属性を付けたメソッドをInspectorからボタン実行できるようにする機能一式
 - `SceneReferenceDrawer` / `FlagsParameterDrawer` / `ReadOnlyDrawer`(カスタムプロパティドロワー)
 - `SceneOpenWindow` / `FolderPainter` / `BuildSettingOptimizer` / `Separator`系(エディタ作業効率化ツール)
+- `FolderPainter`: Projectウィンドウでフォルダを右クリック > MyUtils > フォルダの色を設定... で色を設定(ProjectSettings に保存、同名フォルダに適用)
 
 ## 関連プロジェクト
 
