@@ -11,19 +11,18 @@ namespace MyUtils.UIBinder
         [SerializeField] private float _duration = 1;
         private Coroutine _animationCoroutine;
         private float _displayValue;
+        private float _targetValue;
         private bool _hasValue;
 
         protected override void OnValueChanged(float value)
         {
             // 既存のアニメーションを停止
-            if (_animationCoroutine != null)
-            {
-                StopCoroutine(_animationCoroutine);
-                _animationCoroutine = null;
-            }
+            StopAnimation();
 
-            // 最初の値は演出せずそのまま表示する(0から数え上げない)
-            if (!_hasValue)
+            _targetValue = value;
+
+            // 最初の値と、非アクティブ中(コルーチンを開始できない)の値は演出せずそのまま表示する
+            if (!_hasValue || !isActiveAndEnabled)
             {
                 _hasValue = true;
                 Show(value);
@@ -32,6 +31,23 @@ namespace MyUtils.UIBinder
 
             // 新しいアニメーション開始(途中なら表示中の値から再開する)
             _animationCoroutine = StartCoroutine(AnimateValue(_displayValue, value, _duration));
+        }
+
+        // 非アクティブ化でコルーチンが止まるので、途中の値で止まらないよう最終値を表示しておく
+        private void OnDisable()
+        {
+            if (_animationCoroutine == null) return;
+
+            StopAnimation();
+            Show(_targetValue);
+        }
+
+        private void StopAnimation()
+        {
+            if (_animationCoroutine == null) return;
+
+            StopCoroutine(_animationCoroutine);
+            _animationCoroutine = null;
         }
 
         private void Show(float value)
