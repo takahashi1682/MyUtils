@@ -18,8 +18,8 @@ namespace MyUtils.Parameter
         [SerializeField] private SerializableReactiveProperty<int> _max = new(1000);
         public override ReadOnlyReactiveProperty<int> Max => _max;
 
-        protected override int Plus(int a, int b) => a + b;
-        protected override int Minus(int a, int b) => a - b;
+        protected override int Plus(int a, int b) => (int)System.Math.Clamp((long)a + b, int.MinValue, int.MaxValue);
+        protected override int Minus(int a, int b) => (int)System.Math.Clamp((long)a - b, int.MinValue, int.MaxValue);
         protected override int Clamp(int value, int min, int max) => Mathf.Clamp(value, min, max);
 
         protected override float ToRate(int current, int min, int max) =>
