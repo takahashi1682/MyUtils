@@ -4,93 +4,85 @@ using UnityEngine;
 
 namespace MyUtils
 {
+    /// <summary>
+    /// Project Settings > Editor > Enter Play Mode Settings の「When entering Play Mode」をワンクリックで切り替える。
+    /// Unity 6.6からはチェックボックス(Enter Play Mode Options)が廃止され、4択のドロップダウンに統一されたため、それに合わせた表記にしている。
+    /// </summary>
     public class PlayModeOptimizer : EditorWindow
     {
+        private static readonly (string Label, string Description, EnterPlayModeOptions Options)[] Modes =
+        {
+            ("Reload Domain and Scene", "Unity標準の挙動。再生ごとにstaticとシーンをリセットする", EnterPlayModeOptions.None),
+            ("Reload Scene only", "staticを保持し、シーンだけ再読み込みする", EnterPlayModeOptions.DisableDomainReload),
+            ("Reload Domain only", "staticをリセットし、シーンの再読み込みをスキップする", EnterPlayModeOptions.DisableSceneReload),
+            ("Do not reload Domain or Scene", "staticもシーンもリセットしない(最速)",
+                EnterPlayModeOptions.DisableDomainReload | EnterPlayModeOptions.DisableSceneReload),
+        };
+
         private Vector2 _scrollPos;
 
         [MenuItem("Window/MyUtils/Play Mode Optimizer")]
         public static void ShowWindow() => GetWindow<PlayModeOptimizer>("PlayMode Optimizer");
 
+        // 旧仕様でEnter Play Mode Optionsが無効のままのプロジェクトは、毎回両方リロードされる扱いになる
+        private static EnterPlayModeOptions CurrentOptions =>
+            EditorSettings.enterPlayModeOptionsEnabled
+                ? EditorSettings.enterPlayModeOptions & (EnterPlayModeOptions.DisableDomainReload | EnterPlayModeOptions.DisableSceneReload)
+                : EnterPlayModeOptions.None;
+
         private void OnGUI()
         {
             _scrollPos = GUILayout.BeginScrollView(_scrollPos);
 
-            GUILayout.Label("再生モード設定", EditorStyles.boldLabel);
+            GUILayout.Label("When entering Play Mode", EditorStyles.boldLabel);
             EditorGUILayout.Space();
 
-            bool isNormalModeActive = !EditorSettings.enterPlayModeOptionsEnabled;
-            DrawToggleRow("通常リロード設定を使用 (ON=通常 / OFF=高速化)", isNormalModeActive, () =>
+            var current = CurrentOptions;
+            foreach (var mode in Modes)
             {
-                EditorSettings.enterPlayModeOptionsEnabled = !EditorSettings.enterPlayModeOptionsEnabled;
-            });
-
-            EditorGUILayout.Space(10);
-            GUILayout.Label("詳細設定 (ON = 毎回リセットする / OFF = リセットをスキップ)", EditorStyles.miniLabel);
-
-            // Domain Reload
-            bool isDomainReloadEnabled =
-                (EditorSettings.enterPlayModeOptions & EnterPlayModeOptions.DisableDomainReload) == 0;
-            DrawToggleRow("Domain Reload (staticのリセット)", isDomainReloadEnabled, () =>
-            {
-                ToggleOptionInverse(EnterPlayModeOptions.DisableDomainReload);
-            });
-
-            // Scene Reload
-            bool isSceneReloadEnabled =
-                (EditorSettings.enterPlayModeOptions & EnterPlayModeOptions.DisableSceneReload) == 0;
-            DrawToggleRow("Scene Reload (シーンの再読み込み)", isSceneReloadEnabled, () =>
-            {
-                ToggleOptionInverse(EnterPlayModeOptions.DisableSceneReload);
-            });
+                DrawModeRow(mode.Label, mode.Description, mode.Options == current, mode.Options);
+            }
 
             EditorGUILayout.Space(20);
-            HelpBoxInverse(isNormalModeActive, isDomainReloadEnabled, isSceneReloadEnabled);
+            DrawHelpBox(current);
 
             GUILayout.EndScrollView();
         }
 
-        private static void DrawToggleRow(string label, bool isOn, System.Action toggleAction)
+        private static void DrawModeRow(string label, string description, bool isSelected, EnterPlayModeOptions options)
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
-            GUILayout.Label(label, GUILayout.ExpandWidth(true));
 
-            // 色を逆転：通常(isOn)が緑、高速化(OFF)がグレー
+            EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
+            GUILayout.Label(label);
+            GUILayout.Label(description, EditorStyles.miniLabel);
+            EditorGUILayout.EndVertical();
+
             var defaultColor = GUI.backgroundColor;
-            GUI.backgroundColor = isOn ? Color.green : Color.red;
+            GUI.backgroundColor = isSelected ? Color.green : defaultColor;
 
-            if (GUILayout.Button(isOn ? "ON" : "OFF", GUILayout.Width(80), GUILayout.Height(20)))
+            if (GUILayout.Button(isSelected ? "使用中" : "選択", GUILayout.Width(80), GUILayout.Height(20)) && !isSelected)
             {
-                toggleAction.Invoke();
+                EditorSettings.enterPlayModeOptionsEnabled = true;
+                EditorSettings.enterPlayModeOptions = options;
             }
 
             GUI.backgroundColor = defaultColor;
             EditorGUILayout.EndHorizontal();
         }
 
-        /// <summary>
-        /// 内部の「Disable（無効化）」フラグを逆方向に操作する
-        /// </summary>
-        private static void ToggleOptionInverse(EnterPlayModeOptions option)
+        private static void DrawHelpBox(EnterPlayModeOptions current)
         {
-            if ((EditorSettings.enterPlayModeOptions & option) != 0)
-                EditorSettings.enterPlayModeOptions &= ~option;
-            else
-                EditorSettings.enterPlayModeOptions |= option;
-        }
-
-        private static void HelpBoxInverse(bool isNormal, bool domain, bool scene)
-        {
-            if (isNormal)
+            if (current == EnterPlayModeOptions.None)
             {
                 EditorGUILayout.HelpBox("【通常モード】Unity標準の挙動です。再生ごとにリロードされます。", MessageType.Info);
+                return;
             }
-            else
-            {
-                string status = "【高速モード】";
-                if (!domain) status += " [static保持]";
-                if (!scene) status += " [Scene読込スキップ]";
-                EditorGUILayout.HelpBox(status + " が適用されています。挙動の変化に注意してください。", MessageType.Warning);
-            }
+
+            var status = "【高速モード】";
+            if ((current & EnterPlayModeOptions.DisableDomainReload) != 0) status += " [static保持]";
+            if ((current & EnterPlayModeOptions.DisableSceneReload) != 0) status += " [Scene読込スキップ]";
+            EditorGUILayout.HelpBox(status + " が適用されています。挙動の変化に注意してください。", MessageType.Warning);
         }
     }
 }
