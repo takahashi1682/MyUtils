@@ -12,10 +12,10 @@ namespace MyUtils
     {
         private static readonly (string Label, string Description, EnterPlayModeOptions Options)[] Modes =
         {
-            ("Reload Domain and Scene", "Unity標準の挙動。再生ごとにstaticとシーンをリセットする", EnterPlayModeOptions.None),
+            ("Reload Domain and Scene", "再生ごとにstaticとシーンをリセットする(最も安全だが遅い)", EnterPlayModeOptions.None),
             ("Reload Scene only", "staticを保持し、シーンだけ再読み込みする", EnterPlayModeOptions.DisableDomainReload),
             ("Reload Domain only", "staticをリセットし、シーンの再読み込みをスキップする", EnterPlayModeOptions.DisableSceneReload),
-            ("Do not reload Domain or Scene", "staticもシーンもリセットしない(最速)",
+            ("Do not reload Domain or Scene", "staticもシーンもリセットしない(最速。新規プロジェクトの既定)",
                 EnterPlayModeOptions.DisableDomainReload | EnterPlayModeOptions.DisableSceneReload),
         };
 
@@ -75,14 +75,14 @@ namespace MyUtils
         {
             if (current == EnterPlayModeOptions.None)
             {
-                EditorGUILayout.HelpBox("【通常モード】Unity標準の挙動です。再生ごとにリロードされます。", MessageType.Info);
+                EditorGUILayout.HelpBox("【フルリロード】再生ごとにstaticとシーンがリセットされます。再生開始に時間がかかります。", MessageType.Info);
                 return;
             }
 
             var status = "【高速モード】";
             if ((current & EnterPlayModeOptions.DisableDomainReload) != 0) status += " [static保持]";
             if ((current & EnterPlayModeOptions.DisableSceneReload) != 0) status += " [Scene読込スキップ]";
-            EditorGUILayout.HelpBox(status + " が適用されています。挙動の変化に注意してください。", MessageType.Warning);
+            EditorGUILayout.HelpBox(status + " が適用されています。前回の再生の状態が残る場合がある点に注意してください。", MessageType.Warning);
         }
     }
 }
