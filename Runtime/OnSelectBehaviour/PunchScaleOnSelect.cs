@@ -11,8 +11,8 @@ namespace MyUtils.OnSelectBehaviour
         [Tooltip("縮める対象。空ならこのUI自身。ScaleOnSelectと併用する場合は子のTransformを指定する")]
         [SerializeField] private Transform _scaleTarget;
         [SerializeField] private float _pressedScale = 0.9f;
-        [SerializeField] private float _duration = 0.1f; // 縮む時間(戻る時間も同じ)
-        [SerializeField] private Ease _ease = Ease.OutQuad;
+        [SerializeField] private float _duration = 0.05f; // 縮む時間(戻る時間も同じ)
+        [SerializeField] private Ease _ease = Ease.InSine;
 
         private Vector3 _defaultScale;
         private Tween _tween;
