@@ -32,6 +32,9 @@ namespace MyUtils.VContainerExtensions
         /// <summary>このスコープが作った子コンテナ(構築前はnull)。</summary>
         public IObjectResolver Container { get; private set; }
 
+        // Instantiateで生成した直後のオブジェクトを一時的に置く、非アクティブな親
+        private Transform _spawnBuffer;
+
         /// <summary>親のコンテナへの登録処理。</summary>
         public virtual void OnRegister(IContainerBuilder builder) { }
 
@@ -120,6 +123,43 @@ namespace MyUtils.VContainerExtensions
         {
             SafeInvoke(this, () => resolver.Inject(this));
             ResolveChildren(resolver);
+        }
+
+        /// <summary>
+        /// prefabを生成し、このスコープの子スコープとして登録と[Inject]を済ませてから有効化する。
+        /// 生成したオブジェクトのAwake/OnEnable/Startは、注入が終わった後に呼ばれる。
+        /// position/rotationを省略した場合は、prefab自身の位置・回転を使う。
+        /// </summary>
+        public T Instantiate<T>(T prefab, Vector3? position = null, Quaternion? rotation = null,
+            Transform parent = null)
+            where T : AbstractScopeRoot
+        {
+            if (Container == null)
+            {
+                throw new InvalidOperationException($"{name}: scope is not built yet.");
+            }
+
+            // 非アクティブな親の下に生成し、注入が終わるまでAwakeを止める
+            var instance = UnityEngine.Object.Instantiate(prefab,
+                position ?? prefab.transform.position,
+                rotation ?? prefab.transform.rotation,
+                GetSpawnBuffer());
+            instance.Build(Container);
+
+            // 親を付け替えた時点で有効になり、Awake/OnEnable/Startが呼ばれる
+            instance.transform.SetParent(parent, true);
+            return instance;
+        }
+
+        private Transform GetSpawnBuffer()
+        {
+            if (_spawnBuffer != null) return _spawnBuffer;
+
+            var buffer = new GameObject("SpawnBuffer");
+            buffer.SetActive(false);
+            buffer.transform.SetParent(transform, false);
+            _spawnBuffer = buffer.transform;
+            return _spawnBuffer;
         }
     }
 }
