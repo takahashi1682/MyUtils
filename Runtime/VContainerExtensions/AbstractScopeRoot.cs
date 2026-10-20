@@ -134,6 +134,18 @@ namespace MyUtils.VContainerExtensions
             Transform parent = null)
             where T : AbstractScopeRoot
         {
+            return Instantiate(prefab.gameObject, position, rotation, parent).GetComponent<T>();
+        }
+
+        /// <summary>
+        /// prefabを生成し、[Inject]を済ませてから有効化する。
+        /// 中にAbstractScopeRootがあればそのスコープを作り、無ければこのスコープのコンテナで注入する
+        /// (後者の場合、コンテナは構築済みなのでOnRegisterは呼ばれない)。
+        /// position/rotationを省略した場合は、prefab自身の位置・回転を使う。
+        /// </summary>
+        public GameObject Instantiate(GameObject prefab, Vector3? position = null, Quaternion? rotation = null,
+            Transform parent = null)
+        {
             if (Container == null)
             {
                 throw new InvalidOperationException($"{name}: scope is not built yet.");
@@ -144,7 +156,20 @@ namespace MyUtils.VContainerExtensions
                 position ?? prefab.transform.position,
                 rotation ?? prefab.transform.rotation,
                 GetSpawnBuffer());
-            instance.Build(Container);
+
+            var members = new List<MonoBehaviour>();
+            Collect(instance.transform, members);
+            foreach (var member in members)
+            {
+                if (member is AbstractScopeRoot nestedRoot)
+                {
+                    nestedRoot.Build(Container);
+                }
+                else
+                {
+                    SafeInvoke(member, () => Container.Inject(member));
+                }
+            }
 
             // 親を付け替えた時点で有効になり、Awake/OnEnable/Startが呼ばれる
             instance.transform.SetParent(parent, true);
