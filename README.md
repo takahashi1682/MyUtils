@@ -144,7 +144,7 @@ MyUtils/
 - `UI`: `UISwitchAnimationPlayer` / `UISelectedOnEnable` / `UICursorTrackingObject`
 
 ### 演出・アニメーション
-- `OnSelectBehaviour`系: `ColorOnSelect` / `MoveOnSelect` / `ScaleOnSelect` / `PlaySEOnSelect`(選択時演出) — Samples 30
+- `OnSelectBehaviour`系: `ColorOnSelect` / `ImageOnSelect` / `MoveOnSelect` / `ScaleOnSelect` / `PlaySEOnSelect`(選択時演出) — Samples 30
 - `TweenUtils`系: `TweenLocalMove` / `TweenScale` / `TweenJump` / `TweenFadeGraphic` / `TweenFadeSprite` / `TweenImageAmount` / `TweenShake`、`Ease` / `LoopType` — Samples 30
 - `AnimatorUtils`: `AnimatorStateObserver`(Animatorの状態遷移をR3で購読) / `AnimatorBinder` / `AnimatorExtensions`(UniTaskベースの再生待機) — Samples 31
 - `SpriteAnimation`系: `AbstractAnimation<T>`(Time.timeScale非依存の`AnimatorUpdateMode`対応) / `SpriteAnimation` / `ImageAnimation` — Samples 32
