@@ -20,6 +20,7 @@ namespace MyUtils.Misc
             if (TryGetComponent(out Slider slider))
             {
                 slider.OnValueChangedAsObservable()
+                    .Skip(1) // 購読した時点の現在値は通知されるので、鳴らさない
                     .ThrottleFirstLast(
                         TimeSpan.FromSeconds(Interval),
                         UnityTimeProvider.TimeUpdateRealtime)
