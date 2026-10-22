@@ -9,6 +9,7 @@ namespace MyUtils.UIBinder
     /// <summary>
     ///  Rateをグラデーション評価した色にバインドする機能
     /// </summary>
+    [RequireComponent(typeof(Graphic))]
     public class RateToGradientBinder : AbstractTargetBehaviour<Graphic>
     {
         [SerializeField] private SerializableInterface<IRateProvider> _inRate;

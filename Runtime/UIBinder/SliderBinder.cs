@@ -9,6 +9,7 @@ namespace MyUtils.UIBinder
     /// <summary>
     ///  値をスライダーにバインドする機能
     /// </summary>
+    [RequireComponent(typeof(Slider))]
     public class SliderBinder : AbstractTargetBehaviour<Slider>
     {
         [SerializeField] protected SerializableInterface<IRateProvider> _inRate;

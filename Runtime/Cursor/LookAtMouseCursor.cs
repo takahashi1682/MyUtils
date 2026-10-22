@@ -7,6 +7,7 @@ namespace MyUtils.Cursor
     /// <summary>
     /// マウスカーソルのワールド座標の方向を向くコンポーネント
     /// </summary>
+    [RequireComponent(typeof(Transform))]
     public class LookAtMouseCursor : AbstractTargetBehaviour<Transform>
     {
         [SerializeField] private MouseToWorldRaycaster _mouseToWorldRaycaster;

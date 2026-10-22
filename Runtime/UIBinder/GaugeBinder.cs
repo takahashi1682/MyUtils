@@ -8,6 +8,7 @@ namespace MyUtils.UIBinder
     /// <summary>
     /// 値をGaugeにバインドする機能
     /// </summary>
+    [RequireComponent(typeof(UI.CustomGauge))]
     public class GaugeBinder : AbstractTargetBehaviour<UI.CustomGauge>
     {
         [SerializeField] private SerializableInterface<IRateProvider> _inRate;

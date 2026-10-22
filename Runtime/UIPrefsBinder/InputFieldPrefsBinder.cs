@@ -7,6 +7,7 @@ namespace MyUtils.UIPrefsBinder
     /// <summary>
     ///  InputField の入力内容を PlayerPrefs に保存・復元するコンポーネント
     /// </summary>
+    [RequireComponent(typeof(TMP_InputField))]
     public class InputFieldPrefsBinder : AbstractTargetBehaviour<TMP_InputField>
     {
         [SerializeField] private string _prefsKey = "key_inputField";

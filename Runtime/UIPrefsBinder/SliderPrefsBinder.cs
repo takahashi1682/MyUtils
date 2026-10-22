@@ -7,6 +7,7 @@ namespace MyUtils.UIPrefsBinder
     /// <summary>
     ///  Slider の値を PlayerPrefs に保存・復元するコンポーネント
     /// </summary>
+    [RequireComponent(typeof(Slider))]
     public class SliderPrefsBinder : AbstractTargetBehaviour<Slider>
     {
         [SerializeField] private string _prefsKey = "key_slider";

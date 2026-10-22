@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace MyUtils.TweenUtils
 {
+    [RequireComponent(typeof(Transform))]
     public class TweenScale : AbstractTween<Transform>
     {
         [Header("TweenScale")] public Vector3 ToScale = new(1, 1.2f, 1);

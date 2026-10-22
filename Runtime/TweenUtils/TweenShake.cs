@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace MyUtils.TweenUtils
 {
+    [RequireComponent(typeof(Transform))]
     public class TweenShake : AbstractTween<Transform>
     {
         public float Strength = 0.3f; // 揺れの強さ

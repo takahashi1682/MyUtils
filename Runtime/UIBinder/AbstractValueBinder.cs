@@ -15,6 +15,7 @@ namespace MyUtils.UIBinder
     /// <summary>
     /// 任意の型をTextMeshProにバインドする
     /// </summary>
+    [RequireComponent(typeof(TMP_Text))]
     public abstract class AbstractValueBinder<T> : AbstractTargetBehaviour<TMP_Text>
     {
         [SerializeField] protected SerializableInterface<IValueProvider<T>> _inValue;

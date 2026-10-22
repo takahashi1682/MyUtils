@@ -8,6 +8,7 @@ namespace MyUtils.UI
     /// 値が増えた(回復)場合は瞬時に追従し、減った(ダメージ)場合はゆっくり追いつく。
     /// HPバーで「減った分が少し遅れて追いつく」演出に使う。
     /// </summary>
+    [RequireComponent(typeof(RectTransform))]
     public class TrailingSubGauge : AbstractTargetBehaviour<RectTransform>
     {
         [Header("追従する対象のゲージ")]

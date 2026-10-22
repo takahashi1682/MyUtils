@@ -3,6 +3,7 @@ using MyUtils.Abstract;
 
 namespace MyUtils.AnimatorUtils
 {
+    [RequireComponent(typeof(Animator))]
     public class AnimatorBinder : AbstractTargetBehaviour<Animator>
     {
         public string ParameterName = "Idle";

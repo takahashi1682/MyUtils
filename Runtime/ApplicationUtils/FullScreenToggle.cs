@@ -1,3 +1,4 @@
+using UnityEngine;
 using R3;
 using UnityEngine.UI;
 using Screen = UnityEngine.Device.Screen;
@@ -5,13 +6,15 @@ using MyUtils.Abstract;
 
 namespace MyUtils.ApplicationUtils
 {
+    [RequireComponent(typeof(Toggle))]
     public class FullScreenToggle : AbstractTargetBehaviour<Toggle>
     {
         // Screen.fullScreenはコンストラクタ(フィールド初期化子)では呼べないため、Awakeで作る
         private ReactiveProperty<bool> _isFullScreen;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _isFullScreen = new ReactiveProperty<bool>(Screen.fullScreen);
         }
 

@@ -10,12 +10,13 @@ using UnityEditor;
 
 namespace MyUtils.ApplicationUtils
 {
+    [RequireComponent(typeof(Button))]
     public class QuitGameButton : AbstractTargetBehaviour<Button>
     {
         protected override void Start()
         {
             base.Start();
-            if (TryGetComponent(out Target))
+            if (Target != null)
             {
                 Target.OnClickAsObservable()
                     .Subscribe(_ =>

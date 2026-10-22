@@ -7,6 +7,7 @@ namespace MyUtils.UIPrefsBinder
     /// <summary>
     ///  Dropdown の選択状態を PlayerPrefs に保存・復元するコンポーネント
     /// </summary>
+    [RequireComponent(typeof(TMP_Dropdown))]
     public class DropdownPrefsBinder : AbstractTargetBehaviour<TMP_Dropdown>
     {
         [SerializeField] private string _prefsKey = "key_dropdown";

@@ -9,6 +9,7 @@ namespace MyUtils.Cursor
     ///  マウスのスクリーン座標からワールド座標へのRaycastを行い、
     ///  ヒットしたワールド座標を提供するクラス
     /// </summary>
+    [RequireComponent(typeof(Camera))]
     public class MouseToWorldRaycaster : AbstractTargetBehaviour<Camera>
     {
         [SerializeField] private float _maxDistance = 100f;

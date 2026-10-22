@@ -5,6 +5,7 @@ using MyUtils.Abstract;
 
 namespace MyUtils.AnimatorUtils
 {
+    [RequireComponent(typeof(Animator))]
     public class AnimatorStateObserver : AbstractTargetBehaviour<Animator>
     {
         private readonly ReactiveProperty<ObservableStateMachineTrigger.OnStateInfo> _currentStateHash = new(null);
@@ -17,8 +18,10 @@ namespace MyUtils.AnimatorUtils
         private readonly Subject<ObservableStateMachineTrigger.OnStateInfo> _onExit = new();
         public Observable<ObservableStateMachineTrigger.OnStateInfo> OnExit => _onExit;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             _currentStateHash.AddTo(this);
             _onEntry.AddTo(this);
             _onExit.AddTo(this);

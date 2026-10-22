@@ -8,6 +8,7 @@ namespace MyUtils.UI
     /// 割合(0〜1)に応じてTargetの位置を動かすゲージ。UnityのSliderと同様の使い方ができる。
     /// サブゲージ(遅れて追従する表現)が必要な場合は、別途 <see cref="TrailingSubGauge"/> を組み合わせる。
     /// </summary>
+    [RequireComponent(typeof(RectTransform))]
     public class CustomGauge : AbstractTargetBehaviour<RectTransform>
     {
         [SerializeField] protected Slider.Direction _direction = Slider.Direction.LeftToRight;

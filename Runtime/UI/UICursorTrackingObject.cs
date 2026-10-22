@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace MyUtils.UI
 {
+    [RequireComponent(typeof(RectTransform))]
     public class UICursorTrackingObject : AbstractTargetBehaviour<RectTransform>
     {
         private void LateUpdate()

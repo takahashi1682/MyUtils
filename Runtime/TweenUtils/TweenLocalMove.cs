@@ -5,6 +5,7 @@ namespace MyUtils.TweenUtils
     /// <summary>
     ///     シンプルな移動機能
     /// </summary>
+    [RequireComponent(typeof(Transform))]
     public class TweenLocalMove : AbstractTween<Transform>
     {
         [Header("TweenLocalMove")]

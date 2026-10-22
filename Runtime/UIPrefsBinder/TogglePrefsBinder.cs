@@ -7,6 +7,7 @@ namespace MyUtils.UIPrefsBinder
     /// <summary>
     ///  Toggle のオンオフ状態を PlayerPrefs に保存・復元するコンポーネント
     /// </summary>
+    [RequireComponent(typeof(Toggle))]
     public class TogglePrefsBinder : AbstractTargetBehaviour<Toggle>
     {
         [SerializeField] private string _prefsKey = "key_toggle";

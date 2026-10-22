@@ -1,9 +1,11 @@
+using UnityEngine;
 using R3;
 using TMPro;
 using MyUtils.Abstract;
 
 namespace MyUtils.ApplicationUtils
 {
+    [RequireComponent(typeof(TMP_Dropdown))]
     public class ResolutionSelect : AbstractTargetBehaviour<TMP_Dropdown>
     {
         protected override void Start()

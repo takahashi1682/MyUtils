@@ -27,7 +27,7 @@ namespace MyUtils.Abstract
             base.Start();
             _onClickSubject.AddTo(this);
 
-            if (TryGetComponent(out Target))
+            if (Target != null)
             {
                 Target.OnClickAsObservable()
                     .SubscribeAwait(async (_, cts) =>

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace MyUtils
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class RigidbodyImpact : AbstractTargetBehaviour<Rigidbody>
     {
         public Vector3 Force = new(0, 0, 10);

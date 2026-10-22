@@ -9,6 +9,7 @@ namespace MyUtils.UIBinder
     /// <summary>
     ///  値をMemoryGaugeにバインドする機能
     /// </summary>
+    [RequireComponent(typeof(MemoryGauge))]
     public class MemoryGaugeBinder : AbstractTargetBehaviour<MemoryGauge>
     {
         [SerializeField] private SerializableInterface<IRateProvider> _inRate;

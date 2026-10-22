@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace MyUtils.TweenUtils
 {
+    [RequireComponent(typeof(Transform))]
     public class TweenJump : AbstractTween<Transform>
     {
         public float JumpPower = 2f; // ジャンプの高さ
