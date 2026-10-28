@@ -128,13 +128,37 @@ namespace MyUtils.VContainerExtensions
         /// <summary>
         /// prefabを生成し、このスコープの子スコープとして登録と[Inject]を済ませてから有効化する。
         /// 生成したオブジェクトのAwake/OnEnable/Startは、注入が終わった後に呼ばれる。
-        /// position/rotationを省略した場合は、prefab自身の位置・回転を使う。
+        /// prefabがプレハブの子についている場合は、プレハブ全体を生成して対応するコンポーネントを返す。
+        /// position/rotationは生成したルートに適用し、省略した場合はプレハブのルート自身の位置・回転を使う。
         /// </summary>
         public T Instantiate<T>(T prefab, Vector3? position = null, Quaternion? rotation = null,
             Transform parent = null)
             where T : AbstractScopeRoot
         {
-            return Instantiate(prefab.gameObject, position, rotation, parent).GetComponent<T>();
+            // プレハブの子についている場合もプレハブ全体を生成する(シーン上のオブジェクトはそれ自体だけ)
+            var source = prefab.gameObject.scene.IsValid() ? prefab.transform : prefab.transform.root;
+            var instance = Instantiate(source.gameObject, position, rotation, parent);
+            return FindCounterpart(source, prefab, instance.transform);
+        }
+
+        // sourceRoot以下のtargetと同じ階層位置にある、instanceRoot以下のコンポーネントを返す
+        private static T FindCounterpart<T>(Transform sourceRoot, T target, Transform instanceRoot)
+            where T : Component
+        {
+            var path = new Stack<int>();
+            for (var t = target.transform; t != sourceRoot; t = t.parent)
+            {
+                path.Push(t.GetSiblingIndex());
+            }
+
+            var current = instanceRoot;
+            while (path.Count > 0)
+            {
+                current = current.GetChild(path.Pop());
+            }
+
+            var index = Array.IndexOf(target.GetComponents<T>(), target);
+            return current.GetComponents<T>()[index];
         }
 
         /// <summary>
