@@ -176,11 +176,12 @@ MyUtils/
 - `MonoBehaviourLifecycleEvents`(Awake/Start/OnEnable/OnDisable/OnDestroy/OnBecameVisible/OnBecameInvisibleをUnityEventとしてInspectorから配線)
 - `DelayDestroy` / `TimeScaler` / `OnBecameInvisibleDestroy` / `ProjectVersionViewer` / `CustomBounds` / `PlaySEOnSliderChanged` / `RigidbodyImpact` / `DontDestroyOnLoad` / `TransformExtensions` / `VectorUtils` / `UniTaskUtils` など、単機能の小物コンポーネント群 — Samples 90
 - `DebugMethodAttribute` / `ReadOnlyAttribute`(Inspector拡張属性)
+- `DebugFlag`: `if (DebugFlag.IsOn)` の1行で使えるデバッグフラグ。Window > MyUtils > Debug Mode で切り替える(EditorPrefsに保存。ビルドでは常にfalse)
 
 ### エディタ拡張(Editor)
 - `DebugMethod`系: `[DebugMethod]` 属性を付けたメソッドをInspectorからボタン実行できるようにする機能一式
 - `SceneReferenceDrawer` / `FlagsParameterDrawer` / `ReadOnlyDrawer`(カスタムプロパティドロワー)
-- `SceneOpenWindow` / `FolderPainter` / `PlayModeOptimizer` / `Separator`系(エディタ作業効率化ツール)
+- `SceneOpenWindow` / `FolderPainter` / `PlayModeOptimizer` / `Separator`系 / `DebugFlagMenu`(エディタ作業効率化ツール)
 - `FolderPainter`: Projectウィンドウでフォルダを右クリック > MyUtils > Set Folder Color... で色を設定(ProjectSettings に保存、同名フォルダに適用)
 
 ## 関連プロジェクト
