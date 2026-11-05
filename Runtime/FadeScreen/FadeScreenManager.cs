@@ -14,7 +14,25 @@ namespace MyUtils.FadeScreen
         private const int SortingOrder = 9999;
 
         private static FadeScreenManager _instance;
-        private static FadeScreenManager Instance => _instance ??= new FadeScreenManager();
+
+        // キャンバスは再生を止めると破棄される。static の _instance だけが残っていたら作り直す
+        private static FadeScreenManager Instance
+        {
+            get
+            {
+                if (_instance == null || _instance._fadePanel == null) _instance = new FadeScreenManager();
+                return _instance;
+            }
+        }
+
+        // ドメインリロードを無効にしていると、再生を止めても static が残る。再生の開始時に空へ戻す
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            _instance?._cts?.Cancel();
+            _instance?._cts?.Dispose();
+            _instance = null;
+        }
 
         private Image _fadePanel;
         private GameObject _canvasObject;
