@@ -2,7 +2,6 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using MyUtils.Misc;
 
 namespace MyUtils.FadeScreen
 {
@@ -14,16 +13,7 @@ namespace MyUtils.FadeScreen
         private const int SortingOrder = 9999;
 
         private static FadeScreenManager _instance;
-
-        // キャンバスは再生を止めると破棄される。static の _instance だけが残っていたら作り直す
-        private static FadeScreenManager Instance
-        {
-            get
-            {
-                if (_instance == null || _instance._fadePanel == null) _instance = new FadeScreenManager();
-                return _instance;
-            }
-        }
+        private static FadeScreenManager Instance => _instance ??= new FadeScreenManager();
 
         // ドメインリロードを無効にしていると、再生を止めても static が残る。再生の開始時に空へ戻す
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
