@@ -5,30 +5,29 @@ using UnityEngine;
 namespace MyUtils.Misc
 {
     /// <summary>
-    /// エディタのメニュー(Window/MyUtils/Debug Mode)で切り替えるデバッグフラグ。
-    /// スクリプトからは if (DebugFlag.IsOn) の1行で使う。ビルドでは常に false になる。
+    /// エディタのウィンドウ(Window/MyUtils/Debug Flag Window)で切り替える、50個のデバッグフラグ。
+    /// スクリプトからは if (DebugFlag.IsOn(1)) の1行で使う(番号は1〜50)。ビルドでは常に false になる。
     /// </summary>
     public static class DebugFlag
     {
+        public const int Count = 50;
+
 #if UNITY_EDITOR
-        private static bool? _isOn;
+        private static readonly bool?[] Flags = new bool?[Count];
 
         // EditorPrefs はPC全体で共有されるので、プロジェクトごとに分ける
-        private static string PrefsKey => $"{Application.productName}.MyUtils.DebugFlag";
+        private static string PrefsKey(int no) => $"{Application.productName}.MyUtils.DebugFlag{no}";
 
-        public static bool IsOn
+        // 毎フレーム呼ばれてもよいように、最初の1回だけ EditorPrefs から読む
+        public static bool IsOn(int no) => Flags[no - 1] ??= UnityEditor.EditorPrefs.GetBool(PrefsKey(no));
+
+        public static void Set(int no, bool isOn)
         {
-            // 毎フレーム呼ばれてもよいように、最初の1回だけ EditorPrefs から読む
-            get => _isOn ??= UnityEditor.EditorPrefs.GetBool(PrefsKey);
-            set
-            {
-                _isOn = value;
-                UnityEditor.EditorPrefs.SetBool(PrefsKey, value);
-            }
+            Flags[no - 1] = isOn;
+            UnityEditor.EditorPrefs.SetBool(PrefsKey(no), isOn);
         }
 #else
-        // const にすると、呼び出し側で「到達できないコード」の警告が出るので、プロパティにする
-        public static bool IsOn => false;
+        public static bool IsOn(int no) => false;
 #endif
     }
 }

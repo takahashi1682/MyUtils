@@ -1,6 +1,9 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MyUtils.DebugMethod
 {
@@ -10,36 +13,58 @@ namespace MyUtils.DebugMethod
     public class DebugMethodWindow : EditorWindow
     {
         private Vector2 _scrollPos;
+        private List<DebugMethodCache> _methods = new();
 
         [MenuItem("Window/MyUtils/Debug Method Window")]
         public static void ShowWindow() => GetWindow<DebugMethodWindow>("Debug Method Window");
 
         private void OnEnable()
         {
-            DebugMethodRegistry.RefreshCache();
-            UnityEditor.SceneManagement.EditorSceneManager.sceneOpened += (_, _) => DebugMethodRegistry.RefreshCache();
+            Refresh();
+            EditorSceneManager.sceneOpened += OnSceneOpened;
+            EditorApplication.playModeStateChanged += OnPlayModeChanged;
         }
 
-        private void OnFocus() => DebugMethodRegistry.RefreshCache();
+        private void OnDisable()
+        {
+            EditorSceneManager.sceneOpened -= OnSceneOpened;
+            EditorApplication.playModeStateChanged -= OnPlayModeChanged;
+        }
+
+        private void OnFocus() => Refresh();
+
+        private void OnSceneOpened(Scene scene, OpenSceneMode mode) => Refresh();
+
+        // 再生の開始・終了でシーンのオブジェクトが作り直されるので、取り直す
+        private void OnPlayModeChanged(PlayModeStateChange state)
+        {
+            if (state is PlayModeStateChange.EnteredEditMode or PlayModeStateChange.EnteredPlayMode) Refresh();
+        }
+
+        // シーン内の全コンポーネントを探すので、毎フレームではなく必要なときだけ呼ぶ
+        private void Refresh()
+        {
+            _methods = DebugMethodRegistry.FindAllInScene();
+            Repaint();
+        }
 
         private void OnGUI()
         {
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
             {
-                if (GUILayout.Button("🔄 Refresh List", EditorStyles.toolbarButton)) DebugMethodRegistry.RefreshCache();
+                if (GUILayout.Button("🔄 Refresh List", EditorStyles.toolbarButton)) Refresh();
                 GUILayout.FlexibleSpace();
             }
 
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
 
-            var cachedMethods = DebugMethodRegistry.GlobalCache;
-            if (cachedMethods.Count == 0)
+            if (_methods.Count == 0)
             {
                 EditorGUILayout.HelpBox("[DebugMethod] 属性がついたメソッドがシーン内にありません。", MessageType.Info);
             }
 
             MonoBehaviour lastMono = null;
-            foreach (var cache in cachedMethods)
+            foreach (var cache in _methods)
             {
                 if (cache.Target == null) continue;
 

@@ -123,7 +123,7 @@ MyUtils/
 対応する `MyUtilsProject` のサンプル番号もあわせて記載。
 
 ### 入力・カーソル
-- `InputTrigger`系: `AbstractKeyInputTrigger` / `AbstractActionInputTrigger` / `UnityEventOnKeyTrigger` / `UnityEventOnActionTrigger` / `PlaySEOnInputTrigger`(キー・アクション入力をUnityEventに変換) — Samples 01 / 02
+- `InputTrigger`系: `AbstractKeyInputTrigger` / `AbstractActionInputTrigger` / `UnityEventOnKeyTrigger` / `UnityEventOnActionTrigger`(キー・アクション入力をUnityEventに変換) — Samples 01 / 02
 - `Cursor`: `CursorTexture` / `CursorSetting`(カスタムカーソル表示) — Samples 03
 - `MouseToWorldRaycaster` / `LookAtMouseCursor`(マウス位置のワールド座標変換と追従) — Samples 10
 
@@ -159,7 +159,7 @@ MyUtils/
 - `BGMController`: `BGMControllerSetting` / `EAudioPlayMode`(シーン遷移に応じたBGMの自動再生・停止・フェード・クロスフェード切り替え) — Samples 44
 
 ### データ管理・通信
-- `DataStore`系: `AbstractDataStore` / `AbstractDataAsset` / `AbstractDataStoreSingleton`(JSONセーブデータ管理) — Samples 50 / 51
+- `DataStore`系: `AbstractDataStore` / `AbstractDataAsset`(JSONセーブデータ管理) — Samples 50 / 51
 - `HTTPUtils`(`HTTPRequestUtils` / `HTTPConfig`)、`JsonUtils`(`AESEncryption` / `EncryptedJsonFileHandler` / `PersistentDataTextFileHandler`) — Samples 52
 - `Csv`: `CsvUtils` / `AbstractCsvData`
 - `NfcUtils`: `NfcWatcher`(NFCタグの見張り。`CheckCard()` を一定間隔で呼ぶと、置かれた/外された/エラーを `OnCardRead` / `OnNoCard` / `OnError` で通知、`Write` で書き込み) / `NfcReader`(リーダーへの接続とテキストの読み書き。パスワードを指定すると `NfcCrypto` でAES暗号化して書き、読むときも同じパスワードが必要)。Windows + PC/SCリーダー(PaSoRi RC-S380 など)専用で、NTAG213/215/216 などの Type 2 タグのNDEFテキストに対応。Editor/Windowsスタンドアロンのみコンパイルされる別アセンブリ `MyUtils.NfcUtils` — Samples 80
@@ -176,12 +176,12 @@ MyUtils/
 - `MonoBehaviourLifecycleEvents`(Awake/Start/OnEnable/OnDisable/OnDestroy/OnBecameVisible/OnBecameInvisibleをUnityEventとしてInspectorから配線)
 - `DelayDestroy` / `TimeScaler` / `OnBecameInvisibleDestroy` / `ProjectVersionViewer` / `CustomBounds` / `PlaySEOnSliderChanged` / `RigidbodyImpact` / `DontDestroyOnLoad` / `TransformExtensions` / `VectorUtils` / `UniTaskUtils` など、単機能の小物コンポーネント群 — Samples 90
 - `DebugMethodAttribute` / `ReadOnlyAttribute`(Inspector拡張属性)
-- `DebugFlag`: `if (DebugFlag.IsOn)` の1行で使えるデバッグフラグ。Window > MyUtils > Debug Mode で切り替える(EditorPrefsに保存。ビルドでは常にfalse)
+- `DebugFlag`: `if (DebugFlag.IsOn(1))` の1行で使える50個のデバッグフラグ(番号は1〜50)。Window > MyUtils > Debug Flag Window で切り替える(EditorPrefsに保存。ビルドでは常にfalse)。フラグの横に残せるメモは ProjectSettings に保存し、gitで共有できる。オンのまま再生を始めるとコンソールに警告を出す — Samples 92
 
 ### エディタ拡張(Editor)
 - `DebugMethod`系: `[DebugMethod]` 属性を付けたメソッドをInspectorからボタン実行できるようにする機能一式
 - `SceneReferenceDrawer` / `FlagsParameterDrawer` / `ReadOnlyDrawer`(カスタムプロパティドロワー)
-- `SceneOpenWindow` / `FolderPainter` / `PlayModeOptimizer` / `Separator`系 / `DebugFlagMenu`(エディタ作業効率化ツール)
+- `SceneOpenWindow` / `FolderPainter` / `PlayModeOptimizer` / `Separator`系 / `DebugFlagWindow`(エディタ作業効率化ツール)
 - `FolderPainter`: Projectウィンドウでフォルダを右クリック > MyUtils > Set Folder Color... で色を設定(ProjectSettings に保存、同名フォルダに適用)
 
 ## 関連プロジェクト

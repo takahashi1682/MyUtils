@@ -18,6 +18,8 @@ namespace MyUtils.DebugMethod
         {
             var mono = target as MonoBehaviour;
             if (mono == null) return;
+
+            // インスペクターを開くたびに、表示中のコンポーネントから取り直す(メソッドは型ごとにキャッシュ済み)
             _componentMethods = DebugMethodRegistry.GetMethodsForTarget(mono);
         }
 
