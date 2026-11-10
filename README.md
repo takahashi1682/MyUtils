@@ -176,7 +176,7 @@ MyUtils/
 - `MonoBehaviourLifecycleEvents`(Awake/Start/OnEnable/OnDisable/OnDestroy/OnBecameVisible/OnBecameInvisibleをUnityEventとしてInspectorから配線)
 - `DelayDestroy` / `TimeScaler` / `OnBecameInvisibleDestroy` / `ProjectVersionViewer` / `CustomBounds` / `PlaySEOnSliderChanged` / `RigidbodyImpact` / `DontDestroyOnLoad` / `TransformExtensions` / `VectorUtils` / `UniTaskUtils` など、単機能の小物コンポーネント群 — Samples 90
 - `DebugMethodAttribute` / `ReadOnlyAttribute`(Inspector拡張属性)
-- `DebugFlag`: `if (DebugFlag.IsOn(1))` の1行で使える50個のデバッグフラグ(番号は1〜50)。Window > MyUtils > Debug Flag Window で切り替える(EditorPrefsに保存。ビルドでは常にfalse)。フラグの横に残せるメモは ProjectSettings に保存し、gitで共有できる。オンのまま再生を始めるとコンソールに警告を出す — Samples 92
+- `DebugFlag`: `if (DebugFlag.IsOn(1))` の1行で使える50個のデバッグフラグ(番号は1〜50)。Window > MyUtils > Debug Flag Window で切り替える(EditorPrefsに保存。ビルドでは常にfalse)。フラグの横に残せるメモは ProjectSettings に保存し、gitで共有できる。オンのまま再生を始めるとコンソールに警告を出す。ウィンドウの一番上で、再生中のFPSの上限(10 / 30 / 60 / 144 / 上限なし)も選べる — Samples 92
 
 ### エディタ拡張(Editor)
 - `DebugMethod`系: `[DebugMethod]` 属性を付けたメソッドをInspectorからボタン実行できるようにする機能一式
