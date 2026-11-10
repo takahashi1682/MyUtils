@@ -42,6 +42,10 @@ namespace MyUtils.TweenUtils
                 Play();
         }
 
+        // LinkBehaviour が None でも、このコンポーネントが破棄されたら必ず止める。
+        // 止めないと、画面遷移で Target が破棄されたあとも動き続けてエラーになる
+        protected virtual void OnDestroy() => TweenInstance?.Kill();
+
         protected virtual void InitializeTween()
         {
             TweenInstance?.Kill();

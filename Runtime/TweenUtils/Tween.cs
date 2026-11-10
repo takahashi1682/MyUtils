@@ -7,8 +7,9 @@ namespace MyUtils.TweenUtils
 {
     /// <summary>
     /// DOTweenに依存しない軽量Tweenエンジン。UniTaskの毎フレームループで駆動する。
+    /// IDisposable なので、R3 の AddTo(this) で「このコンポーネントが破棄されたら止める」と書ける。
     /// </summary>
-    public sealed class Tween
+    public sealed class Tween : IDisposable
     {
         private readonly float _duration;
         private readonly Action<float, float> _onProgress; // (easedT, rawT)
@@ -211,6 +212,9 @@ namespace MyUtils.TweenUtils
             _cts = null;
             _onKill?.Invoke();
         }
+
+        /// <summary>Kill と同じ。AddTo で破棄に合わせて止めるために使う</summary>
+        public void Dispose() => Kill();
 
         private void EnsureLoopRunning()
         {
