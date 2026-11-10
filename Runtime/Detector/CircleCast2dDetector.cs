@@ -1,6 +1,7 @@
 using R3;
 using R3.Triggers;
 using UnityEngine;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -19,7 +20,7 @@ namespace MyUtils.Detector
         [Header("Settings")]
         [SerializeField] private Transform _rayPosition;
         [SerializeField] private float _radius = 0.5f;
-        [SerializeField] private Vector2 _rayDirection = Vector2.down;
+        [FormerlySerializedAs("_rayDirection")] public Vector2 RayDirection = Vector2.down;
         [SerializeField] private float _maxRayDistance = 10;
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
 
@@ -58,7 +59,7 @@ namespace MyUtils.Detector
                         Physics2D.CircleCast(
                             _rayPosition.position,
                             _radius,
-                            _rayDirection,
+                            RayDirection,
                             _maxRayDistance,
                             _layerMask);
 
@@ -82,21 +83,21 @@ namespace MyUtils.Detector
 
             if (Application.isPlaying)
             {
-                var to = from + (Vector3)(_rayDirection * _hitDistance.Value);
+                var to = from + (Vector3)(RayDirection * _hitDistance.Value);
                 Gizmos.DrawWireSphere(from, _radius);
                 Gizmos.DrawWireSphere(to, _radius);
 
-                Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
+                Debug.DrawRay(from, RayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
                 Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hit2D.Value.collider?.gameObject}",
                     GUI.skin.box);
             }
             else
             {
-                var to = from + (Vector3)(_rayDirection * _maxRayDistance);
+                var to = from + (Vector3)(RayDirection * _maxRayDistance);
                 Gizmos.DrawWireSphere(from, _radius);
                 Gizmos.DrawWireSphere(to, _radius);
 
-                Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
+                Debug.DrawRay(from, RayDirection * _maxRayDistance, Color.yellow);
             }
         }
 #endif

@@ -1,6 +1,7 @@
 using R3;
 using R3.Triggers;
 using UnityEngine;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -18,7 +19,7 @@ namespace MyUtils.Detector
     {
         [Header("Settings")]
         [SerializeField] private Transform _rayPosition;
-        [SerializeField] private Vector2 _rayDirection = Vector2.down;
+        [FormerlySerializedAs("_rayDirection")] public Vector2 RayDirection = Vector2.down;
         [SerializeField] private float _maxRayDistance = 10;
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
 
@@ -54,7 +55,7 @@ namespace MyUtils.Detector
                 .Subscribe(_ =>
                 {
                     Vector2 from = _rayPosition.position;
-                    Vector2 to = from + _rayDirection * _maxRayDistance;
+                    Vector2 to = from + RayDirection * _maxRayDistance;
 
                     _hit2D.Value = Physics2D.Linecast(from, to, _layerMask);
 
@@ -78,13 +79,13 @@ namespace MyUtils.Detector
 
             if (Application.isPlaying)
             {
-                Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
+                Debug.DrawRay(from, RayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
                 Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hit2D.Value.collider?.gameObject}",
                     GUI.skin.box);
             }
             else
             {
-                Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
+                Debug.DrawRay(from, RayDirection * _maxRayDistance, Color.yellow);
             }
         }
 #endif

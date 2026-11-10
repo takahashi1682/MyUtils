@@ -1,6 +1,7 @@
 using R3;
 using R3.Triggers;
 using UnityEngine;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -18,7 +19,7 @@ namespace MyUtils.Detector
     {
         [Header("Settings")]
         [SerializeField] private Transform _rayPosition;
-        [SerializeField] private Vector3 _rayDirection = Vector3.forward;
+        [FormerlySerializedAs("_rayDirection")] public Vector3 RayDirection = Vector3.forward;
         [SerializeField] private float _maxRayDistance = 10;
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
 
@@ -43,7 +44,7 @@ namespace MyUtils.Detector
         /// <summary>
         /// _rayPositionの向きに追従したワールド空間のRay方向
         /// </summary>
-        private Vector3 WorldRayDirection => _rayPosition.TransformDirection(_rayDirection);
+        private Vector3 WorldRayDirection => _rayPosition.TransformDirection(RayDirection);
 
         protected virtual void Awake()
         {

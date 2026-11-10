@@ -1,6 +1,7 @@
 using R3;
 using R3.Triggers;
 using UnityEngine;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -22,7 +23,7 @@ namespace MyUtils.Detector
         [SerializeField] private float _capsuleHeight = 2f;
         [Tooltip("カプセルの回転（オイラー角、度数）。未回転時はY軸方向が高さ方向。")]
         [SerializeField] private Vector3 _rayAngle = Vector3.zero;
-        [SerializeField] private Vector3 _rayDirection = Vector3.down;
+        [FormerlySerializedAs("_rayDirection")] public Vector3 RayDirection = Vector3.down;
         [SerializeField] private float _maxRayDistance = 10;
         [SerializeField] private LayerMask _layerMask = int.MaxValue;
 
@@ -63,7 +64,7 @@ namespace MyUtils.Detector
                         point1,
                         point2,
                         _capsuleRadius,
-                        _rayDirection,
+                        RayDirection,
                         out var hitInfo,
                         _maxRayDistance,
                         _layerMask);
@@ -100,21 +101,21 @@ namespace MyUtils.Detector
 
             if (Application.isPlaying)
             {
-                var to = from + _rayDirection * _hitDistance.Value;
+                var to = from + RayDirection * _hitDistance.Value;
                 DrawCapsuleGizmo(from);
                 DrawCapsuleGizmo(to);
 
-                Debug.DrawRay(from, _rayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
+                Debug.DrawRay(from, RayDirection * _hitDistance.CurrentValue, _isHit.Value ? Color.red : Color.yellow);
                 Handles.Label(from + _labelOffset, $"{_hitDistance.Value}\n{_hitObject.Value.collider?.gameObject}",
                     GUI.skin.box);
             }
             else
             {
-                var to = from + _rayDirection * _maxRayDistance;
+                var to = from + RayDirection * _maxRayDistance;
                 DrawCapsuleGizmo(from);
                 DrawCapsuleGizmo(to);
 
-                Debug.DrawRay(from, _rayDirection * _maxRayDistance, Color.yellow);
+                Debug.DrawRay(from, RayDirection * _maxRayDistance, Color.yellow);
             }
         }
 
