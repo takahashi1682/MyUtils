@@ -64,6 +64,9 @@ namespace MyUtils
             return string.IsNullOrEmpty(memo) ? $"Flag {no}" : $"Flag {no} ({memo})";
         }
 
+        // 一番左の列(上限 / No)の幅
+        private const float FirstColumnWidth = 30;
+
         private void OnGUI()
         {
             var settings = DebugFlagSettings.instance;
@@ -72,9 +75,14 @@ namespace MyUtils
             GUILayout.Label("FPS 設定", EditorStyles.boldLabel);
             using (new EditorGUILayout.HorizontalScope())
             {
-                GUILayout.Label("上限", GUILayout.Width(70));
+                GUILayout.Label("上限", GUILayout.Width(FirstColumnWidth));
                 var index = Array.IndexOf(FpsValues, Fps);
-                var newIndex = GUILayout.Toolbar(index, FpsLabels);
+
+                // 横幅が足りないとボタンの文字が切れるので、そのときはプルダウンにする
+                var newIndex = position.width - FirstColumnWidth >= FpsToolbarWidth()
+                    ? GUILayout.Toolbar(index, FpsLabels)
+                    : EditorGUILayout.Popup(index, FpsLabels);
+
                 if (newIndex != index)
                 {
                     Fps = FpsValues[newIndex];
@@ -87,7 +95,7 @@ namespace MyUtils
             // 項目名。スクロールしても見えるように、スクロールの外に置く
             using (new EditorGUILayout.HorizontalScope())
             {
-                GUILayout.Label("フラグ番号", EditorStyles.boldLabel, GUILayout.Width(70));
+                GUILayout.Label("No", EditorStyles.boldLabel, GUILayout.Width(FirstColumnWidth));
                 GUILayout.Label("ON", EditorStyles.boldLabel, GUILayout.Width(50));
                 GUILayout.Label("メモ", EditorStyles.boldLabel);
             }
@@ -102,7 +110,7 @@ namespace MyUtils
                 {
                     var isOn = DebugFlag.IsOn(no);
 
-                    GUILayout.Label(no.ToString(), GUILayout.Width(70));
+                    GUILayout.Label(no.ToString(), GUILayout.Width(FirstColumnWidth));
 
                     // オンは緑、オフは赤のボタンで表示する
                     GUI.backgroundColor = isOn ? Color.green : Color.red;
@@ -114,6 +122,10 @@ namespace MyUtils
                 }
             }
         }
+
+        // FPS のボタンを、文字が切れずに並べるのに必要な横幅
+        private static float FpsToolbarWidth()
+            => FpsLabels.Sum(label => GUI.skin.button.CalcSize(new GUIContent(label)).x) + 10;
     }
 }
 #endif
